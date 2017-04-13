@@ -28,9 +28,9 @@ before_script:
 
 # add requirements before building
 ## lib-cn_core
-- "cd /tmp && wget  -O lib-cn_core.zip https://github.com/conjoon/lib-cn_core/archive/master.zip"
-- "unzip lib-cn_core.zip -d $CN_WORKSPACE/packages/local/"
-- "mv $CN_WORKSPACE/packages/local/lib-cn_core-master $CN_WORKSPACE/packages/local/lib-cn_core"
+  - "cd /tmp && wget  -O lib-cn_core.zip https://github.com/conjoon/lib-cn_core/archive/master.zip"
+  - "unzip lib-cn_core.zip -d $CN_WORKSPACE/packages/local/"
+  - "mv $CN_WORKSPACE/packages/local/lib-cn_core-master $CN_WORKSPACE/packages/local/lib-cn_core"
 
 
 script:
