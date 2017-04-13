@@ -30,6 +30,11 @@
     "type": "code",
 
     /**
+     * "sencha package build" will not work if omitted.
+     */
+    "toolkit" :"classic",
+
+    /**
      * The author of the package.
      *
      * Required only if you are distributing this package through a Sencha Cmd repository,
@@ -104,6 +109,7 @@
     "framework": "ext",
 
     "requires": [
+        "sencha-core",
         "lib-cn_core"
     ]
 }
