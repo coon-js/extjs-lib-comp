@@ -22,8 +22,8 @@
 
 /**
  * This is the base class for forms that wish to utilize autocomplete functionality,
- * such as authentication forms.c
- * A form will basically set the autocomplete attribute of it's child textfield
+ * such as authentication forms.
+ * This form will basically set the autocomplete attribute of it's child textfield
  * items to true but those which have disabled autcomplete.
  * Additionally, this form will also focus the first visible, enabled and empty
  * textfield that can be found after the form was rendered.
@@ -36,16 +36,18 @@
  * form-submit. Specify {@link #autoCompleteTrigger} to an object containing
  * an actionUrl and a button-reference whenever instances of
  * this class do not use calls to {@link Ext.form.Panel#submit}.
- * This component will then render two hidden elements and add it to its container:
- * An iframe and a submit-button.
- * This is necessary so the browser and/or its plugins get notified of a form
- * submit and save those values which were specified in autocomplete="on"
- * fields. The action-url for the form can be specified in
+ * This component will then render a hidden input-button with its type set to
+ * "submit" which will be used to create an automatic submit. A specific form
+ * listener will then prevent the default action for the submit event and POST
+ * data via a XMLHttpRequest to the configured #actionUrl.
+ * This is necessary so the browser get notified of a form submit and save those
+ * values which are - in the most cases - a pair of user credentials.
+ * The action-url for the form can be specified in
  * {@link #autoCompleteTrigger}.actionUrl and should be an existing local file.
  * By default, this package's "resources/html/blank.html" will be used.
  * No further form-data is needed by this html-page, it serves solely as a POST
- * target for the submit button. Both do not add any more features other than
- * notifying the browser that autocomplete values can be saved.
+ * target for the submit button andthe created XMLHttpRequest - a status code
+ * of 200 is required, notifying the browser that autocomplete values can be saved.
  * In order for the fake form-submit and the autocomplete to work, implementing
  * classes need to specify a button reference via {@link #autoCompleteTrigger}.reference.
  * This class will then add a click-listener to this button and run the fake
@@ -111,7 +113,7 @@ Ext.define('conjoon.cn_comp.form.AutoCompleteForm', {
      * false to not trigger autocomplete by faking a form submit into a hidden
      * iframe, or
      * {String} autoCompleteTrigger.actionUrl The url to which the fake post
-     * of the automatically created iframe should happen. Will default to {@link #defaultFakeActionUrl}
+     * of the XMLHttpRequest should happen. Will default to {@link #defaultFakeActionUrl}
      * if not specified.
      * {String} autoCompleteTrigger.reference The reference of the button that
      * triggers the fake submit/autocomplete. This class will automatically
@@ -127,26 +129,30 @@ Ext.define('conjoon.cn_comp.form.AutoCompleteForm', {
     defaultFakeActionUrl : './resources/html/blank.html',
 
     /**
-     * @type {String}
+     * @type {HtmlElement}
      * @private
      */
-    submitButtonId : null,
+    submitHelperButton : null,
 
     /**
-     * @type {String}
+     * For Chrome, this will hold a native HTMLElement referencing an input field
+     * which has to be created in order for Chrome's "save form data" dialog
+     * to appear.
+     * @type {HTMLElement}
      * @private
      */
-    iframeId : null,
+    currentRogueField : null,
 
     /**
      * @inheritdoc
+     *
+     * @throws exception if autoCompleteTrigger was not properly configured
      */
     initComponent: function () {
 
         var me         = this,
-            cfgObject  = {},
             listen     = {},
-            fakeSubmit = false;
+            cfgObject  = null;
 
         // Use standard FORM tag for detection by browser or password tools
         cfgObject = {
@@ -160,25 +166,11 @@ Ext.define('conjoon.cn_comp.form.AutoCompleteForm', {
 
         me.autoEl = Ext.applyIf(me.autoEl || {}, cfgObject);
 
-        if (me.autoCompleteTrigger !== false) {
-            me.iframeId       = 'ifr_' + Ext.id();
-            me.submitButtonId = 'sb_'  + Ext.id();
-
-            cfgObject = me.sanitizeAutoCompleteTrigger(me.autoCompleteTrigger);
-            fakeSubmit = true;
-
-            me.autoEl = Ext.applyIf(me.autoEl, {
-                target : me.iframeId,
-                action : cfgObject.actionUrl
-            });
-
-        }
-
         me.callParent();
 
         listen = {
             render : 'doAutoComplete',
-            scope : me,
+            scope  : me,
             single : true
         };
 
@@ -186,8 +178,9 @@ Ext.define('conjoon.cn_comp.form.AutoCompleteForm', {
             field.on(listen);
         });
 
-        if (fakeSubmit === true) {
-            me.createFakeSubmitHelper();
+        if (me.autoCompleteTrigger !== false) {
+            me.sanitizeAutoCompleteTrigger(me.autoCompleteTrigger);
+            me.on('afterrender', me.createFakeSubmitHelper, me, {single : true});
         }
     },
 
@@ -232,7 +225,7 @@ Ext.define('conjoon.cn_comp.form.AutoCompleteForm', {
         },
 
         /**
-         * Adds autocomplete attributes to teh specified textfield
+         * Adds autocomplete attributes to the specified textfield
          *
          * @param {Ext.form.field.Text} field
          */
@@ -245,8 +238,8 @@ Ext.define('conjoon.cn_comp.form.AutoCompleteForm', {
         },
 
         /**
-         * Creates fake submit elements if this form does not use the default submit()
-         * functionality.
+         * Creates fake submit elements if this form should not use the default
+         * submit() functionality.
          *
          * @throws error if the reference specified in {@link #autoCompleteTrigger}.reference
          * cannot be found.
@@ -254,7 +247,7 @@ Ext.define('conjoon.cn_comp.form.AutoCompleteForm', {
         createFakeSubmitHelper : function() {
 
             var me  = this,
-                btn = me.lookupReference(me.autoCompleteTrigger.reference);
+                btn = me.lookup(me.autoCompleteTrigger.reference);
 
             if (!btn) {
                 Ext.raise({
@@ -265,25 +258,50 @@ Ext.define('conjoon.cn_comp.form.AutoCompleteForm', {
                 return;
             }
 
-            me.add({
-                xtype : 'component',
-                id    : me.iframeId,
-                autoEl  : {
-                    tag   : 'iframe',
-                    name  : me.iframeId,
-                    style : 'display:none'
-                }
-            }, {
-                xtype: 'component',
-                id    : me.submitButtonId,
-                autoEl  : {
-                    tag   : 'input',
-                    type  : 'submit',
-                    style : 'display:none'
-                }
-            });
+            me.submitHelperButton = Ext.DomHelper.append(
+                me.el.dom,
+                {tag : 'input', type : 'submit', style : 'display:none'}
+            );
+
+            Ext.fly(me.el.dom).on('submit', me.onDomFormSubmit, me);
 
             btn.on('click', me.triggerFakeSubmit, me);
+        },
+
+        /**
+         * Callback for the native {Form] wrapped by this Ext Element to make
+         * sure the browser's "save form data" dialog is triggered.
+         *
+         * @param {Ext.Event} evt
+         *
+         * @returns {boolean} false
+         */
+        onDomFormSubmit : function(evt) {
+
+            var me   = this,
+                form, p, input;
+
+            evt.preventDefault();
+
+            if (Ext.isChrome) {
+                var form  = me.el.dom,
+                    p     = form.parentNode,
+                    input = me.currentRogueField;
+                if (input) {
+                    form.removeChild(input);
+                }
+
+                input                 = document.createElement('input');
+                me.currentRogueField  = input;
+                input.id              = Ext.id();
+                me.el.dom.appendChild(input);
+            }
+
+            var request = new XMLHttpRequest();
+            request.open('POST', me.autoCompleteTrigger.actionUrl, true);
+            request.send();
+
+            return false;
         },
 
         /**
@@ -295,13 +313,12 @@ Ext.define('conjoon.cn_comp.form.AutoCompleteForm', {
         triggerFakeSubmit : function() {
 
             var me  = this,
-                btn = document.getElementById(me.submitButtonId);
+                btn = me.submitHelperButton;
 
             if (!btn) {
                 Ext.raise({
-                    sourceClass    : Ext.getClassName(this),
-                    submitButtonId : me.submitButtonId,
-                    msg            : Ext.getClassName(this) + " cannot find the fake submit button referenced by submitButtonId"
+                    sourceClass : Ext.getClassName(this),
+                    msg         : Ext.getClassName(this) + " cannot find the fake submit button"
                 });
             }
 

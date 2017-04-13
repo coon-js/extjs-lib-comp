@@ -30,15 +30,19 @@ describe('conjoon.cn_comp.form.AutCompleteFormTest', function(t) {
     t.requireOk('conjoon.cn_comp.form.AutoCompleteForm', function() {
 
         var form,
-            formConfig;
+            formConfig,
+            currId;
 
         t.beforeEach(function(t){
+
+            currId = Ext.id();
+
             formConfig = {
-                id    : 'testForm',
+                id    : currId,
                 xtype : 'cn_comp-autocompleteform',
-
+                width : 400,
+                height : 200,
                 renderTo : document.body,
-
                 items : [{
                     xtype : 'textfield',
                     value : 'a',
@@ -63,21 +67,27 @@ describe('conjoon.cn_comp.form.AutCompleteFormTest', function(t) {
                 form.destroy();
                 form = null;
             }
-        })
 
-    // -------------------------------------------------------------------------
+            if (document.getElementById(currId)) {
+                document.getElementById(currId)
+                        .parentNode
+                        .removeChild(document.getElementById(currId));
+            }
+
+            formConfig = null;
+        });
+
+
+        // -------------------------------------------------------------------------
 
         t.it('Should build the form with autocomplete attributes (autoCompleteTrigger=false)', function(t) {
             formConfig.formName = 'testform';
             form = Ext.widget(formConfig);
 
             t.expect(form.autoCompleteTrigger).toBe(false);
-            t.expect(form.submitButtonId).toBeNull();
-            t.expect(form.iframeId).toBeNull();
+            t.expect(form.submitHelperButton).toBeNull();
             t.expect(form.el.dom.tagName.toLowerCase()).toBe('form');
             t.expect(form.el.dom.method.toLowerCase()).toBe('post');
-            t.expect(form.el.dom.action).toBe("");
-            t.expect(form.el.dom.target).toBe("");
             t.expect(form.el.dom.name).toBe("testform");
 
         });
@@ -124,6 +134,78 @@ describe('conjoon.cn_comp.form.AutCompleteFormTest', function(t) {
 
         });
 
+        t.it("Should be okay with missing actionUrl (autoCompleteTrigger {})", function(t) {
+
+            form = Ext.widget(Ext.apply({
+                autoCompleteTrigger : {
+                    reference : 'somebutton'
+                },
+                buttons : [{
+                    text      : "Login",
+                    reference : "somebutton"
+                }]
+            }, formConfig));
+
+            t.expect(form.defaultFakeActionUrl).not.toBeNull();
+            t.expect(form.defaultFakeActionUrl).toBeDefined();
+            t.expect(form.defaultFakeActionUrl).toBe('./resources/html/blank.html');
+
+            t.expect(form.autoCompleteTrigger.actionUrl)
+             .toBe('./resources/html/blank.html');
+
+        });
+
+        t.it('Should be okay with autoCompleteTrigger', function(t) {
+
+            var wasClicked = false;
+
+            var form = Ext.widget(Ext.apply({
+                autoCompleteTrigger : {
+                    actionUrl : './foo.bar',
+                    reference : 'somebuttonNew'
+                },
+                buttons : [{
+                    text      : "Login",
+                    reference : "somebuttonNew"
+                }]
+            }, formConfig));
+
+            t.expect(form.submitHelperButton).not.toBeNull();
+            t.expect(form.submitHelperButton).toBeDefined();
+
+            if (Ext.isChrome) {
+                form.submitHelperButton.addEventListener('click', function(){
+                    wasClicked = true;
+                });
+            } else {
+                Ext.get(form.submitHelperButton).on('click', function(){
+                    wasClicked = true;
+                });
+            }
+
+            t.expect(wasClicked).toBe(false);
+
+            if (Ext.isChrome) {
+                t.click(form.down('button[reference=somebuttonNew]'));
+
+                t.expect(wasClicked).toBe(true);
+                t.expect(form.currentRogueField).toBeTruthy();
+                var crf = form.currentRogueField;
+                t.click(form.down('button[reference=somebuttonNew]'));
+
+                t.expect(wasClicked).toBe(true);
+                t.expect(crf).not.toBe(form.currentRogueField);
+
+            } else {
+                t.click(form.down('button[reference=somebuttonNew]'));
+
+                t.expect(wasClicked).toBe(true);
+                t.expect(form.currentRogueField).toBeFalsy();
+            }
+
+        });
+
+
 
         t.it('Should throw error for missing reference (autoCompleteTrigger {})', function(t) {
             formConfig.autoCompleteTrigger = {
@@ -145,7 +227,6 @@ describe('conjoon.cn_comp.form.AutCompleteFormTest', function(t) {
                 actionUrl : 'foo.bar',
                 reference : 'somebutton'
             };
-
             var exc = undefined;
 
             try {
@@ -157,7 +238,6 @@ describe('conjoon.cn_comp.form.AutCompleteFormTest', function(t) {
             t.expect(exc).toBeDefined();
             t.expect(exc.msg).toBeDefined();
         });
-
 
         t.it('Should throw error for wrong value for autoCompleteTrigger (autoCompleteTrigger {})', function(t) {
             formConfig.autoCompleteTrigger = true;
@@ -170,80 +250,6 @@ describe('conjoon.cn_comp.form.AutCompleteFormTest', function(t) {
             t.expect(exc).toBeDefined();
             t.expect(exc.msg).toBeDefined();
 
-        });
-
-        t.it("Should be okay with missing actionUrl (autoCompleteTrigger {})", function(t) {
-
-            formConfig.autoCompleteTrigger = {
-                reference : 'somebutton'
-            };
-            formConfig.buttons = [{
-                text      : "Login",
-                reference : "somebutton"
-            }];
-
-            form = Ext.widget(formConfig);
-
-            t.expect(form.defaultFakeActionUrl).not.toBeNull();
-            t.expect(form.defaultFakeActionUrl).toBeDefined();
-            t.expect(form.defaultFakeActionUrl).toBe('./resources/html/blank.html');
-
-            t.expect(
-                form.el.dom.action.substring(
-                    form.el.dom.action.length - form.defaultFakeActionUrl.length + 1,
-                    form.el.dom.action.length
-                )
-            ).toBe('/resources/html/blank.html');
-
-        });
-
-        t.it('Should be okay with autoCompleteTrigger', function(t) {
-
-            var wasClicked = false;
-
-            formConfig.autoCompleteTrigger = {
-                actionUrl : './foo.bar',
-                reference : 'somebutton'
-            };
-
-            formConfig.buttons = [{
-                text : "Login",
-                reference : "somebutton"
-            }];
-
-            form = Ext.widget(formConfig);
-
-            t.expect(form.submitButtonId).not.toBeNull();
-            t.expect(form.submitButtonId).toBeDefined();
-            t.expect(form.iframeId).not.toBeNull();
-            t.expect(form.iframeId).toBeDefined();
-
-            t.expect(Ext.getElementById(form.iframeId)).not.toBeNull();
-            t.expect(Ext.getElementById(form.iframeId)).toBeDefined();
-            t.expect(Ext.getElementById(form.submitButtonId)).not.toBeNull();
-            t.expect(Ext.getElementById(form.submitButtonId)).toBeDefined();
-
-            t.expect(form.el.dom.action.substring(form.el.dom.action.length-8, form.el.dom.action.length)).toBe("/foo.bar");
-            t.expect(form.el.dom.target).toBe(form.iframeId);
-
-
-            if (Ext.isChrome) {
-                Ext.getElementById(form.submitButtonId).addEventListener(
-                    'click',
-                    function(){
-                        wasClicked = true;
-                    }
-                )
-            } else {
-                Ext.fly(Ext.getElementById(form.submitButtonId)).on('click', function(){
-                    wasClicked = true;
-                });
-            }
-
-            t.expect(wasClicked).toBe(false);
-            t.click(form.down('button[reference=somebutton]'));
-
-            t.expect(wasClicked).toBe(true);
         });
 
 
