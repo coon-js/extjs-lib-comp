@@ -56,6 +56,15 @@ Ext.define('conjoon.cn_comp.form.field.FileButton', {
 
     extend : 'Ext.form.field.FileButton',
 
+    requires : [
+        /**
+         * @see https://www.sencha.com/forum/showthread.php?339216-6-2-(GPL)-Styles-for-Ext-form-field-FileButton-not-loaded-generated-in-production&p=1178359#post1178359
+         * @bug this is needed so the css styles for the FileButton get loaded.
+         * Otherwise, the FileButton is not properly rendered in production mode.
+         */
+        'Ext.form.field.File'
+    ],
+
     alias : 'widget.cn_comp-formfieldfilebutton',
 
     /**
