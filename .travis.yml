@@ -1,3 +1,9 @@
+# conjoon
+# (c) 2007-2017 conjoon.org
+# licensing@conjoon.org
+#
+# conjoon / lib-cn_comp
+#
 # This is the very basic travis configuration for the lib-cn_comp
 # package of the conjoon Open Source Project. It simply creates a
 # workspace, adds this package and tries to build it while making sure
@@ -5,9 +11,6 @@
 language: node_js
 env:
   - CN_PACKAGE="lib-cn_comp" CN_SENCHA_EXT_VERSION="6.2.0" CN_SENCHA_CMD_VERSION="6.2.2.36" CN_WORKSPACE="/tmp/conjoon"
-
-install:
-  - gem install jsduck
 
 before_script:
   - "wget http://cdn.sencha.com/ext/gpl/ext-$CN_SENCHA_EXT_VERSION-gpl.zip"
