@@ -1,10 +1,10 @@
 /**
  * conjoon
- * (c) 2007-2016 conjoon.org
+ * (c) 2007-2017 conjoon.org
  * licensing@conjoon.org
  *
  * lib-cn_comp
- * Copyright (C) 2016 Thorsten Suckow-Homberg/conjoon.org
+ * Copyright (C) 2017 Thorsten Suckow-Homberg/conjoon.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -160,9 +160,9 @@ Ext.define('conjoon.cn_comp.app.Application', {
     /**
      * Iterates over this applications controllers and checks if any controller
      * is of the type {@link conjoon.cn_core.app.PackageController}. Its method
-     * {@link conjoon.cn_core.app.PackageController#getMetaItems} will then be called,
-     * if possible, and the returning items will be passed to this {@link conjoon.cn_comp.container.Viewport#postLaunchHook}
-     * method.
+     * {@link conjoon.cn_core.app.PackageController#postLaunchHook} will then be called,
+     * if possible, and the returning items will be passed to its
+     * {@link conjoon.cn_comp.container.Viewport#addPostLaunchInfo} method.
      *
      */
     postLaunchHookProcess : function() {
