@@ -261,7 +261,32 @@ Ext.define('conjoon.cn_comp.app.Application', {
         }
 
         return this.applicationViewModel;
-    }
+    },
 
+
+    /**
+     * Helper method to activate a view identified by the passed hash.
+     * If the view is not available yet, it will be created and added to this
+     * application's viewport, then activated to make sure it has the focus.
+     * The view will be returned.
+     * Any views that might block input (e.g. windows) will be removed if possible.
+     *
+     * Note:
+     * =====
+     * This is mainly for PackageControllers utilizing deeplinking that have to
+     * set up their packages' MainView first in order to continue routing into
+     * functionality of nested views.
+     *
+     * @param {String} hash A string representing a unique hash which is
+     * associated with the view that should be looked up/created and added.
+     *
+     * @return {Ext.Component} The view associated with the hash, if any.
+     *
+     * @see {@link conjoon.cn_comp.container.Viewport#activateViewForHash}
+     */
+    activateViewForHash : function(hash) {
+        var me = this;
+        return me.getMainView().activateViewForHash(hash, me.getDefaultToken());
+    }
 
 });

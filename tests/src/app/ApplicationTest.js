@@ -1,10 +1,10 @@
 /**
  * conjoon
- * (c) 2007-2016 conjoon.org
+ * (c) 2007-2017 conjoon.org
  * licensing@conjoon.org
  *
  * lib-cn_comp
- * Copyright (C) 2016 Thorsten Suckow-Homberg/conjoon.org
+ * Copyright (C) 2017 Thorsten Suckow-Homberg/conjoon.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -376,4 +376,23 @@ describe('conjoon.cn_comp.app.ApplicationTest', function(t) {
         t.expect(w.getApplicationViewModel()).toBe(w.getMainView().getViewModel());
         t.expect(w.getApplicationSession()).toBe(w.getMainView().getViewModel().getSession());
     });
+
+
+    t.it('activateViewForHash()', function(t) {
+
+        var w = Ext.create('conjoon.cn_comp.app.Application', {
+                name     : 'test',
+                mainView : 'conjoon.cn_comp.container.Viewport'
+            }),
+            called = false;;
+
+        w.getMainView().activateViewForHash = function() {
+            called = true;
+        }
+
+        t.expect(called).toBe(false);
+        t.expect(w.activateViewForHash());
+        t.expect(called).toBe(true);
+    });
+
 });

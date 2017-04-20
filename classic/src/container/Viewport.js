@@ -1,10 +1,10 @@
 /**
  * conjoon
- * (c) 2007-2016 conjoon.org
+ * (c) 2007-2017 conjoon.org
  * licensing@conjoon.org
  *
  * lib-cn_comp
- * Copyright (C) 2016 Thorsten Suckow-Homberg/conjoon.org
+ * Copyright (C) 2017 Thorsten Suckow-Homberg/conjoon.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,21 +38,25 @@ Ext.define('conjoon.cn_comp.container.Viewport', {
      */
     addPostLaunchInfo : Ext.emptyFn,
 
+
     /**
-     * Helper method to add any view from outside by specifying a hash. This is
-     * mainly for PackageControllers utilizing deeplinking that have to set up
-     * their packages' MainView first in order to continue routing into
-     * functionality of nested views.
-     * This method should first query its container for a view associated with
-     * the hash, then set this view active. If a view with the hash cannot be
-     * found, the class information of the view associated with the hash should
-     * be looked up and then build.
+     * Method to make sure the the view represented by the passed hash is
+     * available and activated in this viewport.
      *
      * @param {String} hash A string representing a unique hash which is
      * associated with the view.
+     * @param {String} defaultToken A string representing the defaultToken of the
+     * application, if any.
      *
      * @return {Ext.Component} The view associated with the hash, if any.
      */
-    addViewForHash : Ext.emptyFn
+    activateViewForHash : Ext.emptyFn,
+
+
+    /**
+     * Helper method to remove any remaining views from the viewport to make sure
+     * input is not blocked by leftovers.
+     */
+    cleanup : Ext.emptyFn
 
 });
