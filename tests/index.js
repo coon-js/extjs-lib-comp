@@ -8,6 +8,7 @@ harness.configure({
          * Classic Toolkit
          */
         'conjoon.cn_comp.container' : '../classic/src/container',
+        'conjoon.cn_comp.component' : '../classic/src/component',
         'conjoon.cn_comp.window'    : '../classic/src/window',
         'conjoon.cn_comp.form'      : '../classic/src/form',
         'conjoon.cn_comp.list'      : '../classic/src/list',
@@ -37,6 +38,11 @@ harness.configure({
 harness.start({
     group : 'classic',
     items : [{
+        group : 'component',
+        items : [
+            'classic/src/component/LoadMaskTest.js'
+        ]
+    }, {
         group : 'container',
         items : [
             'classic/src/container/ViewportTest.js'
