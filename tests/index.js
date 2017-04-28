@@ -40,7 +40,8 @@ harness.start({
     items : [{
         group : 'component',
         items : [
-            'classic/src/component/LoadMaskTest.js'
+            'classic/src/component/LoadMaskTest.js',
+            'classic/src/component/MessageMaskTest.js'
         ]
     }, {
         group : 'container',
