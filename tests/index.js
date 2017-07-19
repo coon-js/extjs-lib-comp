@@ -12,6 +12,7 @@ harness.configure({
         'conjoon.cn_comp.window'    : '../classic/src/window',
         'conjoon.cn_comp.form'      : '../classic/src/form',
         'conjoon.cn_comp.list'      : '../classic/src/list',
+        'conjoon.cn_comp.grid'      : '../classic/src/grid',
 
         /**
          * Universal
@@ -56,6 +57,14 @@ harness.start({
             group : 'field',
             items : [
                 'classic/src/form/field/FileButtonTest.js'
+            ]
+        }]
+    }, {
+        group : 'grid',
+        items : [{
+            group : 'feature',
+            items : [
+                'classic/src/grid/feature/RowBodySwitchTest.js'
             ]
         }]
     }, {
