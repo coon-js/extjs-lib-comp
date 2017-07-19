@@ -150,6 +150,8 @@ Ext.define('conjoon.cn_comp.grid.feature.RowBodySwitch', {
             me.saveColumns();
             grid.view.addCls(me.enableCls);
             me.restoreColumns(me.previewColumnConfig);
+        } else {
+            grid.view.addCls(me.disableCls);
         }
 
         me.callParent(arguments);

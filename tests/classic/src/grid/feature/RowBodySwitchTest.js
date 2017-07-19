@@ -24,8 +24,9 @@ describe('conjoon.cn_comp.grid.feature.RowBodySwitchTest', function(t) {
 
     var grid;
 
-    t.beforeEach(function() {
-        grid = Ext.create('Ext.grid.Panel', {
+    var getGrid = function(disabled) {
+
+        return Ext.create('Ext.grid.Panel', {
 
             renderTo : document.body,
 
@@ -35,6 +36,7 @@ describe('conjoon.cn_comp.grid.feature.RowBodySwitchTest', function(t) {
             height : 200,
 
             features : [{
+                disabled           : !!disabled,
                 ftype              : 'cn_comp-gridfeature-rowbodyswitch',
                 id                 : 'rowbodyswitchfeature',
                 getAdditionalData  : function (data, idx, record, orig) {
@@ -80,14 +82,10 @@ describe('conjoon.cn_comp.grid.feature.RowBodySwitchTest', function(t) {
             }]
 
         });
-    });
 
-    t.afterEach(function() {
-        if (grid) {
-            grid.destroy();
-            grid = null;
-        }
-    });
+
+    };
+
 
 
 
@@ -99,7 +97,8 @@ describe('conjoon.cn_comp.grid.feature.RowBodySwitchTest', function(t) {
 
 
         t.it('test class and configuration', function(t) {
-            var feature = grid.view.getFeature('rowbodyswitchfeature');
+            var grid    = getGrid(false),
+                feature = grid.view.getFeature('rowbodyswitchfeature');
 
             t.isInstanceOf(feature, 'conjoon.cn_comp.grid.feature.RowBodySwitch');
 
@@ -108,11 +107,13 @@ describe('conjoon.cn_comp.grid.feature.RowBodySwitchTest', function(t) {
             t.expect(feature.enableCls).toContain('cn_comp-rowbodyswitch-enable');
             t.expect(feature.disableCls).toContain('cn_comp-rowbodyswitch-disable');
 
+            grid.destroy();
         });
 
 
-        t.it('enable()/disable()()', function(t) {
-            var feature = grid.view.getFeature('rowbodyswitchfeature'),
+        t.it('enable()/disable()', function(t) {
+            var grid    = getGrid(false),
+                feature = grid.view.getFeature('rowbodyswitchfeature'),
                 columns = grid.getColumns();
 
             t.expect(feature.columnConfig).toEqual({
@@ -123,6 +124,9 @@ describe('conjoon.cn_comp.grid.feature.RowBodySwitchTest', function(t) {
 
             t.expect(feature.disabled).toBeFalsy();
             t.expect(feature.getAdditionalData(null, null, {get:function(){return 'a';}})).toBeDefined();
+
+            t.expect(grid.view.hasCls(feature.enableCls)).toBe(true);
+            t.expect(grid.view.hasCls(feature.disableCls)).toBe(false);
 
             t.expect(columns[0].isVisible()).toBe(false);
             t.expect(columns[0].dataIndex).toBe('isRead');
@@ -138,7 +142,7 @@ describe('conjoon.cn_comp.grid.feature.RowBodySwitchTest', function(t) {
             t.expect(feature.getAdditionalData()).toBeUndefined();
 
 
-            grid.headerCt.move(1, 0); 
+            grid.headerCt.move(1, 0);
             columns = grid.getColumns();
             columns[0].setVisible(true);
             columns[1].setVisible(false);
@@ -149,6 +153,8 @@ describe('conjoon.cn_comp.grid.feature.RowBodySwitchTest', function(t) {
             t.expect(columns[2].dataIndex).toBe('to');
 
             feature.enable();
+            t.expect(grid.view.hasCls(feature.enableCls)).toBe(true);
+            t.expect(grid.view.hasCls(feature.disableCls)).toBe(false);
             columns = grid.getColumns();
             t.expect(columns[0].dataIndex).toBe('isRead');
             t.expect(columns[1].dataIndex).toBe('subject');
@@ -158,15 +164,31 @@ describe('conjoon.cn_comp.grid.feature.RowBodySwitchTest', function(t) {
             t.expect(columns[2].isVisible()).toBe(true);
 
             feature.disable();
+            t.expect(grid.view.hasCls(feature.enableCls)).toBe(false);
+            t.expect(grid.view.hasCls(feature.disableCls)).toBe(true);
             columns = grid.getColumns();
             t.expect(columns[0].isVisible()).toBe(true);
             t.expect(columns[1].isVisible()).toBe(false);
             t.expect(columns[2].isVisible()).toBe(true);
 
+            grid.destroy();
+        });
+
+        t.it('featured initially disabled', function(t) {
+
+            var grid    = getGrid(true),
+                feature = grid.view.getFeature('rowbodyswitchfeature');
+
+            t.expect(feature.disabled).toBe(true);
+
+            t.expect(grid.view.hasCls(feature.enableCls)).toBe(false);
+            t.expect(grid.view.hasCls(feature.disableCls)).toBe(true);
+
+            grid.destroy();
 
         });
-    });
 
+    });
 
 
 });
