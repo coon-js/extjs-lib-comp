@@ -125,6 +125,8 @@ describe('conjoon.cn_comp.grid.feature.RowBodySwitchTest', function(t) {
             t.expect(feature.disabled).toBeFalsy();
             t.expect(feature.getAdditionalData(null, null, {get:function(){return 'a';}})).toBeDefined();
 
+            t.expect(grid.getHideHeaders()).toBe(true);
+
             t.expect(grid.view.hasCls(feature.enableCls)).toBe(true);
             t.expect(grid.view.hasCls(feature.disableCls)).toBe(false);
 
@@ -180,6 +182,8 @@ describe('conjoon.cn_comp.grid.feature.RowBodySwitchTest', function(t) {
                 feature = grid.view.getFeature('rowbodyswitchfeature');
 
             t.expect(feature.disabled).toBe(true);
+
+            t.expect(grid.getHideHeaders()).toBeFalsy();
 
             t.expect(grid.view.hasCls(feature.enableCls)).toBe(false);
             t.expect(grid.view.hasCls(feature.disableCls)).toBe(true);
