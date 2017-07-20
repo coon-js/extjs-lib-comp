@@ -235,15 +235,29 @@ Ext.define('conjoon.cn_comp.grid.feature.RowBodySwitch', {
             columnConfig = {},
             col;
 
-
         for (var i = 0, len = columns.length; i < len; i++) {
             col = columns[i];
 
             columnConfig[col.dataIndex] = {
                 visible : col.rendered
-                    ? col.isVisible()
-                    : col.visible !== false
+                         ? col.isVisible()
+                         : col.visible !== false,
+                width : col.rendered
+                        ? col.getWidth() == 0
+                          ? undefined
+                          : col.getWidth()
+                        : col.width
+                          ? col.width
+                          : undefined
             };
+
+            if (columnConfig[col.dataIndex].width === undefined) {
+                delete columnConfig[col.dataIndex].width;
+            }
+            if (!col.rendered && col.flex) {
+                delete columnConfig[col.dataIndex].width;
+                columnConfig[col.dataIndex].flex = col.flex;
+            }
         }
 
         me.columnConfig = columnConfig;
@@ -271,7 +285,8 @@ Ext.define('conjoon.cn_comp.grid.feature.RowBodySwitch', {
             columns      = grid.getColumns(),
             col          = null,
             dataIndex    = null,
-            restoreCount = 0;
+            restoreCount = 0,
+            configCol;
 
         for (dataIndex in columnConfig) {
             if (!columnConfig.hasOwnProperty(dataIndex)) {
@@ -294,9 +309,15 @@ Ext.define('conjoon.cn_comp.grid.feature.RowBodySwitch', {
 
         columns = grid.getColumns();
         for (var i = 0, len = columns.length; i < len; i++) {
-            col = columns[i];
-            if (columnConfig[col.dataIndex].visible === false) {
+            col       = columns[i];
+            configCol = columnConfig[col.dataIndex];
+            if (configCol.visible === false) {
                 col.setVisible(false);
+            }
+            if (configCol.flex !== undefined) {
+                col.setFlex(configCol.flex);
+            } else if (configCol.width !== undefined) {
+                col.setWidth(configCol.wdth);
             }
         }
 

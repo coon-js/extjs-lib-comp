@@ -32,7 +32,7 @@ describe('conjoon.cn_comp.grid.feature.RowBodySwitchTest', function(t) {
 
             extend : 'Ext.grid.Panel',
 
-            width  : 400,
+            width  : 510,
             height : 200,
 
             features : [{
@@ -54,7 +54,7 @@ describe('conjoon.cn_comp.grid.feature.RowBodySwitchTest', function(t) {
                 previewColumnConfig : {
                     'isRead'  : {visible : false},
                     'subject' : {visible : false},
-                    'to'      : {}
+                    'to'      : {flex : 1}
                 }
             }],
 
@@ -71,10 +71,12 @@ describe('conjoon.cn_comp.grid.feature.RowBodySwitchTest', function(t) {
 
             columns : [{
                 text      : 'Read',
-                dataIndex : 'isRead'
+                dataIndex : 'isRead',
+                flex      : 1
             }, {
                 text      : 'Subject',
-                dataIndex : 'subject'
+                dataIndex : 'subject',
+                flex      : 1
             }, {
                 text      : 'To',
                 dataIndex : 'to',
@@ -114,12 +116,13 @@ describe('conjoon.cn_comp.grid.feature.RowBodySwitchTest', function(t) {
         t.it('enable()/disable()', function(t) {
             var grid    = getGrid(false),
                 feature = grid.view.getFeature('rowbodyswitchfeature'),
-                columns = grid.getColumns();
+                columns = grid.getColumns(),
+                recalcWidth;
 
             t.expect(feature.columnConfig).toEqual({
-                isRead  : {visible : true},
-                subject : {visible : true},
-                to      : {visible : false}
+                isRead  : {visible : true, flex : 1},
+                subject : {visible : true, flex : 1},
+                to      : {visible : false, width : columns[2].defaultWidth}
             });
 
             t.expect(feature.disabled).toBeFalsy();
@@ -131,6 +134,8 @@ describe('conjoon.cn_comp.grid.feature.RowBodySwitchTest', function(t) {
             t.expect(grid.view.hasCls(feature.disableCls)).toBe(false);
 
             t.expect(columns[0].isVisible()).toBe(false);
+            t.expect(columns[0].isVisible()).toBe(false);
+
             t.expect(columns[0].dataIndex).toBe('isRead');
 
             t.expect(columns[1].isVisible()).toBe(false);
@@ -138,17 +143,21 @@ describe('conjoon.cn_comp.grid.feature.RowBodySwitchTest', function(t) {
 
             t.expect(columns[2].isVisible()).toBe(true);
             t.expect(columns[2].dataIndex).toBe('to');
+            t.expect(columns[2].flex).toBe(1);
+
 
             feature.disable();
             t.expect(feature.disabled).toBeTruthy();
             t.expect(feature.getAdditionalData()).toBeUndefined();
-
 
             grid.headerCt.move(1, 0);
             columns = grid.getColumns();
             columns[0].setVisible(true);
             columns[1].setVisible(false);
             columns[2].setVisible(true);
+
+            columns[2].setWidth(210);
+            recalcWidth = columns[2].getWidth();
 
             t.expect(columns[0].dataIndex).toBe('subject');
             t.expect(columns[1].dataIndex).toBe('isRead');
@@ -172,6 +181,7 @@ describe('conjoon.cn_comp.grid.feature.RowBodySwitchTest', function(t) {
             t.expect(columns[0].isVisible()).toBe(true);
             t.expect(columns[1].isVisible()).toBe(false);
             t.expect(columns[2].isVisible()).toBe(true);
+            t.expect(columns[2].getWidth()).toBe(recalcWidth);
 
             grid.destroy();
         });
