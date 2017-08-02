@@ -98,6 +98,12 @@ Ext.define('conjoon.cn_comp.component.LoadMask', {
      */
     glyphCls : '',
 
+    /**
+     * Number between 0 and 1 to start the progress bar with.
+     * @type {Float} progress
+     */
+    progress : 0,
+
     renderTpl: [
         '<div id="{id}-msgWrapEl" data-ref="msgWrapEl" class="{[values.$comp.msgWrapCls]}" role="presentation">',
         '<div class="badge {glyphCls}"></div><div style="width:{msgWidth}px">',
@@ -129,6 +135,17 @@ Ext.define('conjoon.cn_comp.component.LoadMask', {
 
 
     /**
+     * @inheritdoc
+     */
+    afterRender : function() {
+        var me = this;
+
+        me.callParent(arguments);
+
+        me.updateProgress(me.progress);
+    },
+
+    /**
      * Updates this elements msgActionEl with the provided text.
      *
      * @param {String} value
@@ -149,12 +166,19 @@ Ext.define('conjoon.cn_comp.component.LoadMask', {
      * the value should be any number between 0 and 1
      *
      * @param {Number} value
+     * @param {Boolean} internal Whether this method was called internally.
+     * If not submitted or set to false, this value will stop any timers
+     * previously created by #loopProgress
      *
      * @return {conjoon.cn_comp.component.LoadMask}
      */
-    updateProgress: function(value) {
+    updateProgress: function(value, isInternal) {
         var me    = this,
             value = value || 0;
+
+        if (isInternal !== true) {
+            me.clearTimer();
+        }
 
         me.bar.setStyle('width', (value * 100) + '%');
 
@@ -187,15 +211,15 @@ Ext.define('conjoon.cn_comp.component.LoadMask', {
         if (!me.waitTimer) {
             config = config || {};
 
-            interval  = config.interval ||  1000;
-            increment = config.increment || 1000;
+            interval  = config.interval ||  500;
+            increment = config.increment || 10;
 
             me.setTransitionDuration(interval/1000);
 
             me.waitTimer = Ext.TaskManager.start({
                 run: function(i) {
                     me.updateProgress(
-                        me.calculatePercFromTask(increment, i)
+                        me.calculatePercFromTask(increment, i), true
                     );
                 },
                 interval : interval,
@@ -281,7 +305,8 @@ Ext.define('conjoon.cn_comp.component.LoadMask', {
      * @private
      */
     calculatePercFromTask : function(increment, iteration) {
-        var seg     = ((--iteration + increment) % increment ) + 1,
+
+        var seg     = ((iteration - 1) % (increment + 1)),
             segPerc = (100 / increment);
 
         return (seg * segPerc) * 0.01;

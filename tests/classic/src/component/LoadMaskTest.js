@@ -100,8 +100,10 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
             }),
             node, m;
 
+        t.isCalled('clearTimer', w);
+
         node = Ext.dom.Query.selectNode('div[data-ref=bar]', w.el.dom);
-        t.expect(node.style.width).toBe("");
+        t.expect(node.style.width).toBe("0%");
 
         m = w.updateProgress(0.5);
         t.expect(node.style.width).toBe("50%");
@@ -123,6 +125,7 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
 
         t.isCalledOnce('setTransitionDuration', w);
         t.isCalled('updateProgress', w);
+        t.isntCalled('clearTimer', w);
         t.isCalled('calculatePercFromTask', w);
         m = w.loopProgress({increment: 50, interval : 100});
 
@@ -132,9 +135,8 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
 
         t.isObject(w.waitTimer);
 
-
-        t.waitForMs(200, function() {
-            w.clearTimer();
+        t.waitForMs(500, function() {
+            // set timeout so tests can pass
         });
 
     });
@@ -252,7 +254,19 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
             target : panel
         });
 
-        t.expect(w.calculatePercFromTask(10, 5)).toBe(0.5);
+        t.expect(w.calculatePercFromTask(10, 1)).toBe(0);
+        t.expect(w.calculatePercFromTask(10, 2)).toBe(0.1);
+        t.expect(w.calculatePercFromTask(10, 3)).toBe(0.2);
+        t.expect(w.calculatePercFromTask(10, 4)).toBe(0.3);
+        t.expect(w.calculatePercFromTask(10, 5)).toBe(0.4);
+        t.expect(w.calculatePercFromTask(10, 6)).toBe(0.5);
+        t.expect(w.calculatePercFromTask(10, 7)).toBe(0.6);
+        t.expect(w.calculatePercFromTask(10, 8)).toBeGreaterThan(0.7);
+        t.expect(w.calculatePercFromTask(10, 8)).toBeLessThan(0.8);
+        t.expect(w.calculatePercFromTask(10, 9)).toBe(0.8);
+        t.expect(w.calculatePercFromTask(10, 10)).toBe(0.9);
+        t.expect(w.calculatePercFromTask(10, 11)).toBe(1);
+        t.expect(w.calculatePercFromTask(10, 12)).toBe(0);
     });
 
 
@@ -279,6 +293,35 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
         t.expect(node.style.transitionDuration).toBe('12s');
         w.setTransitionDuration(0.5);
         t.expect(node.style.transitionDuration).toBe('0.5s');
+
+    });
+
+
+    t.it('Should start with specified progress', function(t) {
+        var w = Ext.create('conjoon.cn_comp.component.LoadMask', {
+                target    : panel,
+                progress  : 0.3
+            }),
+            node, m;
+
+        node = Ext.dom.Query.selectNode('div[data-ref=bar]', w.el.dom);
+        t.expect(node.style.width).toBe("30%");
+    });
+
+
+    t.it('Manual call to updateProcess() should stop loop timer', function(t) {
+        var w = Ext.create('conjoon.cn_comp.component.LoadMask', {
+                target    : panel
+            }),
+            m, node;
+
+        w.loopProgress({increment: 50, interval : 100});
+
+        t.isCalled('clearTimer', w);
+
+        t.waitForMs(200, function() {
+            w.updateProgress(1);
+        });
 
     });
 
