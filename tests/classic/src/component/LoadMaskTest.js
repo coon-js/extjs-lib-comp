@@ -325,4 +325,20 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
 
     });
 
+
+    t.it('updateMsg()', function(t) {
+        var w = Ext.create('conjoon.cn_comp.component.LoadMask', {
+                target : panel,
+                msg    : 'foo'
+            }),
+            node, m;
+
+        node = Ext.dom.Query.selectNode('div[data-ref=msgTextEl]', w.el.dom);
+        t.expect(node.innerHTML).toBe('foo');
+
+        m = w.updateMsg('bar');
+        t.expect(node.innerHTML).toBe('bar');
+        t.expect(m).toBe(w);
+    });
+
 });

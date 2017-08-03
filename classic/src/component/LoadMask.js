@@ -145,6 +145,7 @@ Ext.define('conjoon.cn_comp.component.LoadMask', {
         me.updateProgress(me.progress);
     },
 
+
     /**
      * Updates this elements msgActionEl with the provided text.
      *
@@ -160,6 +161,21 @@ Ext.define('conjoon.cn_comp.component.LoadMask', {
         return me;
     },
 
+
+    /**
+     * Updates this elements msgEl with the provided text.
+     *
+     * @param {String} value
+     *
+     * @return {conjoon.cn_comp.component.LoadMask}
+     */
+    updateMsg : function(value) {
+        var me = this;
+
+        me.msgTextEl.setHtml(value);
+
+        return me;
+    },
 
     /**
      * Updates the progress bar's width with the specified value, wheres
