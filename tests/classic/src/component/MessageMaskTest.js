@@ -23,7 +23,16 @@
 describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
     var panel,
-        mask;
+        mask,
+        getTextField = function(dom) {
+            var field = Ext.dom.Query.select('div[class=textInput] > input[type=text]', dom);
+            if (field.length) {
+                return field[0];
+            }
+
+            return null;
+        };
+
 
     t.beforeEach(function() {
         panel = Ext.create('Ext.Panel', {
@@ -60,6 +69,7 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
         t.expect(conjoon.cn_comp.component.MessageMask.QUESTION).toBeDefined();
         t.expect(conjoon.cn_comp.component.MessageMask.OK).toBeDefined();
         t.expect(conjoon.cn_comp.component.MessageMask.ERROR).toBeDefined();
+        t.expect(conjoon.cn_comp.component.MessageMask.OKCANCEL).toBeDefined();
 
         t.isInstanceOf(mask, 'Ext.LoadMask');
 
@@ -73,9 +83,10 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
         t.expect(mask.buttonIds[0]).toBe('yesButton');
         t.expect(mask.buttonIds[1]).toBe('noButton');
         t.expect(mask.buttonIds[2]).toBe('okButton');
+        t.expect(mask.buttonIds[3]).toBe('cancelButton');
 
         t.expect(mask.buttonText).toEqual({
-            yes : 'Yes', no : 'No', ok : 'Ok'
+            yes : 'Yes', no : 'No', ok : 'Ok', cancel : 'Cancel'
         });
     });
 
@@ -93,13 +104,17 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
         nodes = Ext.dom.Query.select('span[role=button]', mask.el.dom);
 
-        t.expect(nodes.length).toBe(3);
+        t.expect(nodes.length).toBe(4);
 
-        ids = [nodes[0].id, nodes[1].id, nodes[2].id];
+        ids = [nodes[0].id, nodes[1].id, nodes[2].id, nodes[3].id];
 
         t.expect(ids).toContain(mask.getId() + '-' + 'yesButton');
         t.expect(ids).toContain(mask.getId() + '-' + 'noButton');
         t.expect(ids).toContain(mask.getId() + '-' + 'okButton');
+        t.expect(ids).toContain(mask.getId() + '-' + 'cancelButton');
+
+        var textField = getTextField(mask.el.dom);
+        t.expect(textField).not.toBe(null);
 
     });
 
@@ -118,17 +133,41 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
     t.it('initRenderData()', function(t) {
         mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
             target      : panel,
-            buttonText  : {yes : 'foo', no : 'bar'},
+            buttonText  : {yes : 'foo', no : 'bar', ok : 'test', cancel : 'abort'},
             message     : 'snafu',
-            icon        : 'barfoo'
+            icon        : 'barfoo',
+            input       : {emptyText : 'foobar'}
         }),
         result = mask.initRenderData();
 
         t.expect(result.glyphCls).toBe('barfoo');
         t.expect(result.message).toBe('snafu');
-        t.expect(result.yes).toEqual('foo');
-        t.expect(result.no).toEqual('bar');
+        t.expect(result.yes).toBe('foo');
+        t.expect(result.no).toBe('bar');
+        t.expect(result.ok).toBe('test');
+        t.expect(result.cancel).toEqual('abort');
+        t.expect(result.emptyText).toEqual('foobar');
 
+        mask.destroy();
+
+        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+                target : panel,
+                input  : true
+            }),
+            result = mask.initRenderData();
+
+        t.expect(result.emptyText).toEqual('');
+
+        mask.destroy();
+
+        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+                target : panel
+            }),
+            result = mask.initRenderData();
+
+        t.expect(result.emptyText).toEqual('');
+
+        mask.destroy();
     });
 
 
@@ -180,7 +219,7 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
         t.expect(exc).toBeDefined();
         t.expect(exc.msg).toContain("no value found");
 
-        t.expect(mask.buttonIds.length).toBe(3);
+        t.expect(mask.buttonIds.length).toBe(4);
 
         t.expect(res).toBeUndefined();
         res = mask.getButtonIdForIndex(0);
@@ -191,6 +230,9 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
         res = mask.getButtonIdForIndex(2);
         t.expect(res).toBe('okButton');
+
+        res = mask.getButtonIdForIndex(3);
+        t.expect(res).toBe('cancelButton');
     });
 
 
@@ -230,6 +272,19 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
         t.isCalledOnce('getButtonIdForIndex', mask);
 
         mask.onClick(null, {id : 'foo-okButton', tagName : 'span'});
+    });
+
+
+    t.it('cancelButton onClick()', function(t) {
+
+        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+            target : panel
+        });
+
+        t.isCalledOnce('handleButtonClick',   mask);
+        t.isCalledOnce('getButtonIdForIndex', mask);
+
+        mask.onClick(null, {id : 'foo-cancelButton', tagName : 'span'});
     });
 
 
@@ -297,9 +352,11 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
             target  : panel
         });
 
+        t.expect(getTextField(mask.el.dom).parentNode.style.display).toBe('none');
         t.expect(Ext.dom.Query.select("span[data-ref=yesButton]")[0].parentNode.style.display).not.toBe('none');
         t.expect(Ext.dom.Query.select("span[data-ref=noButton]")[0].parentNode.style.display).not.toBe('none');
         t.expect(Ext.dom.Query.select("span[data-ref=okButton]")[0].parentNode.style.display).toBe('none');
+        t.expect(Ext.dom.Query.select("span[data-ref=cancelButton]")[0].parentNode.style.display).toBe('none');
 
         mask.close();
     });
@@ -312,11 +369,119 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
             target  : panel
         });
 
+        t.expect(getTextField(mask.el.dom).parentNode.style.display).toBe('none');
         t.expect(Ext.dom.Query.select("span[data-ref=yesButton]")[0].parentNode.style.display).toBe('none');
         t.expect(Ext.dom.Query.select("span[data-ref=noButton]")[0].parentNode.style.display).toBe('none');
         t.expect(Ext.dom.Query.select("span[data-ref=okButton]")[0].parentNode.style.display).not.toBe('none');
+        t.expect(Ext.dom.Query.select("span[data-ref=cancelButton]")[0].parentNode.style.display).toBe('none');
 
         mask.close();
     });
 
+
+    t.it('button visibility - OKCANCEL', function(t) {
+
+        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+            buttons : conjoon.cn_comp.component.MessageMask.OKCANCEL,
+            target  : panel
+        });
+
+        t.expect(getTextField(mask.el.dom).parentNode.style.display).toBe('none');
+        t.expect(Ext.dom.Query.select("span[data-ref=yesButton]")[0].parentNode.style.display).toBe('none');
+        t.expect(Ext.dom.Query.select("span[data-ref=noButton]")[0].parentNode.style.display).toBe('none');
+        t.expect(Ext.dom.Query.select("span[data-ref=okButton]")[0].parentNode.style.display).not.toBe('none');
+        t.expect(Ext.dom.Query.select("span[data-ref=cancelButton]")[0].parentNode.style.display).not.toBe('none');
+
+        mask.close();
+    });
+
+
+    t.it('input visibility', function(t) {
+
+        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+            buttons : conjoon.cn_comp.component.MessageMask.OKCANCEL,
+            target  : panel,
+            input   : true
+        });
+
+        t.expect(getTextField(mask.el.dom).parentNode.style.display).not.toBe('none');
+
+        mask.close();
+    });
+
+
+    t.it('input w/ callback (click)', function(t) {
+
+        var BUTTONID, VALUE,
+            func = function(btnId, value) {
+                BUTTONID = btnId;
+                VALUE    = value;
+            };
+
+        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+            buttons  : conjoon.cn_comp.component.MessageMask.OKCANCEL,
+            target   : panel,
+            input    : {emptyText : 'foobar'},
+            callback : func
+        });
+
+        mask.show();
+
+        t.expect(getTextField(mask.el.dom).placeholder).toBe('foobar');
+
+        getTextField(mask.el.dom).value = 'barfoo';
+
+        t.click("span[data-ref=okButton]");
+
+        t.expect(BUTTONID).toBe('okButton');
+        t.expect(VALUE).toBe('barfoo');
+
+        t.expect(mask.destroyed).toBe(true);
+    });
+
+
+    t.it('input w/ callback (keyevent)', function(t) {
+
+        var BUTTONID, VALUE,
+            func = function(btnId, value) {
+                BUTTONID = btnId;
+                VALUE    = value;
+            };
+
+        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+            buttons  : conjoon.cn_comp.component.MessageMask.OKCANCEL,
+            target   : panel,
+            input    : {emptyText : 'foobar'},
+            callback : func
+        });
+
+        mask.show();
+
+        t.expect(getTextField(mask.el.dom).placeholder).toBe('foobar');
+
+        getTextField(mask.el.dom).value = 'barfoo';
+
+        t.keyPress(getTextField(mask.el.dom), "ENTER");
+
+        t.expect(BUTTONID).toBe('okButton');
+        t.expect(VALUE).toBe('barfoo');
+
+        t.expect(mask.destroyed).toBe(true);
+    });
+
+
+    t.it('textfield focus', function(t) {
+
+        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+            buttons  : conjoon.cn_comp.component.MessageMask.OKCANCEL,
+            target   : panel,
+            input    : true
+        });
+
+        mask.show();
+
+        t.waitForMs(500, function() {
+            t.expect(getTextField(mask.el.dom)).toBe(document.activeElement);
+        });
+    });
 });

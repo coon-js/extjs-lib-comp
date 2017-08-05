@@ -74,6 +74,12 @@ Ext.define('conjoon.cn_comp.component.MessageMask', {
         OK : 2,
 
         /**
+         * Button Config for showing "Ok" and "Cancel" button.
+         * @type {Number} [OKCANCEL=3]
+         */
+        OKCANCEL : 3,
+
+        /**
          * Glyph cls for Question mark
          * @type {String} [QUESTION=fa fa-question-circle]
          */
@@ -90,7 +96,9 @@ Ext.define('conjoon.cn_comp.component.MessageMask', {
     childEls: [
         'yesButton',
         'noButton',
-        'okButton'
+        'okButton',
+        'cancelButton',
+        'textfield'
     ],
 
     renderTpl: [
@@ -103,10 +111,12 @@ Ext.define('conjoon.cn_comp.component.MessageMask', {
         Ext.baseCSSPrefix, 'mask-msg-text',
         '{childElCls}" role="presentation">{msg}</div>',
         '<div class="message">{message}</div>',
+        '<div class="textInput"><input type="text" id="{id}-textfield" data-ref="textfield" class="x-form-text-default" placeholder="{emptyText}"/></div>',
         '<div class="actionBox">',
         '<div class="left"><span data-ref="yesButton" id="{id}-yesButton" class="button" role="button">{yes}</span></div>',
         '<div class="right"><span data-ref="noButton" id="{id}-noButton" class="button" role="button">{no}</span></div>',
-        '<div class="center"><span data-ref="okButton" id="{id}-okButton" class="button" role="button">{ok}</span></div>',
+        '<div class="left"><span data-ref="okButton" id="{id}-okButton" class="button" role="button">{ok}</span></div>',
+        '<div class="right"><span data-ref="cancelButton" id="{id}-cancelButton" class="button" role="button">{cancel}</span></div>',
         '</div>',
         '</div>',
         '</div>'
@@ -116,6 +126,15 @@ Ext.define('conjoon.cn_comp.component.MessageMask', {
 
     msg : undefined,
 
+
+    /**
+     * @cfg {Boolean/Object} true to show an input field. It's value will be
+     * submitted to the configured callback as the second parameter. Optional,
+     * an object with an "emptyText" value which will be shown as the placeholder
+     * in the input field.
+     */
+    input : null,
+
     /**
      * An object containing the default button text strings.
      * @cfg {Object} buttonText
@@ -123,7 +142,8 @@ Ext.define('conjoon.cn_comp.component.MessageMask', {
     buttonText: {
         yes    : 'Yes',
         no     : 'No',
-        ok     : 'Ok'
+        ok     : 'Ok',
+        cancel : 'Cancel'
     },
 
     /**
@@ -133,12 +153,14 @@ Ext.define('conjoon.cn_comp.component.MessageMask', {
      * @cfg {Array} buttonIds
      */
     buttonIds : [
-        'yesButton', 'noButton', 'okButton'
+        'yesButton', 'noButton', 'okButton', 'cancelButton'
     ],
 
     /**
-     * A callback function to call whenever a button is clicked.
-     * @cfg {Function} confirmCallback
+     * A callback function to call whenever a button is clicked. First argument
+     * passed to the method is the button-id that was clicked, second argument is
+     * the value of the #input field, if any was rendered.
+     * @cfg {Function} callback
      */
     callback : undefined,
 
@@ -180,9 +202,14 @@ Ext.define('conjoon.cn_comp.component.MessageMask', {
             result = me.callParent(arguments);
 
         // buttons
-        result.yes = me.buttonText.yes;
-        result.no  = me.buttonText.no;
-        result.ok  = me.buttonText.ok;
+        result.yes    = me.buttonText.yes;
+        result.no     = me.buttonText.no;
+        result.ok     = me.buttonText.ok;
+        result.cancel = me.buttonText.cancel;
+
+        result.emptyText = Ext.isObject(me.input) && me.input.emptyText
+                           ? me.input.emptyText
+                           : '';
 
         // texts
         result.message = me.message;
@@ -209,14 +236,27 @@ Ext.define('conjoon.cn_comp.component.MessageMask', {
 
         switch (me.buttons) {
             case me.statics().YESNO:
-                me.okButton.dom.parentNode.style.display = "none";
+                me.okButton.dom.parentNode.style.display     = "none";
+                me.cancelButton.dom.parentNode.style.display = "none";
                 break;
 
             case me.statics().OK:
+                me.yesButton.dom.parentNode.style.display    = "none";
+                me.noButton.dom.parentNode.style.display     = "none";
+                me.cancelButton.dom.parentNode.style.display = "none";
+                break;
+
+            case me.statics().OKCANCEL:
                 me.yesButton.dom.parentNode.style.display = "none";
                 me.noButton.dom.parentNode.style.display  = "none";
                 break;
+        }
 
+        if (me.input) {
+            me.textfield.focus(100);
+            me.mon(me.textfield, 'keydown', me.handleTextFieldKeyDown, me);
+        } else {
+            me.textfield.dom.parentNode.style.display = "none";
         }
     },
 
@@ -224,18 +264,21 @@ Ext.define('conjoon.cn_comp.component.MessageMask', {
     /**
      * Handles a "button" click. The argument passed to the #callback, if any
      * defined for this instance, is the button type that was clicked, thus any
-     * of #buttonIds. Any button click will close this mask.
+     * of #buttonIds. Additionally, if #input was specified and the textfield
+     * was rendered, the value of this field will be submitted as the second
+     * argument.
      *
      * @param {String} type
+     * @param {String} inputValue
      *
      * @see close
      * @private
      */
-    handleButtonClick : function(type) {
+    handleButtonClick : function(type, inputValue) {
         var me = this;
 
         if (me.callback) {
-            me.callback.apply(me.scope, [type]);
+            me.callback.apply(me.scope, arguments);
         }
 
         me.close();
@@ -285,10 +328,16 @@ Ext.define('conjoon.cn_comp.component.MessageMask', {
              * @type {string[]}
              */
             originalIds = me.buttonIds,
-            elId        = originalIds.indexOf(id);
+            elId        = originalIds.indexOf(id),
+            args;
 
         if (el.tagName.toLowerCase() == 'span' && elId !== -1) {
-            me.handleButtonClick(me.getButtonIdForIndex(elId));
+            args = [me.getButtonIdForIndex(elId)];
+
+            if (me.input) {
+                args.push(me.textfield.dom.value);
+            }
+            me.handleButtonClick.apply(me, args);
         }
 
     },
@@ -326,6 +375,29 @@ Ext.define('conjoon.cn_comp.component.MessageMask', {
     /**
      * no store functionality
      */
-    onBeforeLoad : Ext.emptyFn
+    onBeforeLoad : Ext.emptyFn,
+
+    privates : {
+
+        /**
+         * Callback for the textfields "keydown" event, if the textfield was renderd.
+         * Will treat the "enter" key like a click on the okButton.
+         *
+         * @param {Ext.event.Event} evt
+         * @param {HTMLElement} source
+         *
+         * @see handleButtonClick
+         */
+        handleTextFieldKeyDown : function(evt, source) {
+
+            var me = this;
+
+            if (evt.keyCode === Ext.event.Event.ENTER) {
+                me.handleButtonClick('okButton', source.value);
+            }
+
+        }
+
+    }
 
 });
