@@ -289,4 +289,34 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
         t.expect(mask.onBeforeLoad).toBe(Ext.emptyFn);
     });
 
+
+    t.it('button visibility - YESNO', function(t) {
+
+        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+            buttons : conjoon.cn_comp.component.MessageMask.YESNO,
+            target  : panel
+        });
+
+        t.expect(Ext.dom.Query.select("span[data-ref=yesButton]")[0].parentNode.style.display).not.toBe('none');
+        t.expect(Ext.dom.Query.select("span[data-ref=noButton]")[0].parentNode.style.display).not.toBe('none');
+        t.expect(Ext.dom.Query.select("span[data-ref=okButton]")[0].parentNode.style.display).toBe('none');
+
+        mask.close();
+    });
+
+
+    t.it('button visibility - OK', function(t) {
+
+        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+            buttons : conjoon.cn_comp.component.MessageMask.OK,
+            target  : panel
+        });
+
+        t.expect(Ext.dom.Query.select("span[data-ref=yesButton]")[0].parentNode.style.display).toBe('none');
+        t.expect(Ext.dom.Query.select("span[data-ref=noButton]")[0].parentNode.style.display).toBe('none');
+        t.expect(Ext.dom.Query.select("span[data-ref=okButton]")[0].parentNode.style.display).not.toBe('none');
+
+        mask.close();
+    });
+
 });
