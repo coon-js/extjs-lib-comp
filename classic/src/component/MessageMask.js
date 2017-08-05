@@ -65,15 +65,33 @@ Ext.define('conjoon.cn_comp.component.MessageMask', {
          * Button Config for showing "Yes"/"No" buttons.
          * @type {Number} [YESNO=1]
          */
-        YESNO    : 1,
+        YESNO : 1,
+
+        /**
+         * Button Config for showing "Ok" button.
+         * @type {Number} [OK=2]
+         */
+        OK : 2,
 
         /**
          * Glyph cls for Question mark
          * @type {String} [QUESTION=fa fa-question-circle]
          */
-        QUESTION : 'fa fa-question-circle'
+        QUESTION : 'fa fa-question-circle',
+
+        /**
+         * Glyph cls for Exclamation mark
+         * @type {String} [ERROR=fa fa-exclamation-circle]
+         */
+        ERROR : 'fa fa-exclamation-circle'
 
     },
+
+    childEls: [
+        'yesButton',
+        'noButton',
+        'okButton'
+    ],
 
     renderTpl: [
         '<div id="{id}-msgWrapEl" data-ref="msgWrapEl" class="{[values.$comp.msgWrapCls]}" role="presentation">',
@@ -86,8 +104,9 @@ Ext.define('conjoon.cn_comp.component.MessageMask', {
         '{childElCls}" role="presentation">{msg}</div>',
         '<div class="message">{message}</div>',
         '<div class="actionBox">',
-        '<div class="left"><span  id="{id}-yes" class="button" role="button">{yes}</span></div>',
-        '<div class="right"><span id="{id}-no" class="button" role="button">{no}</span></div>',
+        '<div class="left"><span data-ref="yesButton" id="{id}-yesButton" class="button" role="button">{yes}</span></div>',
+        '<div class="right"><span data-ref="noButton" id="{id}-noButton" class="button" role="button">{no}</span></div>',
+        '<div class="center"><span data-ref="okButton" id="{id}-okButton" class="button" role="button">{ok}</span></div>',
         '</div>',
         '</div>',
         '</div>'
@@ -103,7 +122,8 @@ Ext.define('conjoon.cn_comp.component.MessageMask', {
      */
     buttonText: {
         yes    : 'Yes',
-        no     : 'No'
+        no     : 'No',
+        ok     : 'Ok'
     },
 
     /**
@@ -113,7 +133,7 @@ Ext.define('conjoon.cn_comp.component.MessageMask', {
      * @cfg {Array} buttonIds
      */
     buttonIds : [
-        'yes', 'no'
+        'yesButton', 'noButton', 'okButton'
     ],
 
     /**
@@ -160,8 +180,9 @@ Ext.define('conjoon.cn_comp.component.MessageMask', {
             result = me.callParent(arguments);
 
         // buttons
-        result.yes  = me.buttonText.yes;
-        result.no   = me.buttonText.no;
+        result.yes = me.buttonText.yes;
+        result.no  = me.buttonText.no;
+        result.ok  = me.buttonText.ok;
 
         // texts
         result.message = me.message;
@@ -185,6 +206,18 @@ Ext.define('conjoon.cn_comp.component.MessageMask', {
         me.callParent(arguments);
 
         me.el.on('click', me.onClick, me);
+
+        switch (me.buttons) {
+            case me.statics().YESNO:
+                me.okButton.dom.parentNode.style.display = "none";
+                break;
+
+            case me.statics().OK:
+                me.yesButton.dom.parentNode.style.display = "none";
+                me.noButton.dom.parentNode.style.display  = "none";
+                break;
+
+        }
     },
 
 
@@ -251,7 +284,7 @@ Ext.define('conjoon.cn_comp.component.MessageMask', {
              * Entries here must map the order of ids in buttonIds
              * @type {string[]}
              */
-            originalIds = ['yes', 'no'],
+            originalIds = me.buttonIds,
             elId        = originalIds.indexOf(id);
 
         if (el.tagName.toLowerCase() == 'span' && elId !== -1) {

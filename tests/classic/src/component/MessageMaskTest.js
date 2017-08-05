@@ -58,6 +58,8 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
         t.expect(conjoon.cn_comp.component.MessageMask.YESNO).toBeDefined();
         t.expect(conjoon.cn_comp.component.MessageMask.QUESTION).toBeDefined();
+        t.expect(conjoon.cn_comp.component.MessageMask.OK).toBeDefined();
+        t.expect(conjoon.cn_comp.component.MessageMask.ERROR).toBeDefined();
 
         t.isInstanceOf(mask, 'Ext.LoadMask');
 
@@ -68,11 +70,12 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
         t.expect(mask.callback).toBeUndefined();
         t.expect(mask.scope).toBeUndefined();
 
-        t.expect(mask.buttonIds[0]).toBe('yes');
-        t.expect(mask.buttonIds[1]).toBe('no');
+        t.expect(mask.buttonIds[0]).toBe('yesButton');
+        t.expect(mask.buttonIds[1]).toBe('noButton');
+        t.expect(mask.buttonIds[2]).toBe('okButton');
 
         t.expect(mask.buttonText).toEqual({
-            yes : 'Yes', no : 'No'
+            yes : 'Yes', no : 'No', ok : 'Ok'
         });
     });
 
@@ -90,12 +93,13 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
         nodes = Ext.dom.Query.select('span[role=button]', mask.el.dom);
 
-        t.expect(nodes.length).toBe(2);
+        t.expect(nodes.length).toBe(3);
 
-        ids = [nodes[0].id, nodes[1].id];
+        ids = [nodes[0].id, nodes[1].id, nodes[2].id];
 
-        t.expect(ids).toContain(mask.getId() + '-' + 'yes');
-        t.expect(ids).toContain(mask.getId() + '-' + 'no');
+        t.expect(ids).toContain(mask.getId() + '-' + 'yesButton');
+        t.expect(ids).toContain(mask.getId() + '-' + 'noButton');
+        t.expect(ids).toContain(mask.getId() + '-' + 'okButton');
 
     });
 
@@ -176,18 +180,21 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
         t.expect(exc).toBeDefined();
         t.expect(exc.msg).toContain("no value found");
 
-        t.expect(mask.buttonIds.length).toBe(2);
+        t.expect(mask.buttonIds.length).toBe(3);
 
         t.expect(res).toBeUndefined();
         res = mask.getButtonIdForIndex(0);
-        t.expect(res).toBe('yes');
+        t.expect(res).toBe('yesButton');
 
         res = mask.getButtonIdForIndex(1);
-        t.expect(res).toBe('no');
+        t.expect(res).toBe('noButton');
+
+        res = mask.getButtonIdForIndex(2);
+        t.expect(res).toBe('okButton');
     });
 
 
-    t.it('onClick()', function(t) {
+    t.it('yesButton onClick()', function(t) {
 
         mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
             target : panel
@@ -196,11 +203,11 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
         t.isCalledOnce('handleButtonClick',   mask);
         t.isCalledOnce('getButtonIdForIndex', mask);
 
-        mask.onClick(null, {id : 'foo-yes', tagName : 'SPAN'});
+        mask.onClick(null, {id : 'foo-yesButton', tagName : 'SPAN'});
     });
 
 
-    t.it('onClick()', function(t) {
+    t.it('noButton onClick()', function(t) {
 
         mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
             target : panel
@@ -209,11 +216,24 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
         t.isCalledOnce('handleButtonClick',   mask);
         t.isCalledOnce('getButtonIdForIndex', mask);
 
-        mask.onClick(null, {id : 'foo-no', tagName : 'span'});
+        mask.onClick(null, {id : 'foo-noButton', tagName : 'span'});
     });
 
 
-    t.it('onClick()', function(t) {
+    t.it('okButton onClick()', function(t) {
+
+        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+            target : panel
+        });
+
+        t.isCalledOnce('handleButtonClick',   mask);
+        t.isCalledOnce('getButtonIdForIndex', mask);
+
+        mask.onClick(null, {id : 'foo-okButton', tagName : 'span'});
+    });
+
+
+    t.it('invalid target onClick()', function(t) {
 
         mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
             target : panel
