@@ -4,6 +4,17 @@ harness.configure({
     title          : 'lib-cn_comp Tests',
     disableCaching : true,
     loaderPath     : {
+
+        /**
+         * ux
+         */
+        'Ext.ux' : "../../../../ext/packages/ux/src/",////bryntum.com/examples/extjs-6.0.1/build/ext-all.js"
+
+        /**
+         * fixtures
+         */
+        'conjoon.cn_comp.fixtures' : './fixtures',
+
         /**
          * Classic Toolkit
          */
@@ -64,7 +75,8 @@ harness.start({
         items : [{
             group : 'feature',
             items : [
-                'classic/src/grid/feature/RowBodySwitchTest.js'
+                'classic/src/grid/feature/RowBodySwitchTest.js',
+                'classic/src/grid/feature/BufferedStoreEnhancerTest.js'
             ]
         }]
     }, {
