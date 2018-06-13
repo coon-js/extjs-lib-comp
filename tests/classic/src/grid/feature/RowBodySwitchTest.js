@@ -1,10 +1,10 @@
 /**
  * conjoon
- * (c) 2007-2017 conjoon.org
+ * (c) 2007-2018 conjoon.org
  * licensing@conjoon.org
  *
  * lib-cn_comp
- * Copyright (C) 2017 Thorsten Suckow-Homberg/conjoon.org
+ * Copyright (C) 2018 Thorsten Suckow-Homberg/conjoon.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,8 +29,6 @@ describe('conjoon.cn_comp.grid.feature.RowBodySwitchTest', function(t) {
         return Ext.create('Ext.grid.Panel', {
 
             renderTo : document.body,
-
-            extend : 'Ext.grid.Panel',
 
             width  : 510,
             height : 200,
