@@ -224,7 +224,7 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
         }); // ^^
 
 
-        t.it('updating a field which is part of a sorter should ADD to prunePageSet', function(t) {
+        t.it('updating a field which is part of a sorter and in the rendered view should NOT ADD to prunePageSet', function(t) {
 
             var grid = getGrid({
                     autoLoad : true,
@@ -238,11 +238,10 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
 
             t.waitForMs(750, function() {
 
-                store.getAt(0).set({subject : 'foo', 'testProp' : 9724224723});
+                store.getAt(0).set({subject : 'foo', 'testProp' : 5.5});
                 store.getAt(0).commit();
 
-                t.expect(feature.prunePageSet).not.toBe(null);
-                t.expect(feature.prunePageSet.length).toBeDefined();
+                t.expect(feature.prunePageSet).toBe(null);
 
                 grid.destroy();
                 grid = null;
@@ -256,7 +255,7 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
                     autoLoad : true,
                     sorters  : [{
                         property  : 'testProp',
-                        direction : 'ASC'
+                        direction : 'DESC'
                     }]
                 }),
                 view    = grid.view,
@@ -273,20 +272,20 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
                 );
                 t.expect(row.className).toContain(feature.updatedRowCls);
 
-                store.getAt(10).set('testProp', 9724);
+                store.getAt(10).set('testProp', 9998.5);
                 store.getAt(10).commit();
                 row = Ext.dom.Query.selectNode(
                     'tr[class*=x-grid-row]', view.all.item(10, true)
                 );
                 t.expect(row.className).toContain(feature.updatedRowCls);
 
-                grid.destroy();
-                grid = null;
+                //grid.destroy();
+                // grid = null;
             });
         }); // ^^
 
 
-        t.it('updating a field in the view should prune surrounding pages', function(t) {
+        t.it('updating a field of data currently in the view should prune surrounding pages', function(t) {
 
             var grid = getGrid({
                     autoLoad : true,
@@ -338,6 +337,124 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
                 grid = null;
 
             });
+        }); // ^^
+
+
+        t.it('updating a field of data NOT in the view should prune surrounding pages of rendered view', function(t) {
+
+            var grid = getGrid({
+                    autoLoad : true,
+                    sorters  : [{
+                        property  : 'testProp',
+                        direction : 'ASC'
+                    }]
+                }),
+                view    = grid.view,
+                store   = grid.getStore(),
+                pageMap = store.getData(),
+                pages   = pageMap.map,
+                countPages = function() {
+                    var length = 0, i;
+                    for (i in pages) {
+                        length++;
+                    }
+
+                    return length;
+                },
+                feature = view.getFeature('bufferedstoreenhancer'),
+                row, recToUpdate, length = 0, start, end;
+
+            t.waitForMs(750, function() {
+
+                t.expect(pages[1]).toBeDefined();
+
+                t.expect(countPages()).toBe(11);
+                recToUpdate = pages[1].value[0];
+
+                // scroll to ANOTHER record
+                grid.ensureVisible(pages[5].value[9]);
+
+                recToUpdate.set('testProp', new Date());
+                recToUpdate.commit();
+
+                t.expect(countPages()).not.toBe(11);
+                t.expect(pages[1]).not.toBeDefined();
+                t.expect(pages[5]).toBeDefined();
+
+                start = view.all.startIndex;
+                end   = view.all.endIndex;
+
+                for (var i = start; i < end; i++) {
+                    t.expect(store.getAt(i)).toBeDefined();
+                }
+
+                grid.destroy();
+                grid = null;
+
+            });
+        }); // ^^
+
+
+        t.it('updating a field in the view should re-sort in the remaining pages which are not getting pruned', function(t) {
+
+            var grid = getGrid({
+                    autoLoad : true,
+                    sorters  : [{
+                        property  : 'testProp',
+                        direction : 'ASC'
+                    }]
+                }),
+                view    = grid.view,
+                store   = grid.getStore(),
+                pageMap = store.getData(),
+                pages   = pageMap.map,
+                countPages = function() {
+                    var length = 0, i;
+                    for (i in pages) {
+                        length++;
+                    }
+
+                    return length;
+                },
+                feature = view.getFeature('bufferedstoreenhancer'),
+                row, recToUpdate, length = 0, start, end,
+                siblingLeftId, siblingRightId;
+
+            t.waitForMs(750, function() {
+
+                t.expect(pages[1]).toBeDefined();
+
+                t.expect(countPages()).toBe(11);
+                siblingLeftId  = pages[5].value[8].getId();
+                recToUpdate    = pages[5].value[9];
+                siblingRightId = pages[5].value[10].getId();
+
+                // scroll to ANOTHER record
+                grid.ensureVisible(pages[5].value[9]);
+
+                recToUpdate.set('testProp', 107.5)
+                recToUpdate.commit();
+
+                t.expect(pages[5].value[8].get('id')).toBe(recToUpdate.get('id'));
+                t.expect(pages[5].value[9].get('id')).toBe(siblingLeftId);
+                t.expect(pages[5].value[10].get('id')).toBe(siblingRightId);
+
+                start = view.all.startIndex;
+                end   = view.all.endIndex;
+
+                for (var i = start; i < end; i++) {
+                    t.expect(store.getAt(i)).toBeDefined();
+                }
+
+                grid.destroy();
+                grid = null;
+
+            });
+
+        }); // ^^
+
+
+        t.it('updating a field in the view should remove it out of pages which are not getting pruned and shift data from sibling pages', function(t) {
         }); // ^^
 
 

@@ -93,6 +93,7 @@ Ext.define('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer', {
      * @param operation
      */
     onBeforeStorePrefetch : function(store, operation) {
+
         var me           = this,
             grid         = me.grid,
             /**
@@ -136,14 +137,12 @@ Ext.define('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer', {
                 ? store.getPageFromRecordIndex(recordIndex)
                 : -1,
             rows        = view.all,
-            pageSize    = store.pageSize,
             sortField   = store.sorters && store.sorters.length
                           ? store.sorters.getAt(0).getProperty()
                           : null,
             prunePageSet = [],
             renderStartPage = store.getPageFromRecordIndex(rows.startIndex),
-            renderEndPage   = store.getPageFromRecordIndex(rows.endIndex),
-            firstPage, lastPage;
+            renderEndPage   = store.getPageFromRecordIndex(rows.endIndex);
 
         // IN ANY CASE, EVEN IF THE RECORD WAS NOT PART OF THE CACHED/VIEWD PAGES:
         // was the updated field part of the sorter? Then the order of the
@@ -163,65 +162,76 @@ Ext.define('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer', {
             // i.e. if the user scrolled the view and requested new data
             // which discarded the cache with THIS record
             // we leave this in here to be on the safe side.
-            console.log("Record to update was not found", record);
             return;
         }
-
-        // apply updatedRowCls to the row here
-        Ext.fly(
-            Ext.dom.Query.selectNode('tr[class*=x-grid-row]', view.all.item(recordIndex, true))
-        ).addCls(me.updatedRowCls);
 
         if (!sortField || !record.previousValues.hasOwnProperty(sortField)) {
-            console.log("record was not updated at " + sortField +", no action needed.");
+           // me.updateRowCls(record);
+            // if not part of a sort field, data set needs no re-ordering
+            // return here
             return;
         }
 
-        //console.log(rows)
-        console.log(recordPage, pages);
-
-        firstPage = Math.max(1, Math.floor(rows.startIndex / pageSize));
-        lastPage  = Math.ceil(rows.endIndex / pageSize);
+        // add pages which are currently rendered to pagePruneSet.
+        // we may not remove them right now
+        for (var i = renderStartPage; i <= renderEndPage; i++) {
+            prunePageSet.push('' + i);
+        }
 
         if (recordIndex < rows.startIndex || recordIndex > rows.endIndex) {
-            console.log("Record was not part of the rendered view", recordIndex, recordPage);
-            console.log("removing all cached pages except for page in view", rows.startIndex, rows.endIndex);
-
+            // record was not part of the rendered view
+            // add pages which are currently part of the rendered view to
+            // pagePruneSet, other pages can be removed
             for (var pageNumber in pages) {
-                console.log("checking if " + pageNumber + " can be removed", firstPage, lastPage);
-
-                if (pageNumber >= firstPage && pageNumber <= lastPage) {
-                    console.log("NOT TOUCHING", pageNumber);
-                    prunePageSet.push(pageNumber);
-                } else {
-                    console.log("removing page at " + pageNumber, pageMap.removeAtKey(pageNumber));
-                }
-            }
-
-            console.log("DONE", rows, store.getData().map);
-        } else {
-            // Remove surrounding pages.
-            // if we are here, the record was also renderes, not only part of
-            // the store.
-            // Make sure we are not removing any page which is currently
-            // rendered
-            for (var i = renderStartPage; i < renderEndPage; i++) {
-                prunePageSet.push('' + i);
-            }
-            if (prunePageSet.indexOf(recordPage) == -1) {
-                prunePageSet.push('' + recordPage);
-            }
-
-            for (var pageNumber in pages) {
-                if (prunePageSet.indexOf(pageNumber) == -1) {
+                if (prunePageSet.indexOf('' + pageNumber) == -1) {
                     pageMap.removeAtKey(pageNumber);
                 }
             }
+        } else {
+            // TESTED
+            // Remove surrounding pages.
+            // if we are here, the record was also rendered, not only part of
+            // the store.
+            // Make sure we are not removing any page which is currently
+            // rendered
+            //if (prunePageSet.indexOf('' + recordPage) == -1) {
+            //    prunePageSet.push('' + recordPage);
+            //}
+            prunePageSet = null;
+            me.moveSorted(record, renderStartPage, renderEndPage);
+            // only refresh the view of the buffered renderer
+            me.grid.view.bufferedRenderer.refreshView();
+          //  me.updateRowCls(record);
+
+            //for (var pageNumber in pages) {
+             //   if (prunePageSet.indexOf(pageNumber) == -1) {
+                    // We do not need to remove right now if anything happened IN
+                    // the rendered view
+                   // pageMap.removeAtKey(pageNumber);
+              //  }
+            //}
+
+
         }
 
         me.prunePageSet = prunePageSet;
     },
 
+
+    updateRowCls : function(record) {
+        var me          = this,
+            grid        = me.grid,
+            view        = grid.view,
+            recordIndex = grid.getStore().indexOf(record);
+console.log("UPDATING ROW CLS", record, recordIndex);
+        // apply updatedRowCls to the row here
+        Ext.fly(
+            Ext.dom.Query.selectNode(
+                'tr[class*=x-grid-row]',
+                view.all.item(recordIndex, true)
+            )
+        ).addCls(me.updatedRowCls);
+    },
 
 
     /**
@@ -249,7 +259,167 @@ Ext.define('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer', {
             me.mun(store, 'update',         me.onStoreUpdate, me);
             me.mun(store, 'beforeprefetch', me.onBeforeStorePrefetch,    me);
         }
+    },
+
+
+    /**
+     * (Local sort only) Inserts the passed Record into the Store at the index where it
+     * should go based on the current sort information.
+     *
+     * @param {Ext.data.Record} record
+     * @param {Mixed} startPage
+     * @param {Mixed} endPage
+     *
+     * @return {Ext.data.Record}
+     */
+    moveSorted : function(record, startPage, endPage) {
+        var me         = this,
+            store      = me.grid.getStore(),
+            data       = store.getData(),
+            orgIndex   = data.indexOf(record) % data.getPageSize(),
+            index      = me.findInsertIndexInPageRangeForRecord(record, startPage, endPage),
+            storeIndex = 0,
+            page, pos, values, tmp;
+
+
+        if (index === null) {
+            return null;
+        }
+
+        page   = index[0];
+        pos    = index[1];
+        values = data.map[page].value;
+
+        // swap
+        tmp = values.splice(orgIndex, 1);
+        values.splice(pos, 0, tmp[0]);
+
+
+        for (var startIdx in data.map) {
+            // Maintain the indexMap so that we can implement indexOf(record)
+            for (var i = 0, len = data.map[startIdx].value.length; i < len; i++) {
+                data.indexMap[data.map[startIdx].value[i].internalId] = storeIndex++;
+            }
+        }
+
+        console.log(data.map);
+        console.log(data.indexMap);
+
+        return record;
+    },
+
+
+    isFirstPageLoaded : function() {
+        return !!this.grid.getStore().getData().map[1]
+    },
+
+
+    cmpFuncHelper : function(val1, val2) {
+
+        return val1 < val2
+            ? -1
+            : val1 === val2
+            ? 0
+            : 1;
+    },
+
+
+    /**
+     * Same values: Presedence is given the newly inserted record.
+     *
+     * @param record
+     * @returns {*}
+     */
+    findInsertIndexInPageRangeForRecord : function(record, startPage, endPage) {
+
+        var me          = this,
+            grid        = me.grid,
+            store       = grid.getStore(),
+            map         = store.getData().map,
+            // guaranteed to be only one sorter
+            sorters     = store.getSorters(),
+            target      = null,
+            isBeginning = this.isFirstPageLoaded(),
+            pageIterate,
+            values, property,
+            direction, cmpRecord, cmp, cmpFunc,
+            firstPage;
+
+        // iterate through maps
+        // insert at map n
+        // shift records through pages
+        // update indexMap
+        if (!sorters || sorters.length != 1) {
+            return [1, 0];
+        }
+
+        property  = sorters.getAt(0).getProperty();
+        direction = sorters.getAt(0).getDirection();
+
+        cmpFunc = record.getField(property)
+                  ? record.getField(property).compare
+                  : me.cmpFuncHelper;
+
+        for (var i = startPage; i <= endPage; i++) {
+
+            if (!map.hasOwnProperty(i) ) {
+                continue;
+            }
+
+            pageIterate = parseInt(i, 10) ;
+            firstPage   = firstPage ? firstPage : pageIterate;
+
+            values = map[i].value;
+
+            for (var a = 0, lena = values.length; a < lena; a++) {
+                cmpRecord = values[a];
+
+                if (cmpRecord === record) {
+                    continue;
+                }
+
+                cmp = cmpFunc(record.get(property), cmpRecord.get(property));
+
+                // -1 less, 0 equal, 1 greater
+                switch (direction) {
+                    case 'ASC':
+                        console.log("CMP", cmp, record.get(property), cmpRecord.get(property));
+                        if (cmp === 0) {
+                            return [pageIterate, a];
+                        } else if (cmp === -1) {
+
+                            if (a === 0) {
+                                if (firstPage === 1 && pageIterate >= 1) {
+                                    return [pageIterate, a];
+                                } else {
+                                    return null;
+                                }
+                            } else {
+                                a--;
+                            }
+
+                            return [pageIterate, a];
+                        }
+                        break;
+                    default:
+                        if (cmp === 0) {
+                            return [pageIterate, a];
+                        } else if (cmp === 1) {
+                            if (firstPage !== 1 &&  !map.hasOwnProperty(pageIterate - 1)) {
+                                return null;
+                            }
+                            return [pageIterate, a];
+                        }
+                        break;
+                }
+            }
+        }
+
+        return null;
+
     }
+
+
 
 
 
