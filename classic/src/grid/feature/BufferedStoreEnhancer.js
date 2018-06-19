@@ -23,10 +23,16 @@
 
 /**
  * Grid Feature which enhances the usability when used with a BufferedStore,
- * allowing for more seamlessly udate/remove/add operations without the need
+ * allowing for more seamless update/remove/add operations without the need
  * to completely reload the store, and instead delay reloading data to
  * the prefetching mechanism of the BufferedStore.
  *
+ * ## Extra Events
+ *
+ * This feature adds several extra events that will be fired on the grid to
+ * interact with:
+ *
+ *  - {@link #cn_comp-bufferedstoreenhancer-recordmove}
  *
  *
  */
@@ -36,25 +42,22 @@ Ext.define('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer', {
 
     alias : 'feature.cn_comp-gridfeature-bufferedstoreenhancer',
 
-    /**
-     * @type {Ext.grid.Panel}
-     */
-    grid : null,
+    requires : [
+        'conjoon.cn_core.data.pageMap.IndexLookup'
+    ],
+
 
     /**
-     * @type {Array} prunePageSet
-     * Holds a list of pages that need to get pruned when the next prefetch
-     * should happen. This holds most likely the data representing the rendered
-     * view in which an update happened, and which needs to be frehsly reloaded
-     * from the server in the background when the user scrolls it out of view.
+     * @event cn_comp-bufferedstoreenhancer-recordmove
+     * @param {Ext.grid.Panel} grid The grid this feature is used with
+     * @param {Ext.data.Model} record The record that was updated
+     * @param {conjoon.cn_core.data.pageMap.RecordPosition} from The original
+     * position of the record before it was moved
+     * @param {conjoon.cn_core.data.pageMap.RecordPosition} to The target position
+     * of the record to which it was moved
+     * @param {Boolean} viewRefreshed whether the view was refresh to represent
+     * the changes
      */
-    prunePageSet : null,
-
-    /**
-     * The ccss class which will be attached to updated rows
-     * @cfg {String=cn_comp-bufferedstoreenhancer-updatedrow}
-     */
-    updatedRowCls : 'cn_comp-bufferedstoreenhancer-updatedrow',
 
 
     /**
@@ -64,8 +67,6 @@ Ext.define('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer', {
 
         var me = this;
 
-        me.grid = grid;
-
         if (grid.multiColumnSort) {
             Ext.raise({
                 msg             : 'BufferedStoreEnhancer does not work with ' +
@@ -74,351 +75,139 @@ Ext.define('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer', {
             });
         }
 
-        me.interceptGrid(grid);
+
+        me.associateSetup(grid.getStore());
+        grid.on('reconfigure', me.onGridReconfigure, me);
 
         me.callParent(arguments);
     },
 
-    interceptGrid : function(grid) {
-        var me = this;
-
-        Ext.Function.interceptBefore(grid, "bindStore",   me.bindStore,   me);
-        Ext.Function.interceptBefore(grid, "unbindStore", me.unbindStore, me);
-    },
-
 
     /**
+     * Callback for the store's update event. Will check if this
+     * grid's store sorter and sort order is affected by the update, and trigger
+     * a view update if necessary and applicable.
      *
-     * @param store
-     * @param operation
-     */
-    onBeforeStorePrefetch : function(store, operation) {
-
-        var me           = this,
-            grid         = me.grid,
-            /**
-             * @type {Ext.data.PageMap}
-             */
-            pageMap      = grid.getStore().getData(),
-            prunePageSet = me.prunePageSet;
-
-        if (prunePageSet) {
-            console.log("Prefetching and pruning", prunePageSet, arguments);
-
-            for (var i = 0, len = prunePageSet.length; i < len; i++) {
-                pageMap.removeAtKey(prunePageSet[i]);
-            }
-
-            me.prunePageSet =  null;
-        }
-
-    },
-
-
-    /**
-     *
-     * @param store
-     * @param record
-     * @param operation
+     * @param {Ext.data.BufferedStore} store
+     * @param {Ext.data.Model} record
+     * @param {Ext.data.operation.Operation} operation
      */
     onStoreUpdate : function(store, record, operation) {
 
-        var me          = this,
-            grid        = me.grid,
-            view        = grid.view,
-            store       = grid.getStore(),
-            /**
-             * @type {Ext.data.PageMap}
-             */
-            pageMap     = store.getData(),
-            pages       = pageMap.map,
-            recordIndex = store.indexOf(record), // -1 if not found
-            recordPage  = recordIndex > -1
-                ? store.getPageFromRecordIndex(recordIndex)
-                : -1,
-            rows        = view.all,
-            sortField   = store.sorters && store.sorters.length
-                          ? store.sorters.getAt(0).getProperty()
-                          : null,
-            prunePageSet = [],
-            renderStartPage = store.getPageFromRecordIndex(rows.startIndex),
-            renderEndPage   = store.getPageFromRecordIndex(rows.endIndex);
+        var me            = this,
+            grid          = me.grid,
+            PageMapUtil   = conjoon.cn_core.data.pageMap.PageMapUtil,
+            sorters       = store.getSorters(),
+            property      = sorters.getAt(0).getProperty(),
+            rows          = grid.getView().all,
+            pageMap       = grid.getStore().getData(),
+            viewRefreshed = false,
+            orgIndex,index, viewRect, from, to;
 
-        // IN ANY CASE, EVEN IF THE RECORD WAS NOT PART OF THE CACHED/VIEWD PAGES:
-        // was the updated field part of the sorter? Then the order of the
-        // displayed records might have changed, we need to update the cahed
-        // pages
-
-        // WAS THE RECORD PART OF THE VIEW?
-        // Discard all saved pages except for the rendered one
-        // discard the rendered one as soon as the new prefetch starts
-
-        // WAS THE RECORD ONLY PART OF THE CACHED PAGES?
-        // Discard the cached pages, discard the rendered pages as soon
-        // as the next prefetch happens
-
-        if (recordIndex === -1) {
-            // the update event isnt even fired if the record was not part of the store,
-            // i.e. if the user scrolled the view and requested new data
-            // which discarded the cache with THIS record
-            // we leave this in here to be on the safe side.
+        if (!record.previousValues.hasOwnProperty(property)) {
             return;
         }
 
-        if (!sortField || !record.previousValues.hasOwnProperty(sortField)) {
-           // me.updateRowCls(record);
-            // if not part of a sort field, data set needs no re-ordering
-            // return here
-            return;
-        }
+        orgIndex = pageMap.indexOf(record);
 
-        // add pages which are currently rendered to pagePruneSet.
-        // we may not remove them right now
-        for (var i = renderStartPage; i <= renderEndPage; i++) {
-            prunePageSet.push('' + i);
-        }
+        viewRect = [rows.startIndex, rows.endIndex];
 
-        if (recordIndex < rows.startIndex || recordIndex > rows.endIndex) {
-            // record was not part of the rendered view
-            // add pages which are currently part of the rendered view to
-            // pagePruneSet, other pages can be removed
-            for (var pageNumber in pages) {
-                if (prunePageSet.indexOf('' + pageNumber) == -1) {
-                    pageMap.removeAtKey(pageNumber);
-                }
+        index = me.indexLookup.findInsertIndex(record);
+
+        if (Ext.isArray(index)) {
+
+            from = PageMapUtil.storeIndexToPosition(orgIndex, pageMap);
+            to   = Ext.create('conjoon.cn_core.data.pageMap.RecordPosition', {
+                page  : index[0],
+                index : index[1]
+            });
+
+            PageMapUtil.moveRecord(from, to, pageMap);
+
+            // if from or to is in the rendered rect, refresh view
+            if (pageMap.indexOf(record) >= 0 ||
+                (index[1] >= viewRect[0] && index[1] <= viewRect[1])) {
+                grid.view.refreshView(Math.min(from.getIndex(), to.getIndex()));
+                viewRefreshed = true;
+                grid.ensureVisible(record);
             }
-        } else {
-            // TESTED
-            // Remove surrounding pages.
-            // if we are here, the record was also rendered, not only part of
-            // the store.
-            // Make sure we are not removing any page which is currently
-            // rendered
-            //if (prunePageSet.indexOf('' + recordPage) == -1) {
-            //    prunePageSet.push('' + recordPage);
-            //}
-            prunePageSet = null;
-            me.moveSorted(record, renderStartPage, renderEndPage);
-            // only refresh the view of the buffered renderer
-            me.grid.view.bufferedRenderer.refreshView();
-          //  me.updateRowCls(record);
 
-            //for (var pageNumber in pages) {
-             //   if (prunePageSet.indexOf(pageNumber) == -1) {
-                    // We do not need to remove right now if anything happened IN
-                    // the rendered view
-                   // pageMap.removeAtKey(pageNumber);
-              //  }
-            //}
+            grid.fireEvent(
+                'cn_comp-bufferedstoreenhancer-recordmove',
+                grid, record, from, to, viewRefreshed
+            );
 
 
         }
 
-        me.prunePageSet = prunePageSet;
-    },
-
-
-    updateRowCls : function(record) {
-        var me          = this,
-            grid        = me.grid,
-            view        = grid.view,
-            recordIndex = grid.getStore().indexOf(record);
-console.log("UPDATING ROW CLS", record, recordIndex);
-        // apply updatedRowCls to the row here
-        Ext.fly(
-            Ext.dom.Query.selectNode(
-                'tr[class*=x-grid-row]',
-                view.all.item(recordIndex, true)
-            )
-        ).addCls(me.updatedRowCls);
     },
 
 
     /**
+     * Callback fro the reconfigure event of the grid of this feature.
      *
-     * @param {Ext.data.Store} store
+     * @param {Ext.grid.Panel} grid
+     * @param {Ext.store.AbstractStore} store
+     * @param {Array} columns
+     * @param {Ext.store.AbstractStore} oldStore
+     * @param {Array} oldColumns
      */
-    bindStore : function(store) {
+    onGridReconfigure : function(grid, store, columns, oldStore, oldColumns) {
+
         var me = this;
 
-        if (store && (store instanceof Ext.data.BufferedStore)) {
-            me.mon(store, 'update',         me.onStoreUpdate, me);
-            me.mon(store, 'beforeprefetch', me.onBeforeStorePrefetch,    me);
+        if (store && store !== oldStore) {
+            me.associateSetup(store);
         }
     },
 
 
     /**
+     * Sets up needed requirements for this feature to work properly.
+     * We treat empty stores special, as we silently ignore them when this
+     * method is called with a store representing an empty store.
      *
+     * @param {Ext.data.AbstractStore} store
+     * @return {Boolean} true if the requirements where successfully installed,
+     * otherwise false, e.g. due to an empty store
+     *
+     * @private
+     *
+     * @throws if store is not an empty store or a BufferedStore
      */
-    unbindStore : function() {
-        var me    = this,
-            store = me.grid ? me.grid.getStore() : null;
+    associateSetup : function(store) {
 
-        if (store && (store instanceof Ext.data.BufferedStore)) {
-            me.mun(store, 'update',         me.onStoreUpdate, me);
-            me.mun(store, 'beforeprefetch', me.onBeforeStorePrefetch,    me);
-        }
-    },
+        var me = this;
 
 
-    /**
-     * (Local sort only) Inserts the passed Record into the Store at the index where it
-     * should go based on the current sort information.
-     *
-     * @param {Ext.data.Record} record
-     * @param {Mixed} startPage
-     * @param {Mixed} endPage
-     *
-     * @return {Ext.data.Record}
-     */
-    moveSorted : function(record, startPage, endPage) {
-        var me         = this,
-            store      = me.grid.getStore(),
-            data       = store.getData(),
-            orgIndex   = data.indexOf(record) % data.getPageSize(),
-            index      = me.findInsertIndexInPageRangeForRecord(record, startPage, endPage),
-            storeIndex = 0,
-            page, pos, values, tmp;
-
-
-        if (index === null) {
-            return null;
+        if (store && store.isEmptyStore) {
+            return false;
         }
 
-        page   = index[0];
-        pos    = index[1];
-        values = data.map[page].value;
-
-        // swap
-        tmp = values.splice(orgIndex, 1);
-        values.splice(pos, 0, tmp[0]);
-
-
-        for (var startIdx in data.map) {
-            // Maintain the indexMap so that we can implement indexOf(record)
-            for (var i = 0, len = data.map[startIdx].value.length; i < len; i++) {
-                data.indexMap[data.map[startIdx].value[i].internalId] = storeIndex++;
-            }
+        if (!store || !(store instanceof Ext.data.BufferedStore)) {
+            Ext.raise({
+                msg   : '\'store\' must be an instance of Ext.data.BufferedStore',
+                store : store
+            });
         }
 
-        console.log(data.map);
-        console.log(data.indexMap);
+        // this is not needed since Ext.util.Event#addListener already checks
+        // for duplicates and doesn't add one and the same event twice.
+        // however, we want to be on the save side, tests consider this edge case
+        me.mun(store, 'update',  me.onStoreUpdate, me);
+        me.mon(store, 'update',  me.onStoreUpdate, me);
 
-        return record;
-    },
-
-
-    isFirstPageLoaded : function() {
-        return !!this.grid.getStore().getData().map[1]
-    },
-
-
-    cmpFuncHelper : function(val1, val2) {
-
-        return val1 < val2
-            ? -1
-            : val1 === val2
-            ? 0
-            : 1;
-    },
-
-
-    /**
-     * Same values: Presedence is given the newly inserted record.
-     *
-     * @param record
-     * @returns {*}
-     */
-    findInsertIndexInPageRangeForRecord : function(record, startPage, endPage) {
-
-        var me          = this,
-            grid        = me.grid,
-            store       = grid.getStore(),
-            map         = store.getData().map,
-            // guaranteed to be only one sorter
-            sorters     = store.getSorters(),
-            target      = null,
-            isBeginning = this.isFirstPageLoaded(),
-            pageIterate,
-            values, property,
-            direction, cmpRecord, cmp, cmpFunc,
-            firstPage;
-
-        // iterate through maps
-        // insert at map n
-        // shift records through pages
-        // update indexMap
-        if (!sorters || sorters.length != 1) {
-            return [1, 0];
+        if (me.indexLookup) {
+            me.indexLookup.destroy();
+            me.indexLookup = null;
         }
 
-        property  = sorters.getAt(0).getProperty();
-        direction = sorters.getAt(0).getDirection();
+        me.indexLookup = Ext.create('conjoon.cn_core.data.pageMap.IndexLookup', {
+            pageMap : store.getData()
+        });
 
-        cmpFunc = record.getField(property)
-                  ? record.getField(property).compare
-                  : me.cmpFuncHelper;
-
-        for (var i = startPage; i <= endPage; i++) {
-
-            if (!map.hasOwnProperty(i) ) {
-                continue;
-            }
-
-            pageIterate = parseInt(i, 10) ;
-            firstPage   = firstPage ? firstPage : pageIterate;
-
-            values = map[i].value;
-
-            for (var a = 0, lena = values.length; a < lena; a++) {
-                cmpRecord = values[a];
-
-                if (cmpRecord === record) {
-                    continue;
-                }
-
-                cmp = cmpFunc(record.get(property), cmpRecord.get(property));
-
-                // -1 less, 0 equal, 1 greater
-                switch (direction) {
-                    case 'ASC':
-                        console.log("CMP", cmp, record.get(property), cmpRecord.get(property));
-                        if (cmp === 0) {
-                            return [pageIterate, a];
-                        } else if (cmp === -1) {
-
-                            if (a === 0) {
-                                if (firstPage === 1 && pageIterate >= 1) {
-                                    return [pageIterate, a];
-                                } else {
-                                    return null;
-                                }
-                            } else {
-                                a--;
-                            }
-
-                            return [pageIterate, a];
-                        }
-                        break;
-                    default:
-                        if (cmp === 0) {
-                            return [pageIterate, a];
-                        } else if (cmp === 1) {
-                            if (firstPage !== 1 &&  !map.hasOwnProperty(pageIterate - 1)) {
-                                return null;
-                            }
-                            return [pageIterate, a];
-                        }
-                        break;
-                }
-            }
-        }
-
-        return null;
-
+        return true;
     }
-
 
 
 

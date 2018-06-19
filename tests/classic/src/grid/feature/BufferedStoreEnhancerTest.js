@@ -22,73 +22,75 @@
 
 describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
 
-    var grid;
+    var createStore = function(cfg) {
 
-    var getGrid = function(cfg) {
+            cfg = cfg || {};
 
-        cfg = cfg || {};
+            return Ext.create('Ext.data.BufferedStore', {
 
-        var featureCfg = {
-            ftype : 'cn_comp-gridfeature-bufferedstoreenhancer',
-            id    : 'bufferedstoreenhancer'
-        };
-
-        if (cfg.updatedRowCls) {
-            featureCfg.updatedRowCls = cfg.updatedRowCls;
-        }
-
-        return Ext.create('Ext.grid.Panel', {
-
-            renderTo : document.body,
-
-            width  : 510,
-            height : 550,
-
-            features : [featureCfg],
-
-            multiColumnSort :  cfg.multiColumnSort ? cfg.multiColumnSort : false,
-
-            store : {
-                type : 'buffered',
+                type   : 'buffered',
                 fields : ['id', 'testProp'],
                 autoLoad : cfg.autoLoad ? cfg.autoLoad : undefined,
-                sorters : cfg.sorters
-                          ? cfg.sorters
-                          : undefined,
+                sorters  : cfg.sorters
+                           ? cfg.sorters
+                           : undefined,
                 proxy : {
                     type : 'rest',
-                    url  : 'cn_comp/fixtures/BufferedStoreEnhancerItems',
-                    reader : {
+                        url  : 'cn_comp/fixtures/BufferedStoreEnhancerItems',
+                        reader : {
                         type         : 'json',
-                        rootProperty : 'data'
+                            rootProperty : 'data'
                     }
-                    }
-            },
+                }
+            });
+
+        },
+        getGrid = function(cfg) {
+
+            cfg = cfg || {};
+
+            var featureCfg = {
+                ftype : 'cn_comp-gridfeature-bufferedstoreenhancer',
+                id    : 'bufferedstoreenhancer'
+            };
+
+            return Ext.create('Ext.grid.Panel', {
+
+                renderTo : document.body,
+
+                width  : 510,
+                height : 550,
+
+                features : [featureCfg],
+
+                multiColumnSort :  cfg.multiColumnSort ? cfg.multiColumnSort : false,
+
+                store : createStore(cfg),
 
 
-            columns : [{
-                text      : 'id',
-                dataIndex : 'id',
-                flex      : 1
-            }, {
-                text      : 'subject',
-                dataIndex : 'subject',
-                flex      : 1
-            }, {
-                text      : 'date',
-                dataIndex : 'date',
-                flex      : 1
-            }, {
-                text      : 'from',
-                dataIndex : 'from',
-                flex      : 1
-            }, {
-                text      : 'testProp',
-                dataIndex : 'testProp',
-                flex      : 1
-            }]
+                columns : [{
+                    text      : 'id',
+                    dataIndex : 'id',
+                    flex      : 1
+                }, {
+                    text      : 'subject',
+                    dataIndex : 'subject',
+                    flex      : 1
+                }, {
+                    text      : 'date',
+                    dataIndex : 'date',
+                    flex      : 1
+                }, {
+                    text      : 'from',
+                    dataIndex : 'from',
+                    flex      : 1
+                }, {
+                    text      : 'testProp',
+                    dataIndex : 'testProp',
+                    flex      : 1
+                }]
 
-        });
+            });
 
 
     };
@@ -120,342 +122,73 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
         }); //^^
 
 
-        t.it('cfg updatedRowCls', function(t) {
+        t.it("associateSetup()", function(t) {
 
-            var grid    = getGrid({autoLoad : false}),
-                feature = grid.view.getFeature('bufferedstoreenhancer');
+            var store   = Ext.create('Ext.data.Store'),
+                SIGNAL  = 0,
+                exc, e, oldLookup, store;
 
-            t.expect(feature.updatedRowCls).toBe(
-                'cn_comp-bufferedstoreenhancer-updatedrow');
+            store.isEmptyStore = true;
 
-            grid.destroy();
+            feature = Ext.create('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer');
+            t.expect(feature.associateSetup(store)).toBe(false);
 
-            grid    = getGrid({autoLoad : false, updatedRowCls : 'foo'});
-            feature = grid.view.getFeature('bufferedstoreenhancer');
+            // exceptions
+            feature = Ext.create('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer');
+            try {feature.associateSetup(Ext.create('Ext.data.Store'));}catch(e){exc=e;}
+            t.expect(exc).toBeDefined();
+            t.expect(exc.msg.toLowerCase()).toContain('must be an instance of');
+            exc = undefined;
+            try {feature.associateSetup();}catch(e){exc=e;}
+            t.expect(exc).toBeDefined();
+            t.expect(exc.msg.toLowerCase()).toContain('must be an instance of');
 
-            t.expect(feature.updatedRowCls).toBe('foo');
 
-            grid.destroy();
-            grid = null;
-        }); //^^
-
-
-        t.it('onStoreUpdate() is registered and called', function(t) {
-            t.methodIsCalledNTimes('onStoreUpdate', 'conjoon.cn_comp.grid.feature.BufferedStoreEnhancer', 1);
-
-            var grid    = getGrid({autoLoad : true}),
-                store   = grid.getStore(),
-                feature = grid.view.getFeature('bufferedstoreenhancer');
-
-            t.waitForMs(750, function() {
-                store.getAt(0).set('testProp', 2);
-                store.getAt(0).commit();
-                grid.destroy();
-                grid = null;
+            // indexLookup setting
+            feature = Ext.create('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer');
+            t.expect(feature.indexLookup).toBeFalsy();
+            oldLookup = Ext.create('conjoon.cn_core.data.pageMap.IndexLookup', {
+                pageMap : createStore().getData()
             });
-        }); // ^^
+            feature.indexLookup = oldLookup;
+            t.isCalledNTimes('destroy', feature.indexLookup, 1);
+            t.expect(feature.indexLookup).toBe(oldLookup);
+            t.expect(feature.associateSetup(Ext.create('Ext.data.BufferedStore'))).toBe(true);
+            t.expect(feature.indexLookup instanceof conjoon.cn_core.data.pageMap.IndexLookup).toBe(true);
+            t.expect(feature.indexLookup).not.toBe(oldLookup);
 
-
-        t.it('onBeforeStorePrefetch() is registered and called', function(t) {
-            t.methodIsCalled('onBeforeStorePrefetch', 'conjoon.cn_comp.grid.feature.BufferedStoreEnhancer', 1);
-
-            var grid    = getGrid({
-                    autoLoad : true
-                }),
-                store   = grid.getStore(),
-                feature = grid.view.getFeature('bufferedstoreenhancer');
-
-
-            t.waitForMs(750, function() {
-                grid.destroy();
-                grid = null;
-            });
-        }); // ^^
-
-
-        t.it('unbindStore()', function(t) {
-            t.methodIsntCalled('onStoreUpdate', 'conjoon.cn_comp.grid.feature.BufferedStoreEnhancer', 1);
-            t.methodIsCalledNTimes('onBeforeStorePrefetch', 'conjoon.cn_comp.grid.feature.BufferedStoreEnhancer', 11);
-
-            var grid    = getGrid(),
-                store   = grid.getStore(),
-                feature = grid.view.getFeature('bufferedstoreenhancer');
-
+            store = createStore();
             store.load();
+            t.waitForMs(250, function() {
 
-            t.waitForMs(750, function() {
-
-                grid.unbindStore();
-
-                store.getAt(0).set('testProp', 9724224723);
+                // onStoreUpdate installed
+                feature = Ext.create('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer');
+                feature.onStoreUpdate = function() {
+                    SIGNAL++;
+                };
+                t.expect(SIGNAL).toBe(0);
+                t.expect(feature.associateSetup(store)).toBe(true);
+                store.getAt(0).set('testProp', 't');
                 store.getAt(0).commit();
-
-                store.reload();
-                t.waitForMs(750, function() {
-
-
-                    grid.destroy();
-                    grid = null;
-                });
-
-
-            });
-        }); // ^^
-
-
-        t.it('updating a field which is not part of a sorter should NOT ADD to prunePageSet', function(t) {
-
-            var grid = getGrid({
-                    autoLoad : true
-                }),
-                store   = grid.getStore(),
-                feature = grid.view.getFeature('bufferedstoreenhancer');
-
-            t.waitForMs(750, function() {
-
-                store.getAt(0).set('testProp', 9724224723);
+                t.expect(SIGNAL).toBe(1);
+                store.getAt(0).set('testProp', 'u');
                 store.getAt(0).commit();
+                t.expect(SIGNAL).toBe(2);
+                SIGNAL = 0;
+                t.expect(feature.associateSetup(store)).toBe(true);
+                t.expect(feature.associateSetup(store)).toBe(true);
+                store.getAt(1).set('testProp', 'fjfjjfu');
+                store.getAt(1).commit();
+                t.expect(SIGNAL).toBe(1);
 
-                t.expect(feature.prunePageSet).toBe(null);
-
-                grid.destroy();
-                grid = null;
-            });
-        }); // ^^
-
-
-        t.it('updating a field which is part of a sorter and in the rendered view should NOT ADD to prunePageSet', function(t) {
-
-            var grid = getGrid({
-                    autoLoad : true,
-                    sorters : [{
-                        property  : 'testProp',
-                        direction : 'ASC'
-                    }]
-                }),
-                store   = grid.getStore(),
-                feature = grid.view.getFeature('bufferedstoreenhancer');
-
-            t.waitForMs(750, function() {
-
-                store.getAt(0).set({subject : 'foo', 'testProp' : 5.5});
-                store.getAt(0).commit();
-
-                t.expect(feature.prunePageSet).toBe(null);
-
-                grid.destroy();
-                grid = null;
-            });
-        }); // ^^
-
-
-        t.it('updating a field should add updatedRowCls to the row representing the updated record ', function(t) {
-
-            var grid = getGrid({
-                    autoLoad : true,
-                    sorters  : [{
-                        property  : 'testProp',
-                        direction : 'DESC'
-                    }]
-                }),
-                view    = grid.view,
-                store   = grid.getStore(),
-                feature = view.getFeature('bufferedstoreenhancer'),
-                row;
-
-            t.waitForMs(750, function() {
-
-                store.getAt(0).set('testProp', 924224723);
-                store.getAt(0).commit();
-                row = Ext.dom.Query.selectNode(
-                    'tr[class*=x-grid-row]', view.all.item(0, true)
-                );
-                t.expect(row.className).toContain(feature.updatedRowCls);
-
-                store.getAt(10).set('testProp', 9998.5);
-                store.getAt(10).commit();
-                row = Ext.dom.Query.selectNode(
-                    'tr[class*=x-grid-row]', view.all.item(10, true)
-                );
-                t.expect(row.className).toContain(feature.updatedRowCls);
-
-                //grid.destroy();
-                // grid = null;
-            });
-        }); // ^^
-
-
-        t.it('updating a field of data currently in the view should prune surrounding pages', function(t) {
-
-            var grid = getGrid({
-                    autoLoad : true,
-                    sorters  : [{
-                        property  : 'testProp',
-                        direction : 'ASC'
-                    }]
-                }),
-                view    = grid.view,
-                store   = grid.getStore(),
-                pageMap = store.getData(),
-                pages   = pageMap.map,
-                countPages = function() {
-                    var length = 0, i;
-                    for (i in pages) {
-                        length++;
-                    }
-
-                    return length;
-                },
-                feature = view.getFeature('bufferedstoreenhancer'),
-                row, recToUpdate, length = 0, start, end;
-
-            t.waitForMs(750, function() {
-
-                t.expect(pages[1]).toBeDefined();
-
-                t.expect(countPages()).toBe(11);
-                recToUpdate = pages[5].value[9];
-
-                // scroll to the record
-                grid.ensureVisible(recToUpdate);
-
-                recToUpdate.set('testProp', new Date());
-                recToUpdate.commit();
-
-                t.expect(countPages()).not.toBe(11);
-                t.expect(pages[1]).not.toBeDefined();
-                t.expect(pages[5]).toBeDefined();
-
-                start = view.all.startIndex;
-                end   = view.all.endIndex;
-
-                for (var i = start; i < end; i++) {
-                    t.expect(store.getAt(i)).toBeDefined();
-                }
-
-                grid.destroy();
-                grid = null;
-
-            });
-        }); // ^^
-
-
-        t.it('updating a field of data NOT in the view should prune surrounding pages of rendered view', function(t) {
-
-            var grid = getGrid({
-                    autoLoad : true,
-                    sorters  : [{
-                        property  : 'testProp',
-                        direction : 'ASC'
-                    }]
-                }),
-                view    = grid.view,
-                store   = grid.getStore(),
-                pageMap = store.getData(),
-                pages   = pageMap.map,
-                countPages = function() {
-                    var length = 0, i;
-                    for (i in pages) {
-                        length++;
-                    }
-
-                    return length;
-                },
-                feature = view.getFeature('bufferedstoreenhancer'),
-                row, recToUpdate, length = 0, start, end;
-
-            t.waitForMs(750, function() {
-
-                t.expect(pages[1]).toBeDefined();
-
-                t.expect(countPages()).toBe(11);
-                recToUpdate = pages[1].value[0];
-
-                // scroll to ANOTHER record
-                grid.ensureVisible(pages[5].value[9]);
-
-                recToUpdate.set('testProp', new Date());
-                recToUpdate.commit();
-
-                t.expect(countPages()).not.toBe(11);
-                t.expect(pages[1]).not.toBeDefined();
-                t.expect(pages[5]).toBeDefined();
-
-                start = view.all.startIndex;
-                end   = view.all.endIndex;
-
-                for (var i = start; i < end; i++) {
-                    t.expect(store.getAt(i)).toBeDefined();
-                }
-
-                grid.destroy();
-                grid = null;
-
-            });
-        }); // ^^
-
-
-        t.it('updating a field in the view should re-sort in the remaining pages which are not getting pruned', function(t) {
-
-            var grid = getGrid({
-                    autoLoad : true,
-                    sorters  : [{
-                        property  : 'testProp',
-                        direction : 'ASC'
-                    }]
-                }),
-                view    = grid.view,
-                store   = grid.getStore(),
-                pageMap = store.getData(),
-                pages   = pageMap.map,
-                countPages = function() {
-                    var length = 0, i;
-                    for (i in pages) {
-                        length++;
-                    }
-
-                    return length;
-                },
-                feature = view.getFeature('bufferedstoreenhancer'),
-                row, recToUpdate, length = 0, start, end,
-                siblingLeftId, siblingRightId;
-
-            t.waitForMs(750, function() {
-
-                t.expect(pages[1]).toBeDefined();
-
-                t.expect(countPages()).toBe(11);
-                siblingLeftId  = pages[5].value[8].getId();
-                recToUpdate    = pages[5].value[9];
-                siblingRightId = pages[5].value[10].getId();
-
-                // scroll to ANOTHER record
-                grid.ensureVisible(pages[5].value[9]);
-
-                recToUpdate.set('testProp', 107.5)
-                recToUpdate.commit();
-
-                t.expect(pages[5].value[8].get('id')).toBe(recToUpdate.get('id'));
-                t.expect(pages[5].value[9].get('id')).toBe(siblingLeftId);
-                t.expect(pages[5].value[10].get('id')).toBe(siblingRightId);
-
-                start = view.all.startIndex;
-                end   = view.all.endIndex;
-
-                for (var i = start; i < end; i++) {
-                    t.expect(store.getAt(i)).toBeDefined();
-                }
-
-                grid.destroy();
-                grid = null;
-
+                store.destroy();
+                store = null;
             });
 
-        }); // ^^
 
 
-        t.it('updating a field in the view should remove it out of pages which are not getting pruned and shift data from sibling pages', function(t) {
-        }); // ^^
+        });
+
 
 
     })}) // EO requireOk
