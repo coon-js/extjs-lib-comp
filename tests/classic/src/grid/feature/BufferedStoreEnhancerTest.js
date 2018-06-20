@@ -91,9 +91,73 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
                 }]
 
             });
+        },
+        moveRecordTest = function(config, t) {
+
+                var grid = getGrid({
+                        autoLoad : true,
+                        sorters  : [{
+                            property : 'testProp',
+                            dir      : 'ASC'
+                        }]
+                    }),
+                    store          = grid.getStore(),
+                    pageMap        = store.getData(),
+                    map            = pageMap.map,
+                    feature        = grid.view.getFeature('bufferedstoreenhancer'),
+                    RecordPosition = conjoon.cn_core.data.pageMap.RecordPosition,
+                    PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
+                    SIGNAL = 0, REFRESHED = false,
+                    from, to, FROM, TO;
 
 
-    };
+                t.waitForMs(500, function() {
+
+                    config.before && config.before.apply(null, [grid, t]);
+
+                    from = RecordPosition.create(config.from);
+                    to   = RecordPosition.create(config.to);
+
+                    grid.on('cn_comp-bufferedstoreenhancer-recordmove', function(grid, record, from, to, refreshed) {
+                        SIGNAL++;
+                        REFRESHED = refreshed;
+                        FROM = from;
+                        TO = to;
+                    });
+
+                    config.additionalFn && config.additionalFn.apply(null, [grid, t]);
+
+                    if (config.exception) {
+
+                        var exc, e;
+                        try {
+                            feature.moveRecord(PageMapUtil.getRecordAt(from, pageMap), to);
+                        } catch (e) {
+                            exc = e;
+                        }
+
+                        t.expect(exc).toBeDefined();
+                        t.expect(exc.msg).toBeDefined();
+                        t.expect(exc.msg.toLowerCase()).toContain(config.exception.toLowerCase());
+
+                    } else {
+                        feature.moveRecord(PageMapUtil.getRecordAt(from, pageMap), to);
+
+                        t.expect(SIGNAL).toBe(1);
+                        t.expect(REFRESHED).toBe(config.REFRESHED);
+                        t.expect(FROM.equalTo(from)).toBe(true);
+                        t.expect(TO.equalTo(to)).toBe(true);
+                    }
+
+                    if (config.remove !== false) {
+                        grid.destroy();
+                        grid = null;
+                    }
+
+                });
+
+
+        };
 
 
 
@@ -184,14 +248,185 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
                 store.destroy();
                 store = null;
             });
+        });
 
+
+        t.it("onGridReconfigure() - callback", function(t) {
+
+            var grid, feature, store;
+
+            t.isCalledNTimes(
+                'onGridReconfigure',
+                conjoon.cn_comp.grid.feature.BufferedStoreEnhancer.prototype,
+                1
+            );
+
+            grid    = getGrid({autoLoad : true});
+            feature = grid.view.getFeature('bufferedstoreenhancer');
+            store   = createStore(),
+            store2  = createStore;
+
+
+            grid.reconfigure(store);
+
+
+            grid.destroy();
+            grid = null;
+        });
+
+
+        t.it("onGridReconfigure() - argument behavior", function(t) {
+
+            var grid, feature, store;
+
+            grid    = getGrid({autoLoad : true});
+            feature = grid.view.getFeature('bufferedstoreenhancer');
+            store   = createStore(),
+            store2  = createStore();
+
+
+            t.isCalledNTimes('associateSetup', feature, 3)
+            feature.onGridReconfigure(grid, store, null, null);
+            feature.onGridReconfigure(grid, store2, null, store);
+            feature.onGridReconfigure(grid, store, null, store2);
+            // shouldnt trigger associate setup
+            feature.onGridReconfigure(grid, store, null, store);
+            feature.onGridReconfigure(grid);
+
+
+            grid.destroy();
+            grid = null;
+        });
+
+
+        t.it("getPageMap()", function(t) {
+
+            var grid, feature, store;
+
+            grid    = getGrid({autoLoad : true});
+            feature = grid.view.getFeature('bufferedstoreenhancer');
+
+            t.expect(feature.getPageMap()).toBe(grid.getStore().getData());
+
+            grid.destroy();
+            grid = null;
+        });
+
+
+        t.it("getCurrentViewRange()", function(t) {
+
+            var grid           = getGrid({autoLoad : true}),
+                feature        = grid.view.getFeature('bufferedstoreenhancer'),
+                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil;
+
+
+            t.expect(feature.getCurrentViewRange()).toBe(null);
+
+            t.waitForMs(500, function() {
+
+                t.expect(
+                    feature.getCurrentViewRange() instanceof
+                        conjoon.cn_core.data.pageMap.IndexRange).toBe(true);
+
+                t.expect(
+                    feature.getCurrentViewRange().getStart().equalTo(
+                        PageMapUtil.storeIndexToPosition(grid.view.all.startIndex, feature.getPageMap())
+                    )).toBe(true);
+
+                t.expect(
+                    feature.getCurrentViewRange().getEnd().equalTo(
+                        PageMapUtil.storeIndexToPosition(grid.view.all.endIndex, feature.getPageMap())
+                    )).toBe(true);
+
+
+                grid.destroy();
+                grid = null;
+            });
 
 
         });
 
 
+        t.it("refreshView()", function(t) {
 
-    })}) // EO requireOk
+            var grid           = getGrid({autoLoad : true}),
+                feature        = grid.view.getFeature('bufferedstoreenhancer'),
+                RecordPosition = conjoon.cn_core.data.pageMap.RecordPosition,
+                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
+                viewRange, SIGNAL = 0;
+
+
+            t.waitForMs(500, function() {
+
+                grid.view.on('refresh', function(){SIGNAL++});
+
+                t.expect(feature.refreshView(
+                    RecordPosition.create(1, 0), RecordPosition.create(2,4)
+                )).toBe(true);
+
+                t.expect(SIGNAL).toBe(1);
+                viewRange = feature.getCurrentViewRange();
+
+                t.expect(feature.refreshView(
+                    RecordPosition.create(viewRange.getEnd().getPage() + 1, 0),
+                    RecordPosition.create(viewRange.getEnd().getPage() + 1, 4)
+                )).toBe(false);
+                t.expect(SIGNAL).toBe(1);
+
+                grid.destroy();
+                grid = null;
+            });
+        });
+
+
+        t.it("moveRecord() - from visible, to visible", function(t) {
+            moveRecordTest({
+                from      : [1, 0],
+                to        : [1, 8],
+                REFRESHED : true
+            }, t)
+        });
+
+        t.it("moveRecord() - from visible, to not visible", function(t) {
+            moveRecordTest({
+                from      : [1, 0],
+                to        : [3, 24],
+                REFRESHED : true,
+                additionalFn : function(grid, t) {
+                    t.expect(grid.view.all.startIndex).toBeGreaterThan(-1);
+                    t.expect(grid.view.all.endIndex).toBeLessThan(55);
+                }
+            }, t)
+        });
+
+        t.it("moveRecord() - from not visible, to not visible", function(t) {
+            moveRecordTest({
+                from      : [3, 18],
+                to        : [3, 24],
+                REFRESHED : false,
+                additionalFn : function(grid, t) {
+                    t.expect(grid.view.all.startIndex).toBeGreaterThan(-1);
+                    t.expect(grid.view.all.endIndex).toBeLessThan(55);
+                }
+            }, t)
+        });
+
+        t.it("moveRecord() - from and to not in same page range", function(t) {
+            moveRecordTest({
+                remove    : false,
+                from      : [1, 18],
+                to        : [3, 24],
+                exception : "runtime exception",
+                REFRESHED : false,
+                before    : function(grid, t) {
+                    grid.view.getFeature('bufferedstoreenhancer')
+                        .getPageMap().removeAtKey(2);
+                }
+            }, t)
+        });
+
+
+})}) // EO requireOk
 
 
 
