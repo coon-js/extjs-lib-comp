@@ -105,6 +105,7 @@ Ext.define('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer', {
                              : null,
             searchIndex;
 
+
         if (!property || !record.previousValues.hasOwnProperty(property)) {
             return false;
         }
@@ -112,7 +113,8 @@ Ext.define('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer', {
         searchIndex = me.indexLookup.findInsertIndex(record);
 
         if (Ext.isArray(searchIndex)) {
-            return me.moveRecord(record, RecordPosition.create(searchIndex));
+            me.moveRecord(record, RecordPosition.create(searchIndex));
+            return true;
         }
 
         return false;

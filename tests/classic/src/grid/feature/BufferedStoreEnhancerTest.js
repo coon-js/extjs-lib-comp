@@ -387,6 +387,7 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
             }, t)
         });
 
+
         t.it("moveRecord() - from visible, to not visible", function(t) {
             moveRecordTest({
                 from      : [1, 0],
@@ -398,6 +399,7 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
                 }
             }, t)
         });
+
 
         t.it("moveRecord() - from not visible, to not visible", function(t) {
             moveRecordTest({
@@ -411,6 +413,7 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
             }, t)
         });
 
+
         t.it("moveRecord() - from and to not in same page range", function(t) {
             moveRecordTest({
                 remove    : false,
@@ -423,6 +426,82 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
                         .getPageMap().removeAtKey(2);
                 }
             }, t)
+        });
+
+
+        t.it("onStoreUpdate() - is called", function(t) {
+
+            t.isCalledNTimes(
+                'onStoreUpdate',
+                conjoon.cn_comp.grid.feature.BufferedStoreEnhancer.prototype,
+                1
+            );
+            var grid    = getGrid({autoLoad : true}),
+                feature = grid.view.getFeature('bufferedstoreenhancer');
+
+            t.waitForMs(500, function() {
+
+                grid.getStore().getData().map[1].value[0].set('testProp', 800);
+                grid.getStore().getData().map[1].value[0].commit();
+
+                grid.destroy();
+                grid = null;
+            });
+        });
+
+
+        t.it("onStoreUpdate()", function(t) {
+
+            var grid           = getGrid({autoLoad : true}),
+                store          = grid.getStore(),
+                feature        = grid.view.getFeature('bufferedstoreenhancer'),
+                pageMap        = feature.getPageMap(),
+                RecordPosition = conjoon.cn_core.data.pageMap.RecordPosition,
+                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
+                rec;
+
+            t.waitForMs(750, function() {
+
+                rec = PageMapUtil.getRecordAt(RecordPosition.create(1, 0), pageMap);
+
+                // no sorters
+                t.expect(grid.getStore().getSorters().length).toBe(0);
+                t.expect(feature.onStoreUpdate(store, rec)).toBe(false);
+
+                // wrong sorter
+                store.setSorters({property : 'subject', dir : 'ASC'});
+                t.waitForMs(500, function() {
+                    t.expect(grid.getStore().getSorters().length).toBe(1);
+                    t.expect(grid.getStore().getSorters().getAt(0).getProperty()).toBe('subject');
+                    rec.set('testProp', 1);
+                    rec.commit();
+                    t.expect(feature.onStoreUpdate(store, rec)).toBe(false);
+
+
+                    // proper sorter
+                    store.getSorters().clear()
+                    store.setSorters({property : 'testProp', dir : 'ASC'});
+                    t.waitForMs(500, function() {
+                        t.expect(grid.getStore().getSorters().length).toBe(1);
+                        t.expect(grid.getStore().getSorters().getAt(0).getProperty()).toBe('testProp');
+                        rec = PageMapUtil.getRecordAt(RecordPosition.create(1, 0), pageMap);
+                        rec.set('testProp', 2);
+                        rec.commit();
+                        t.expect(feature.onStoreUpdate(store, rec)).toBe(true);
+
+
+                        // no insert index can be found
+                        rec.set('testProp', 322552252);
+                        rec.commit();
+                        t.expect(feature.onStoreUpdate(store, rec)).toBe(false);
+
+                        grid.destroy();
+                        grid = null;
+                    });
+
+                });
+
+            });
         });
 
 
