@@ -35,7 +35,7 @@ Ext.define('conjoon.cn_comp.fixtures.sim.ItemSim', {
     Ext.ux.ajax.SimManager.register({
         type : 'json',
 
-        url  : /cn_comp\/fixtures\/BufferedStoreEnhancerItems(\/\d+)?/,
+        url  : /cn_comp\/fixtures\/Livegrid(\/\d+)?/,
 
         doPut : function(ctx) {
 
