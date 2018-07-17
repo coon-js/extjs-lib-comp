@@ -22,44 +22,34 @@
  */
 
 /**
+ *  +--------------------------------------------------------------------+
+ *  |                        LIVEGRID                                    |
+ *  +--------------------------------------------------------------------+
+ *
  * Grid Feature which enhances the usability when used with a BufferedStore,
  * allowing for more seamless update/remove/add operations without the need
  * to completely reload the store, and instead delay reloading data to
  * the prefetching mechanism of the BufferedStore.
  *
- * ## Extra Events
- *
- * This feature adds several extra events that will be fired on the grid to
- * interact with:
- *
- *  - {@link #cn_comp-bufferedstoreenhancer-recordmove}
- *
- *
  */
-Ext.define('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer', {
+Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
 
     extend : 'Ext.grid.feature.Feature',
 
-    alias : 'feature.cn_comp-gridfeature-bufferedstoreenhancer',
+    alias : 'feature.cn_comp-gridfeature-livegrid',
 
     requires : [
-        'conjoon.cn_core.data.pageMap.IndexLookup',
+        'conjoon.cn_core.data.pageMap.PageMapFeeder',
         'conjoon.cn_core.data.pageMap.RecordPosition',
         'conjoon.cn_core.data.pageMap.IndexRange'
     ],
 
 
     /**
-     * @event cn_comp-bufferedstoreenhancer-recordmove
-     * @param {Ext.grid.Panel} grid The grid this feature is used with
-     * @param {Ext.data.Model} record The record that was updated
-     * @param {conjoon.cn_core.data.pageMap.RecordPosition} from The original
-     * position of the record before it was moved
-     * @param {conjoon.cn_core.data.pageMap.RecordPosition} to The target position
-     * of the record to which it was moved
-     * @param {Boolean} viewRefreshed whether the view was refresh to represent
-     * the changes
+     * @type {conjoon.cn_core.data.pageMap.PageMapFeeder} pageMapFeeder
+     * @private
      */
+    pageMapFeeder : null,
 
 
     /**
@@ -71,14 +61,13 @@ Ext.define('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer', {
 
         if (grid.multiColumnSort) {
             Ext.raise({
-                msg             : 'BufferedStoreEnhancer does not work with ' +
+                msg             : 'Livegrid does not work with ' +
                                   'grid\'s "multiColumnSort"-functionality enabled',
                 multiColumnSort : grid.multiColumnSort
             });
         }
 
-
-        me.associateSetup(grid.getStore());
+        me.configure(grid.getStore());
         grid.on('reconfigure', me.onGridReconfigure, me);
 
         me.callParent(arguments);
@@ -88,116 +77,76 @@ Ext.define('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer', {
     /**
      * Callback for the store's update event. Will check if this
      * grid's store sorter and sort order is affected by the update, and forward
-     * to #moveRecord.
+     * to this PageMapFeeder's #update method. If a conjoon.cn_core.data.pageMap.Operation
+     * instance is returned by this method, either its from or to (or both)
+     * position(s) will be forwarded to #refreshView, which has the to decide
+     * if the view is re-rendered.
+     *
      *
      * @param {Ext.data.BufferedStore} store
      * @param {Ext.data.Model} record
      * @param {Ext.data.operation.Operation} operation
+     *
+     * @return {Boolean} false if no update in the view was triggered, otherwise
+     * true
      */
     onStoreUpdate : function(store, record, operation) {
 
-        var me             = this,
-            grid           = me.grid,
-            RecordPosition = conjoon.cn_core.data.pageMap.RecordPosition,
-            sorters        = grid.store.getSorters(),
-            property       = sorters && sorters.getAt(0)
-                             ? sorters.getAt(0).getProperty()
-                             : null,
-            searchIndex;
-
+        const me       = this,
+              sorters  = me.grid.store.getSorters(),
+              property = sorters && sorters.getAt(0)
+                         ? sorters.getAt(0).getProperty()
+                         : null;
 
         if (!property || !record.previousValues.hasOwnProperty(property)) {
             return false;
         }
 
-        searchIndex = me.indexLookup.findInsertIndex(record);
+        let op  = me.pageMapFeeder.update(record),
+            pos = [], result;
 
-        if (Ext.isArray(searchIndex)) {
-            me.moveRecord(record, RecordPosition.create(searchIndex));
-            return true;
+        if (op) {
+            result = op.getResult();
+            if (result.to) {
+                pos.push(result.to);
+            }
+            if (result.from) {
+                pos.push(result.from);
+            }
         }
 
-        return false;
+        return me.refreshView(pos);
     },
 
 
     /**
-     * Tries to move the record in the PageMap to position based on the sort
-     * information.
-     * Any responsibility for refreshing the view is delegated to #refreshView.
-     * This method triggers the #cn_comp-bufferedstoreenhancer-recordmove event
-     * with the appropriate event-informations.
-     * Will not scroll to the moved record, for this you are advised to call
-     * {Ext.grid.Panel#ensureVisible} in any #cn_comp-bufferedstoreenhancer-recordmove-
-     * listener.
-
+     * Refreshes the view if any of the positions found in positions is contained
+     * in the current view.
      *
-     * @param {Ext.data.Model} record
-     * @param {conjoon.cn_core.data.pageMap.RecordPosition} to
-     *
-     * @return {Boolean} true if the record was moved, otherwise false.
-     *
-     * @private
-     */
-    moveRecord : function(record, to) {
-
-        var me             = this,
-            grid           = me.grid,
-            PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
-            pageMap        = me.getPageMap(),
-            viewRefreshed  = false,
-            from           = PageMapUtil.storeIndexToPosition(pageMap.indexOf(record), pageMap);
-
-        // no support for moving anything that is out of the PageRange of record
-        if (!PageMapUtil.getPageRangeForRecord(record, pageMap)
-            .equalTo(PageMapUtil.getPageRangeForRecord(
-                PageMapUtil.getRecordAt(to, pageMap), pageMap)
-        )) {
-            Ext.raise('Runtime Exception');
-        }
-
-        PageMapUtil.moveRecord(from, to, pageMap);
-        viewRefreshed = me.refreshView(from, to);
-
-        grid.fireEvent(
-            'cn_comp-bufferedstoreenhancer-recordmove',
-            grid, record, from, to, viewRefreshed
-        );
-
-    },
-
-
-    /**
-     * Refreshes the view if either from or to are within the currently rendered
-     * range of records in the grid.
-     *
-     * @param {conjoon.cn_core.data.pageMap.RecordPosition} from The position from
-     * where the view should be re-rendered
-     * @param {conjoon.cn_core.data.pageMap.RecordPosition} from The position to
-     * where the view should be re-rendered
+     * @param {Array|conjoon.cn_core.data.pageMap.RecordPosition} positions
      *
      * @return {Boolean} true if refreshing the view was delegated to this grid's
      * view, otherwise false
      *
      * @private
      */
-    refreshView : function(from, to) {
+    refreshView : function(positions) {
 
-        var me          = this,
-            grid        = me.grid,
-            view        = grid.getView(),
-            pageMap     = me.getPageMap(),
-            PageMapUtil = conjoon.cn_core.data.pageMap.PageMapUtil,
-            start;
+        const me          = this,
+              grid        = me.grid,
+              view        = grid.getView(),
+              pageMap     = me.getPageMap(),
+              PageMapUtil = conjoon.cn_core.data.pageMap.PageMapUtil;
+
+        let i, len, indexes = [];
+
+        for (i = 0, len = positions.length; i < len; i++) {
+            indexes.push(PageMapUtil.positionToStoreIndex(positions[i], pageMap));
+        }
 
         // if from or to is in the rendered rect, refresh view
-        if (me.getCurrentViewRange().contains([from, to])) {
-            start = Math.min(
-                PageMapUtil.positionToStoreIndex(from, pageMap),
-                PageMapUtil.positionToStoreIndex(to, pageMap)
-            );
-            view.on('beforerefresh', function(){console.log(arguments)});
-            view.refreshView(start);
+        if (me.getCurrentViewRange().contains(positions)) {
+            view.refreshView(Math.min(...indexes));
 
             return true;
         }
@@ -209,7 +158,7 @@ Ext.define('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer', {
     /**
      * Returns the current range of rendered indexes.
      *
-     *  @return {conjoon.cn_core.data.pageMap.IndexRange} the current rnge or
+     *  @return {conjoon.cn_core.data.pageMap.IndexRange} the current range or
      *  null if no range could be determined
      */
     getCurrentViewRange : function() {
@@ -240,12 +189,14 @@ Ext.define('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer', {
      * @private
      */
     getPageMap : function() {
+        const me = this;
+
         return this.grid.getStore().getData();
     },
 
 
     /**
-     * Callback fro the reconfigure event of the grid of this feature.
+     * Callback for the reconfigure event of the grid of this feature.
      *
      * @param {Ext.grid.Panel} grid
      * @param {Ext.store.AbstractStore} store
@@ -260,7 +211,7 @@ Ext.define('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer', {
         var me = this;
 
         if (store && store !== oldStore) {
-            me.associateSetup(store);
+            me.configure(store);
         }
     },
 
@@ -278,7 +229,7 @@ Ext.define('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer', {
      *
      * @throws if store is not an empty store or a BufferedStore
      */
-    associateSetup : function(store) {
+    configure : function(store) {
 
         var me = this;
 
@@ -296,16 +247,17 @@ Ext.define('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer', {
 
         // this is not needed since Ext.util.Event#addListener already checks
         // for duplicates and doesn't add one and the same event twice.
-        // however, we want to be on the save side, tests consider this edge case
+        // however, we want to be on the save side, our tests consider this
+        // edge case
         me.mun(store, 'update',  me.onStoreUpdate, me);
         me.mon(store, 'update',  me.onStoreUpdate, me);
 
-        if (me.indexLookup) {
-            me.indexLookup.destroy();
-            me.indexLookup = null;
+        if (me.pageMapFeeder) {
+            me.pageMapFeeder.destroy();
+            me.pageMapFeeder = null;
         }
 
-        me.indexLookup = Ext.create('conjoon.cn_core.data.pageMap.IndexLookup', {
+        me.pageMapFeeder = Ext.create('conjoon.cn_core.data.pageMap.PageMapFeeder', {
             pageMap : store.getData()
         });
 

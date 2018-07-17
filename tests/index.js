@@ -76,7 +76,7 @@ harness.start({
             group : 'feature',
             items : [
                 'classic/src/grid/feature/RowBodySwitchTest.js',
-                'classic/src/grid/feature/BufferedStoreEnhancerTest.js'
+                'classic/src/grid/feature/LivegridTest.js'
             ]
         }]
     }, {

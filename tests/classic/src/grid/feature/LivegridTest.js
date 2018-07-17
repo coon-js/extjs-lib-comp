@@ -20,7 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
+describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
 
     var createStore = function(cfg) {
 
@@ -30,16 +30,17 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
 
                 type   : 'buffered',
                 fields : ['id', 'testProp'],
+                pageSize : 100,
                 autoLoad : cfg.autoLoad ? cfg.autoLoad : undefined,
                 sorters  : cfg.sorters
                            ? cfg.sorters
                            : undefined,
                 proxy : {
                     type : 'rest',
-                        url  : 'cn_comp/fixtures/BufferedStoreEnhancerItems',
+                        url  : 'cn_comp/fixtures/Livegrid',
                         reader : {
                         type         : 'json',
-                            rootProperty : 'data'
+                        rootProperty : 'data'
                     }
                 }
             });
@@ -50,9 +51,10 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
             cfg = cfg || {};
 
             var featureCfg = {
-                ftype : 'cn_comp-gridfeature-bufferedstoreenhancer',
-                id    : 'bufferedstoreenhancer'
+                ftype : 'cn_comp-gridfeature-livegrid',
+                id    : 'livegrid'
             };
+
 
             return Ext.create('Ext.grid.Panel', {
 
@@ -92,71 +94,8 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
 
             });
         },
-        moveRecordTest = function(config, t) {
-
-                var grid = getGrid({
-                        autoLoad : true,
-                        sorters  : [{
-                            property : 'testProp',
-                            dir      : 'ASC'
-                        }]
-                    }),
-                    store          = grid.getStore(),
-                    pageMap        = store.getData(),
-                    map            = pageMap.map,
-                    feature        = grid.view.getFeature('bufferedstoreenhancer'),
-                    RecordPosition = conjoon.cn_core.data.pageMap.RecordPosition,
-                    PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
-                    SIGNAL = 0, REFRESHED = false,
-                    from, to, FROM, TO;
-
-
-                t.waitForMs(500, function() {
-
-                    config.before && config.before.apply(null, [grid, t]);
-
-                    from = RecordPosition.create(config.from);
-                    to   = RecordPosition.create(config.to);
-
-                    grid.on('cn_comp-bufferedstoreenhancer-recordmove', function(grid, record, from, to, refreshed) {
-                        SIGNAL++;
-                        REFRESHED = refreshed;
-                        FROM = from;
-                        TO = to;
-                    });
-
-                    config.additionalFn && config.additionalFn.apply(null, [grid, t]);
-
-                    if (config.exception) {
-
-                        var exc, e;
-                        try {
-                            feature.moveRecord(PageMapUtil.getRecordAt(from, pageMap), to);
-                        } catch (e) {
-                            exc = e;
-                        }
-
-                        t.expect(exc).toBeDefined();
-                        t.expect(exc.msg).toBeDefined();
-                        t.expect(exc.msg.toLowerCase()).toContain(config.exception.toLowerCase());
-
-                    } else {
-                        feature.moveRecord(PageMapUtil.getRecordAt(from, pageMap), to);
-
-                        t.expect(SIGNAL).toBe(1);
-                        t.expect(REFRESHED).toBe(config.REFRESHED);
-                        t.expect(FROM.equalTo(from)).toBe(true);
-                        t.expect(TO.equalTo(to)).toBe(true);
-                    }
-
-                    if (config.remove !== false) {
-                        grid.destroy();
-                        grid = null;
-                    }
-
-                });
-
-
+        createLivegrid = function() {
+            return Ext.create('conjoon.cn_comp.grid.feature.Livegrid');
         };
 
 
@@ -166,11 +105,11 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
 // |                    =~. Tests .~=
 // +----------------------------------------------------------------------------
 
-    t.requireOk('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer', function() {
+    t.requireOk('conjoon.cn_comp.grid.feature.Livegrid', function() {
     t.requireOk('conjoon.cn_comp.fixtures.sim.ItemSim', function(){
 
 
-        t.it('BufferedStoreEnhancer will not work with multiColumnSort', function(t) {
+        t.it('Livegrid will not work with multiColumnSort', function(t) {
 
             var exc, e, grid;
 
@@ -183,55 +122,55 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
             t.expect(exc).toBeDefined();
             t.expect(exc.msg).toContain('does not work with');
 
-        }); //^^
+        });
 
 
-        t.it("associateSetup()", function(t) {
+        t.it("setup()", function(t) {
 
             var store   = Ext.create('Ext.data.Store'),
                 SIGNAL  = 0,
-                exc, e, oldLookup, store;
+                exc, e, oldPageMapFeeder, store;
 
             store.isEmptyStore = true;
 
-            feature = Ext.create('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer');
-            t.expect(feature.associateSetup(store)).toBe(false);
+            feature = createLivegrid();
+            t.expect(feature.configure(store)).toBe(false);
 
             // exceptions
-            feature = Ext.create('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer');
-            try {feature.associateSetup(Ext.create('Ext.data.Store'));}catch(e){exc=e;}
+            feature = createLivegrid();
+            try {feature.configure(Ext.create('Ext.data.Store'));}catch(e){exc=e;}
             t.expect(exc).toBeDefined();
             t.expect(exc.msg.toLowerCase()).toContain('must be an instance of');
             exc = undefined;
-            try {feature.associateSetup();}catch(e){exc=e;}
+            try {feature.configure();}catch(e){exc=e;}
             t.expect(exc).toBeDefined();
             t.expect(exc.msg.toLowerCase()).toContain('must be an instance of');
 
 
-            // indexLookup setting
-            feature = Ext.create('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer');
-            t.expect(feature.indexLookup).toBeFalsy();
-            oldLookup = Ext.create('conjoon.cn_core.data.pageMap.IndexLookup', {
+            // pageMapFeeder setting
+            feature = createLivegrid();
+            t.expect(feature.pageMapFeeder).toBeFalsy();
+            oldPageMapFeeder = Ext.create('conjoon.cn_core.data.pageMap.PageMapFeeder', {
                 pageMap : createStore().getData()
             });
-            feature.indexLookup = oldLookup;
-            t.isCalledNTimes('destroy', feature.indexLookup, 1);
-            t.expect(feature.indexLookup).toBe(oldLookup);
-            t.expect(feature.associateSetup(Ext.create('Ext.data.BufferedStore'))).toBe(true);
-            t.expect(feature.indexLookup instanceof conjoon.cn_core.data.pageMap.IndexLookup).toBe(true);
-            t.expect(feature.indexLookup).not.toBe(oldLookup);
+            feature.pageMapFeeder = oldPageMapFeeder;
+            t.isCalledNTimes('destroy', feature.pageMapFeeder, 1);
+            t.expect(feature.pageMapFeeder).toBe(oldPageMapFeeder);
+            t.expect(feature.configure(Ext.create('Ext.data.BufferedStore'))).toBe(true);
+            t.expect(feature.pageMapFeeder instanceof conjoon.cn_core.data.pageMap.PageMapFeeder).toBe(true);
+            t.expect(feature.pageMapFeeder).not.toBe(oldPageMapFeeder);
 
             store = createStore();
             store.load();
             t.waitForMs(250, function() {
 
                 // onStoreUpdate installed
-                feature = Ext.create('conjoon.cn_comp.grid.feature.BufferedStoreEnhancer');
+                feature = createLivegrid();
                 feature.onStoreUpdate = function() {
                     SIGNAL++;
                 };
                 t.expect(SIGNAL).toBe(0);
-                t.expect(feature.associateSetup(store)).toBe(true);
+                t.expect(feature.configure(store)).toBe(true);
                 store.getAt(0).set('testProp', 't');
                 store.getAt(0).commit();
                 t.expect(SIGNAL).toBe(1);
@@ -239,8 +178,8 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
                 store.getAt(0).commit();
                 t.expect(SIGNAL).toBe(2);
                 SIGNAL = 0;
-                t.expect(feature.associateSetup(store)).toBe(true);
-                t.expect(feature.associateSetup(store)).toBe(true);
+                t.expect(feature.configure(store)).toBe(true);
+                t.expect(feature.configure(store)).toBe(true);
                 store.getAt(1).set('testProp', 'fjfjjfu');
                 store.getAt(1).commit();
                 t.expect(SIGNAL).toBe(1);
@@ -257,12 +196,12 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
 
             t.isCalledNTimes(
                 'onGridReconfigure',
-                conjoon.cn_comp.grid.feature.BufferedStoreEnhancer.prototype,
+                conjoon.cn_comp.grid.feature.Livegrid.prototype,
                 1
             );
 
             grid    = getGrid({autoLoad : true});
-            feature = grid.view.getFeature('bufferedstoreenhancer');
+            feature = grid.view.getFeature('livegrid');
             store   = createStore(),
             store2  = createStore;
 
@@ -280,12 +219,12 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
             var grid, feature, store;
 
             grid    = getGrid({autoLoad : true});
-            feature = grid.view.getFeature('bufferedstoreenhancer');
+            feature = grid.view.getFeature('livegrid');
             store   = createStore(),
             store2  = createStore();
 
 
-            t.isCalledNTimes('associateSetup', feature, 3)
+            t.isCalledNTimes('configure', feature, 3)
             feature.onGridReconfigure(grid, store, null, null);
             feature.onGridReconfigure(grid, store2, null, store);
             feature.onGridReconfigure(grid, store, null, store2);
@@ -304,9 +243,11 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
             var grid, feature, store;
 
             grid    = getGrid({autoLoad : true});
-            feature = grid.view.getFeature('bufferedstoreenhancer');
+            feature = grid.view.getFeature('livegrid');
 
             t.expect(feature.getPageMap()).toBe(grid.getStore().getData());
+            t.expect(feature.pageMapFeeder.getPageMap()).toBe(feature.getPageMap()
+            );
 
             grid.destroy();
             grid = null;
@@ -316,7 +257,7 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
         t.it("getCurrentViewRange()", function(t) {
 
             var grid           = getGrid({autoLoad : true}),
-                feature        = grid.view.getFeature('bufferedstoreenhancer'),
+                feature        = grid.view.getFeature('livegrid'),
                 PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil;
 
 
@@ -350,7 +291,7 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
         t.it("refreshView()", function(t) {
 
             var grid           = getGrid({autoLoad : true}),
-                feature        = grid.view.getFeature('bufferedstoreenhancer'),
+                feature        = grid.view.getFeature('livegrid'),
                 RecordPosition = conjoon.cn_core.data.pageMap.RecordPosition,
                 PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
                 viewRange, SIGNAL = 0;
@@ -361,15 +302,15 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
                 grid.view.on('refresh', function(){SIGNAL++});
 
                 t.expect(feature.refreshView(
-                    RecordPosition.create(1, 0), RecordPosition.create(2,4)
+                    [RecordPosition.create(1, 0), RecordPosition.create(2,4)]
                 )).toBe(true);
 
                 t.expect(SIGNAL).toBe(1);
                 viewRange = feature.getCurrentViewRange();
 
                 t.expect(feature.refreshView(
-                    RecordPosition.create(viewRange.getEnd().getPage() + 1, 0),
-                    RecordPosition.create(viewRange.getEnd().getPage() + 1, 4)
+                    [RecordPosition.create(viewRange.getEnd().getPage() + 1, 0),
+                    RecordPosition.create(viewRange.getEnd().getPage() + 1, 4)]
                 )).toBe(false);
                 t.expect(SIGNAL).toBe(1);
 
@@ -379,65 +320,15 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
         });
 
 
-        t.it("moveRecord() - from visible, to visible", function(t) {
-            moveRecordTest({
-                from      : [1, 0],
-                to        : [1, 8],
-                REFRESHED : true
-            }, t)
-        });
-
-
-        t.it("moveRecord() - from visible, to not visible", function(t) {
-            moveRecordTest({
-                from      : [1, 0],
-                to        : [3, 24],
-                REFRESHED : true,
-                additionalFn : function(grid, t) {
-                    t.expect(grid.view.all.startIndex).toBeGreaterThan(-1);
-                    t.expect(grid.view.all.endIndex).toBeLessThan(55);
-                }
-            }, t)
-        });
-
-
-        t.it("moveRecord() - from not visible, to not visible", function(t) {
-            moveRecordTest({
-                from      : [3, 18],
-                to        : [3, 24],
-                REFRESHED : false,
-                additionalFn : function(grid, t) {
-                    t.expect(grid.view.all.startIndex).toBeGreaterThan(-1);
-                    t.expect(grid.view.all.endIndex).toBeLessThan(55);
-                }
-            }, t)
-        });
-
-
-        t.it("moveRecord() - from and to not in same page range", function(t) {
-            moveRecordTest({
-                remove    : false,
-                from      : [1, 18],
-                to        : [3, 24],
-                exception : "runtime exception",
-                REFRESHED : false,
-                before    : function(grid, t) {
-                    grid.view.getFeature('bufferedstoreenhancer')
-                        .getPageMap().removeAtKey(2);
-                }
-            }, t)
-        });
-
-
         t.it("onStoreUpdate() - is called", function(t) {
 
             t.isCalledNTimes(
                 'onStoreUpdate',
-                conjoon.cn_comp.grid.feature.BufferedStoreEnhancer.prototype,
+                conjoon.cn_comp.grid.feature.Livegrid.prototype,
                 1
             );
             var grid    = getGrid({autoLoad : true}),
-                feature = grid.view.getFeature('bufferedstoreenhancer');
+                feature = grid.view.getFeature('livegrid');
 
             t.waitForMs(500, function() {
 
@@ -454,7 +345,7 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
 
             var grid           = getGrid({autoLoad : true}),
                 store          = grid.getStore(),
-                feature        = grid.view.getFeature('bufferedstoreenhancer'),
+                feature        = grid.view.getFeature('livegrid'),
                 pageMap        = feature.getPageMap(),
                 RecordPosition = conjoon.cn_core.data.pageMap.RecordPosition,
                 PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
@@ -505,9 +396,4 @@ describe('conjoon.cn_comp.grid.feature.BufferedStoreEnhancerTest', function(t) {
         });
 
 
-})}) // EO requireOk
-
-
-
-
-});
+})})});
