@@ -71,6 +71,43 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
         grid.on('reconfigure', me.onGridReconfigure, me);
 
         me.callParent(arguments);
+
+        me.swapSaveFocusState();
+    },
+
+
+    /**
+     * Method for removing a record, which will forward this call to this
+     * feature's PageMapFeeder#remove method.
+     * Selections will be updated in case the removed record was part of
+     * the selection-model.
+     *
+     * @param {Ext.data.Model} record
+     *
+     * @returns {Boolean} Returns the result of  #refreshView, which returns
+     * true in case the view was updated, otherwise false
+     */
+    remove : function(record) {
+
+        const me       = this,
+              selModel = me.grid.getSelectionModel();
+
+        let op  = me.pageMapFeeder.remove(record),
+            pos = [], result;
+
+        if (op) {
+            result = op.getResult();
+
+            if (selModel.isSelected(record)) {
+                selModel.deselect(record);
+            }
+
+            if (result.from) {
+                pos.push(result.from);
+            }
+        }
+
+        return me.refreshView(pos, false);
     },
 
 
@@ -81,7 +118,6 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
      * instance is returned by this method, either its from or to (or both)
      * position(s) will be forwarded to #refreshView, which has the to decide
      * if the view is re-rendered.
-     *
      *
      * @param {Ext.data.BufferedStore} store
      * @param {Ext.data.Model} record
@@ -124,19 +160,21 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
      * in the current view.
      *
      * @param {Array|conjoon.cn_core.data.pageMap.RecordPosition} positions
+     * @param {Boolean=true} ensureVisible true to call the grid's ensureVisible()
+     * method IF the grid has a selection
      *
      * @return {Boolean} true if refreshing the view was delegated to this grid's
      * view, otherwise false
      *
      * @private
      */
-    refreshView : function(positions) {
+    refreshView : function(positions, ensureVisible = true) {
 
-        const me          = this,
-              grid        = me.grid,
-              view        = grid.getView(),
-              pageMap     = me.getPageMap(),
-              PageMapUtil = conjoon.cn_core.data.pageMap.PageMapUtil;
+        const me        = this,
+            grid        = me.grid,
+            view        = grid.getView(),
+            pageMap     = me.getPageMap(),
+            PageMapUtil = conjoon.cn_core.data.pageMap.PageMapUtil;
 
         let i, len, indexes = [];
 
@@ -146,7 +184,16 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
 
         // if from or to is in the rendered rect, refresh view
         if (me.getCurrentViewRange().contains(positions)) {
-            view.refreshView(Math.min(...indexes));
+            indexes.push(view.all.startIndex);
+
+            view.refreshView(...indexes);
+
+            if (ensureVisible !== false) {
+                let selection = grid.getSelection();
+                if (selection.length) {
+                    grid.ensureVisible(selection[0]);
+                }
+            }
 
             return true;
         }
@@ -157,27 +204,31 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
 
     /**
      * Returns the current range of rendered indexes.
+     * The end index of the computed range might not exist anymore in the
+     * store, since this method might get called after a record has been
+     * removed locally, but the view wasn't updated yet.
      *
-     *  @return {conjoon.cn_core.data.pageMap.IndexRange} the current range or
-     *  null if no range could be determined
+     * @return {conjoon.cn_core.data.pageMap.IndexRange} the current range or
+     * null if no range could be determined
+     *
+     * @private
      */
     getCurrentViewRange : function() {
 
-        var me          = this,
-            grid        = me.grid,
-            view        = grid.getView(),
-            rows        = view.all,
-            PageMapUtil = conjoon.cn_core.data.pageMap.PageMapUtil;
+        const me          = this,
+              grid        = me.grid,
+              view        = grid.getView(),
+              rows        = view.all,
+              PageMapUtil = conjoon.cn_core.data.pageMap.PageMapUtil;
 
         if (rows.endIndex === -1) {
             return null;
         }
 
-        return PageMapUtil.storeIndexToRange(
-            rows.startIndex,
-            rows.endIndex,
-            me.getPageMap()
-        );
+        let start = rows.startIndex,
+            end   = rows.endIndex;
+
+        return PageMapUtil.storeIndexToRange(start, end, me.getPageMap(), true);
     },
 
 
@@ -192,6 +243,92 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
         const me = this;
 
         return this.grid.getStore().getData();
+    },
+
+
+    /**
+     * Last resort for BufferedStore is to trigger the cachemiss which signals
+     * that the pages between the start- and the end-index shoulc be loaded
+     * immediately.
+     * Since this feature might prevent Pages to be loaded in case they are
+     * currently being used as Feeds, the cachemiss event will remove all
+     * Feeds that would be replaced by the page(s) which are about to get
+     * loaded.
+     * This method will effectively release any "lock" that is considered by the
+     * beforepretch-listener in this feature,
+     *
+     * @param {Ext.data.BufferedStore} store
+     * @param {Number} start
+     * @param {Number} end
+     */
+    onCacheMiss : function(store, start, end) {
+
+        const me            = this,
+              pageMap       = me.getPageMap(),
+              PageMapUtil   = conjoon.cn_core.data.pageMap.PageMapUtil,
+              pageMapFeeder = me.pageMapFeeder;
+
+        let startPos = PageMapUtil.storeIndexToPosition(start, pageMap),
+            endPos   = PageMapUtil.storeIndexToPosition(end, pageMap),
+            startIdx = Math.min(startPos.getPage(), endPos.getPage()),
+            endIdx   = Math.max(startPos.getPage(), endPos.getPage());
+
+        for (let i = startIdx; i <= endIdx; i++) {
+            if (!pageMap.peekPage(i) && pageMapFeeder.getFeedAt(i)) {
+                pageMapFeeder.removeFeedAt(i);
+            }
+        }
+    },
+
+
+    /**
+     * Callback for the pageadd-event.
+     * When this event is triggered, we give precedence to the reason that caused
+     * the page to be added, and remobe the feed at the added page, without
+     * asking.
+     *
+     * @param {Ext.data.PageMap} pageMap
+     * @param {Number} pageNumber
+     *
+     * @private
+     *
+     * @see conjoon.cn_core.data.pageMap.PageMapFeeder#removeFeedAt
+     */
+    onPageAdd : function(pageMap, pageNumber) {
+
+        const me            = this,
+              pageMapFeeder = me.pageMapFeeder;
+
+        pageMapFeeder.removeFeedAt(pageNumber);
+    },
+
+
+    /**
+     * Cancels prefetch by checking whether the required page exists as a Feed,
+     * and, if that is the case, is currently not in the current view-range.
+     *
+     * @param {Ext.data.BufferedStore} store
+     * @param {Ext.data.Operation} operation
+     *
+     * @return {Boolean} if this feature is okay with prefetching the requested
+     * page, otherwise false
+     *
+     * @see #getCurrentViewRange
+     */
+    onBeforePrefetch : function(store, operation) {
+
+        const me             = this,
+              page           = operation.getPage(),
+              pageMapFeeder  = me.pageMapFeeder,
+              RecordPosition = conjoon.cn_core.data.pageMap.RecordPosition;
+
+
+        if (pageMapFeeder.getFeedAt(page) &&
+            !me.getCurrentViewRange().contains(RecordPosition.create(page, 0))) {
+            return false;
+        }
+
+        return true;
     },
 
 
@@ -221,7 +358,8 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
      * We treat empty stores special, as we silently ignore them when this
      * method is called with a store representing an empty store.
      *
-     * @param {Ext.data.AbstractStore} store
+     * @param {Ext.data.BufferedStore} store
+     *
      * @return {Boolean} true if the requirements where successfully installed,
      * otherwise false, e.g. due to an empty store
      *
@@ -231,7 +369,7 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
      */
     configure : function(store) {
 
-        var me = this;
+        const me = this;
 
 
         if (store && store.isEmptyStore) {
@@ -245,6 +383,8 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
             });
         }
 
+        let pageMap = store.getData();
+
         // this is not needed since Ext.util.Event#addListener already checks
         // for duplicates and doesn't add one and the same event twice.
         // however, we want to be on the save side, our tests consider this
@@ -252,18 +392,80 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
         me.mun(store, 'update',  me.onStoreUpdate, me);
         me.mon(store, 'update',  me.onStoreUpdate, me);
 
+        me.mun(store, 'beforeprefetch',  me.onBeforePrefetch, me);
+        me.mon(store, 'beforeprefetch',  me.onBeforePrefetch, me);
+
+        me.mun(store, 'pageadd',  me.onPageAdd, me);
+        me.mon(store, 'pageadd',  me.onPageAdd, me);
+
+        me.mun(store, 'cachemiss',  me.onCacheMiss, me);
+        me.mon(store, 'cachemiss',  me.onCacheMiss, me);
+
+
         if (me.pageMapFeeder) {
             me.pageMapFeeder.destroy();
             me.pageMapFeeder = null;
         }
 
         me.pageMapFeeder = Ext.create('conjoon.cn_core.data.pageMap.PageMapFeeder', {
-            pageMap : store.getData()
+            pageMap : pageMap
         });
 
         return true;
-    }
+    },
 
+
+    /**
+     * Swaps the restoreFocus() method that is usually returned by the grid's
+     * view "saveFocusState()" with a custom method that considers all store
+     * data instead just a snapshot as assumed by the default implementation,
+     * by overriding the NodeCache's (view.all) getCount() method to return the
+     * totalCount of the store.
+     *
+     * @return {Boolean}
+     *
+     * @private
+     */
+    swapSaveFocusState : function() {
+        const me   = this,
+              view = me.view;
+
+        view.saveFocusState = conjoon.cn_comp.grid.feature.Livegrid.prototype.saveFocusState;
+
+        return true;
+    },
+
+
+    /**
+     * Replacement-method for Ext.view.Table#saveFocusState.
+     * This method gets called in the scope of the grid's view.
+     *
+     * @return {Function}
+     *
+     * @private
+     *
+     * @see swapSaveFocusState
+     */
+    saveFocusState : function() {
+
+        const me = this;
+
+        let tmp = me.all.getCount,
+            res = Ext.view.Table.prototype.saveFocusState.apply(me, arguments);
+
+        let func = function() {
+
+            me.all.getCount = function() {
+                return me.dataSource.getTotalCount();
+            };
+            res.apply(me);
+
+            me.all.getCount = tmp;
+        };
+
+
+        return func;
+    }
 
 
 

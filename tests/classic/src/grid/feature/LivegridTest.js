@@ -128,7 +128,7 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
         t.it("setup()", function(t) {
 
             var store   = Ext.create('Ext.data.Store'),
-                SIGNAL  = 0,
+                SIGNAL  = 0, BEFOREPREFETCH = 0, CACHEMISS = 0, PAGEADD = 0,
                 exc, e, oldPageMapFeeder, store;
 
             store.isEmptyStore = true;
@@ -166,6 +166,15 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
 
                 // onStoreUpdate installed
                 feature = createLivegrid();
+                feature.onCacheMiss = function() {
+                    CACHEMISS++;
+                };
+                feature.onBeforePrefetch = function() {
+                    BEFOREPREFETCH++;
+                };
+                feature.onPageAdd = function() {
+                    PAGEADD++;
+                };
                 feature.onStoreUpdate = function() {
                     SIGNAL++;
                 };
@@ -174,15 +183,41 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
                 store.getAt(0).set('testProp', 't');
                 store.getAt(0).commit();
                 t.expect(SIGNAL).toBe(1);
+
+                store.fireEvent('cachemiss');
+                store.fireEvent('beforeprefetch');
+                store.fireEvent('pageadd');
+                t.expect(BEFOREPREFETCH).toBe(1);
+                t.expect(CACHEMISS).toBe(1);
+                t.expect(PAGEADD).toBe(1);
+
                 store.getAt(0).set('testProp', 'u');
                 store.getAt(0).commit();
                 t.expect(SIGNAL).toBe(2);
+
+                store.fireEvent('cachemiss');
+                store.fireEvent('beforeprefetch');
+                store.fireEvent('pageadd');
+                t.expect(BEFOREPREFETCH).toBe(2);
+                t.expect(CACHEMISS).toBe(2);
+                t.expect(PAGEADD).toBe(2);
+
+                CACHEMISS = 0;
+                BEFOREPREFETCH = 0;
+                PAGEADD = 0;
                 SIGNAL = 0;
                 t.expect(feature.configure(store)).toBe(true);
                 t.expect(feature.configure(store)).toBe(true);
                 store.getAt(1).set('testProp', 'fjfjjfu');
                 store.getAt(1).commit();
                 t.expect(SIGNAL).toBe(1);
+
+                store.fireEvent('cachemiss');
+                store.fireEvent('beforeprefetch');
+                store.fireEvent('pageadd');
+                t.expect(BEFOREPREFETCH).toBe(1);
+                t.expect(CACHEMISS).toBe(1);
+                t.expect(PAGEADD).toBe(1);
 
                 store.destroy();
                 store = null;
@@ -396,4 +431,301 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
         });
 
 
-})})});
+
+        t.it("saveFocusState()", function(t) {
+
+            let grid           = getGrid({autoLoad : true}),
+                store          = grid.getStore(),
+                feature        = grid.view.getFeature('livegrid'),
+                pageMap        = feature.getPageMap();
+
+            t.waitForMs(750, function() {
+
+                t.isCalledNTimes('saveFocusState', Ext.view.Table.prototype, 1);
+
+                res = feature.saveFocusState.apply(grid.view);
+                t.expect(res).toBeTruthy();
+                t.expect(Ext.isFunction(res));
+
+                grid.destroy();
+                grid = null;
+
+            });
+
+        });
+
+
+        t.it("swapSaveFocusState()", function(t) {
+
+            let grid    = getGrid({autoLoad : true}),
+                store   = grid.getStore(),
+                feature = grid.view.getFeature('livegrid'),
+                pageMap = feature.getPageMap();
+
+            t.isCalledNTimes('saveFocusState', conjoon.cn_comp.grid.feature.Livegrid.prototype, 1);
+
+            t.waitForMs(750, function() {
+
+                t.expect(feature.swapSaveFocusState()).toBe(true);
+                t.expect(grid.view.saveFocusState).toBe(
+                    conjoon.cn_comp.grid.feature.Livegrid.prototype.saveFocusState
+                );
+
+                t.expect(Ext.isFunction(grid.view.saveFocusState())).toBe(true);
+
+                grid.destroy();
+                grid = null;
+
+            });
+        });
+
+
+        t.it("onBeforePrefetch()", function(t) {
+
+            let grid    = getGrid({autoLoad : true}),
+                store   = grid.getStore(),
+                feature = grid.view.getFeature('livegrid'),
+                PAGE, operation = {
+                    getPage : function() {
+                        return PAGE;
+                    }
+                };
+
+
+
+            t.waitForMs(1250, function() {
+
+                feature.pageMapFeeder.swapMapToFeed(2, 1);
+
+                t.expect(feature.pageMapFeeder.getFeedAt(2)).toBeTruthy();
+
+                PAGE = 2;
+
+                t.expect(feature.onBeforePrefetch(store, operation)).toBe(false);
+
+                PAGE = 10000;
+                t.expect(feature.onBeforePrefetch(store, operation)).toBe(true);
+
+                grid.destroy();
+                grid = null;
+
+            });
+        });
+
+
+        t.it("onPageAdd()", function(t) {
+
+            let grid    = getGrid({autoLoad : true}),
+                feature = grid.view.getFeature('livegrid'),
+                pageMap = feature.getPageMap();
+
+
+            t.waitForMs(1250, function() {
+
+                t.isCalledNTimes('removeFeedAt', feature.pageMapFeeder, 2);
+
+                feature.onPageAdd(pageMap, 1);
+                feature.pageMapFeeder.swapMapToFeed(3, 2);
+                t.expect(feature.pageMapFeeder.getFeedAt(3)).toBeTruthy();
+
+                feature.onPageAdd(pageMap, 3);
+                t.expect(feature.pageMapFeeder.getFeedAt(3)).toBe(null);
+
+                grid.destroy();
+                grid = null;
+
+            });
+        });
+
+
+        t.it("onCacheMiss()", function(t) {
+
+            let grid    = getGrid({autoLoad : true}),
+                store   = grid.getStore(),
+                feature = grid.view.getFeature('livegrid'),
+                pageMap = feature.getPageMap();
+
+
+            t.waitForMs(1250, function() {
+
+                feature.pageMapFeeder.swapMapToFeed(3, 2);
+                t.expect(feature.pageMapFeeder.getFeedAt(3)).toBeTruthy();
+                feature.onCacheMiss(store, 301, 310);
+
+                feature.onPageAdd(pageMap, 3);
+                t.expect(feature.pageMapFeeder.getFeedAt(3)).toBe(null);
+
+                grid.destroy();
+                grid = null;
+
+            });
+        });
+
+
+        t.it("getCurrentViewRange()", function(t) {
+
+            let grid        = getGrid({autoLoad : true}),
+                view        = grid.view,
+                store       = grid.getStore(),
+                feature     = grid.view.getFeature('livegrid'),
+                pageMap     = feature.getPageMap(),
+                PageMapUtil = conjoon.cn_core.data.pageMap.PageMapUtil;
+
+
+            t.waitForMs(750, function() {
+
+                let oldEnd = view.all.endIndex;
+
+                view.all.endIndex = -1;
+
+                t.expect(feature.getCurrentViewRange()).toBe(null);
+
+                view.all.endIndex = oldEnd;
+
+                let range = feature.getCurrentViewRange();
+                t.expect(range instanceof conjoon.cn_core.data.pageMap.IndexRange);
+
+                t.expect(PageMapUtil.positionToStoreIndex(range.getStart(), pageMap)).toBe(view.all.startIndex);
+                t.expect(PageMapUtil.positionToStoreIndex(range.getEnd(), pageMap)).toBe(view.all.endIndex);
+
+                grid.destroy();
+                grid = null;
+
+            });
+        });
+
+
+        t.it("refreshView()", function(t) {
+
+            let grid           = getGrid({autoLoad : true}),
+                view           = grid.view,
+                store          = grid.getStore(),
+                feature        = grid.view.getFeature('livegrid'),
+                pageMap        = feature.getPageMap(),
+                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
+                RecordPosition =  conjoon.cn_core.data.pageMap.RecordPosition;
+
+
+            t.waitForMs(750, function() {
+
+                let positions = [
+                    RecordPosition.create(3, 23)
+                ];
+
+                t.expect(feature.refreshView(positions)).toBe(false);
+
+                t.isCalledNTimes('ensureVisible', grid, 0);
+
+                positions = [
+                    RecordPosition.create(1, 4),
+                    RecordPosition.create(3, 23)
+                ];
+
+                t.expect(feature.refreshView(positions)).toBe(true);
+
+
+                grid.destroy();
+                grid = null;
+            });
+        });
+
+
+        t.it("refreshView() - ensureVisible with selection", function(t) {
+
+            let grid           = getGrid({autoLoad : true}),
+                view           = grid.view,
+                store          = grid.getStore(),
+                feature        = grid.view.getFeature('livegrid'),
+                pageMap        = feature.getPageMap(),
+                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
+                RecordPosition =  conjoon.cn_core.data.pageMap.RecordPosition;
+
+
+            t.waitForMs(750, function() {
+
+                t.isCalledNTimes('ensureVisible', grid, 1);
+
+                grid.getSelectionModel().select(pageMap.map[1].value[4]);
+
+                positions = [
+                    RecordPosition.create(1, 4),
+                    RecordPosition.create(3, 23)
+                ];
+
+                t.expect(feature.refreshView(positions)).toBe(true);
+
+
+                grid.destroy();
+                grid = null;
+            });
+        });
+
+
+        t.it("refreshView() - ensureVisible (=false) with selection", function(t) {
+
+            let grid           = getGrid({autoLoad : true}),
+                view           = grid.view,
+                store          = grid.getStore(),
+                feature        = grid.view.getFeature('livegrid'),
+                pageMap        = feature.getPageMap(),
+                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
+                RecordPosition =  conjoon.cn_core.data.pageMap.RecordPosition;
+
+
+            t.waitForMs(750, function() {
+
+                t.isCalledNTimes('ensureVisible', grid, 0);
+
+                grid.getSelectionModel().select(pageMap.map[1].value[4]);
+
+                positions = [
+                    RecordPosition.create(1, 4),
+                    RecordPosition.create(3, 23)
+                ];
+
+                t.expect(feature.refreshView(positions, false)).toBe(true);
+
+
+                grid.destroy();
+                grid = null;
+            });
+        });
+
+
+        t.it("remove()", function(t) {
+
+            let grid           = getGrid({autoLoad : true}),
+                view           = grid.view,
+                store          = grid.getStore(),
+                feature        = grid.view.getFeature('livegrid'),
+                pageMap        = feature.getPageMap(),
+                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
+                RecordPosition =  conjoon.cn_core.data.pageMap.RecordPosition;
+
+
+            t.waitForMs(750, function() {
+
+                let rec  = pageMap.map[1].value[4],
+                    rec2 =  pageMap.map[3].value[4];
+
+                t.isCalledNTimes('remove', feature.pageMapFeeder, 2);
+
+                grid.getSelectionModel().select(rec);
+                t.expect(grid.getSelection()[0]).toBe(rec);
+                t.expect(feature.remove(rec)).toBe(true);
+                t.expect(grid.getSelection().length).toBe(0);
+
+
+                grid.getSelectionModel().select(rec2);
+                t.expect(grid.getSelection()[0]).toBe(rec2);
+                t.expect(feature.remove(rec2)).toBe(false);
+                t.expect(grid.getSelection().length).toBe(0);
+
+                grid.destroy();
+                grid = null;
+            });
+        });
+
+
+
+    })})});
