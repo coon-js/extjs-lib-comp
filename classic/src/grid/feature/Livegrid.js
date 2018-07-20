@@ -53,6 +53,17 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
 
 
     /**
+     * A list of pages that where vetoed when the PageMapFeeder wanted to remove
+     * them. This is most likely due to the view still needing the page as being
+     * rendered. vetoedPages will get pruned in the #onScroll listener
+     *
+     * @type {Array}
+     * @private
+     */
+    vetoedPages : null,
+
+
+    /**
      * @inheritdoc
      */
     init : function(grid) {
@@ -73,6 +84,105 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
         me.callParent(arguments);
 
         me.swapSaveFocusState();
+
+        me.mon(me.grid.view.getScrollable(), 'scroll', me.onScroll, me);
+
+        me.vetoedPages = [];
+    },
+
+
+    /**
+     * Adds the specified record to this Feature's BufferedStore.
+     *
+     * @param {Ext.data.Model} record
+     *
+     * @returns {Boolean} Returns the result of  #refreshView, which returns
+     * true in case the view was updated, otherwise false
+     */
+    add : function(record) {
+
+        const me = this;
+
+        let op  = me.pageMapFeeder.add(record),
+            pos = [], result;
+
+        if (op) {
+            result = op.getResult();
+
+            if (result.to) {
+                pos.push(result.to);
+            }
+        }
+
+        return me.refreshView(pos, false);
+
+    },
+
+
+    /**
+     * Callback for this feature's grid's scroll-event. Will check if the
+     * current-scroll position allows for finally removing vetoed pages out of the
+     * pageMap, so that they are reloaded when demanded.
+     *
+     * @param {Ext.scroll.Scroller} scroller
+     * @param {Number} x
+     * @param {Number} scrollTop
+     *
+     * @private
+     */
+    onScroll : function(scroller, x, scrollTop) {
+
+        const me          = this,
+              vetoedPages = me.vetoedPages,
+              len         = vetoedPages.length;
+
+        if (!len) {
+            return;
+        }
+
+        const rowHeight      = me.grid.view.bufferedRenderer.rowHeight,
+              pageMap        = me.getPageMap(),
+              pageSize       = pageMap.getPageSize(),
+              recordIndex    = Math.round(scrollTop / rowHeight);
+
+        let idx, start, end;
+
+        for (var i = len -1; i >= 0; i--) {
+            idx = vetoedPages[i];
+
+            // compute the range for the vetoedPage
+            start = (idx - 1) * pageSize;
+            end   = (start) + (pageSize - 1);
+
+            if (!(start <= recordIndex && recordIndex <= end)) {
+                pageMap.suspendEvents();
+                pageMap.removeAtKey(idx);
+                pageMap.resumeEvents();
+
+                vetoedPages.splice(i, 1);
+            }
+        }
+    },
+
+
+    /**
+     * Callback for the cn_core-pagemapfeeder-pageremoveveto-event of this
+     * Livegrid's PageMapFeeder.
+     * Will add the vetoed page to #vetoedPages, if it was not already registered
+     * as such.
+     *
+     * @param {Ext.data.PageMap} pageMapFeeder
+     * @param {Number} pageNumber
+     *
+     * @private
+     */
+    onPageRemoveVeto : function(pageMapFeeder, pageNumber) {
+        const me          = this,
+              vetoedPages = me.vetoedPages;
+
+        if (vetoedPages.indexOf(pageNumber) === -1) {
+            me.vetoedPages.push(pageNumber);
+        }
     },
 
 
@@ -186,7 +296,7 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
         if (me.getCurrentViewRange().contains(positions)) {
             indexes.push(view.all.startIndex);
 
-            view.refreshView(...indexes);
+            view.refreshView(Math.min(...indexes));
 
             if (ensureVisible !== false) {
                 let selection = grid.getSelection();
@@ -283,24 +393,39 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
 
     /**
      * Callback for the pageadd-event.
-     * When this event is triggered, we give precedence to the reason that caused
-     * the page to be added, and remobe the feed at the added page, without
-     * asking.
+     * Delegates to #cleanFeedsAndVetoed with the pageNumber.
+     * When this callback is invoked, we assume the event was triggered for
+     * a valid cause.
      *
      * @param {Ext.data.PageMap} pageMap
      * @param {Number} pageNumber
      *
      * @private
      *
-     * @see conjoon.cn_core.data.pageMap.PageMapFeeder#removeFeedAt
+     * @see #cleanFeedsAndVetoed
      */
     onPageAdd : function(pageMap, pageNumber) {
-
-        const me            = this,
-              pageMapFeeder = me.pageMapFeeder;
-
-        pageMapFeeder.removeFeedAt(pageNumber);
+        this.cleanFeedsAndVetoed(pageNumber);
     },
+
+
+    /**
+     * Callback for the pageremove-event.
+     * Delegates to #cleanFeedsAndVetoed with the pageNumber.
+     * When this callback is invoked, we assume the event was triggered for
+     * a valid cause.
+
+     * @param {Ext.data.PageMap} pageMap
+     * @param {Number} pageNumber
+     *
+     * @private
+     *
+     * @see #cleanFeedsAndVetoed
+     */
+    onPageRemove : function(pageMap, pageNumber) {
+        this.cleanFeedsAndVetoed(pageNumber);
+    },
+
 
 
     /**
@@ -321,7 +446,6 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
               page           = operation.getPage(),
               pageMapFeeder  = me.pageMapFeeder,
               RecordPosition = conjoon.cn_core.data.pageMap.RecordPosition;
-
 
         if (pageMapFeeder.getFeedAt(page) &&
             !me.getCurrentViewRange().contains(RecordPosition.create(page, 0))) {
@@ -371,7 +495,6 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
 
         const me = this;
 
-
         if (store && store.isEmptyStore) {
             return false;
         }
@@ -398,11 +521,15 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
         me.mun(store, 'pageadd',  me.onPageAdd, me);
         me.mon(store, 'pageadd',  me.onPageAdd, me);
 
+        me.mun(store, 'pageremove',  me.onPageRemove, me);
+        me.mon(store, 'pageremove',  me.onPageRemove, me);
+
         me.mun(store, 'cachemiss',  me.onCacheMiss, me);
         me.mon(store, 'cachemiss',  me.onCacheMiss, me);
 
 
         if (me.pageMapFeeder) {
+            me.mun(me.pageMapFeeder, 'cn_core-pagemapfeeder-pageremoveveto',  me.onPageRemoveVeto, me);
             me.pageMapFeeder.destroy();
             me.pageMapFeeder = null;
         }
@@ -410,6 +537,8 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
         me.pageMapFeeder = Ext.create('conjoon.cn_core.data.pageMap.PageMapFeeder', {
             pageMap : pageMap
         });
+
+        me.mon(me.pageMapFeeder, 'cn_core-pagemapfeeder-pageremoveveto',  me.onPageRemoveVeto, me);
 
         return true;
     },
@@ -465,7 +594,29 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
 
 
         return func;
-    }
+    },
+
+
+    /**
+     * Will remove the Feed and the vetoedPage identified by pageNumber.
+     *
+     * @param {Number} pageNumber
+     *
+     * @private
+     */
+    cleanFeedsAndVetoed : function(pageNumber) {
+
+        const me            = this,
+              pageMapFeeder = me.pageMapFeeder,
+              vetoedPages   = me.vetoedPages;
+
+        pageMapFeeder.removeFeedAt(pageNumber);
+
+        let idx = vetoedPages.indexOf(pageNumber);
+        if (idx !== -1) {
+            vetoedPages.splice(idx, 1);
+        }
+    },
 
 
 

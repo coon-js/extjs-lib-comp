@@ -22,11 +22,22 @@
 
 describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
 
+    Ext.define('MockModel', {
+        extend : 'Ext.data.Model',
+
+        fields : [{
+            name : 'testProp',
+            type : 'int'
+        }]
+    });
+
     var createStore = function(cfg) {
 
             cfg = cfg || {};
 
             return Ext.create('Ext.data.BufferedStore', {
+
+                model : 'MockModel',
 
                 type   : 'buffered',
                 fields : ['id', 'testProp'],
@@ -124,11 +135,11 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
 
         });
 
-
         t.it("setup()", function(t) {
 
             var store   = Ext.create('Ext.data.Store'),
                 SIGNAL  = 0, BEFOREPREFETCH = 0, CACHEMISS = 0, PAGEADD = 0,
+                PAGEREMOVE = 0, PAGEREMOVEVETO = 0,
                 exc, e, oldPageMapFeeder, store;
 
             store.isEmptyStore = true;
@@ -178,6 +189,16 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
                 feature.onStoreUpdate = function() {
                     SIGNAL++;
                 };
+
+                feature.onPageRemove = function() {
+                    PAGEREMOVE++;
+                };
+
+                feature.onPageRemoveVeto = function() {
+                    PAGEREMOVEVETO++;
+                };
+
+
                 t.expect(SIGNAL).toBe(0);
                 t.expect(feature.configure(store)).toBe(true);
                 store.getAt(0).set('testProp', 't');
@@ -187,9 +208,13 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
                 store.fireEvent('cachemiss');
                 store.fireEvent('beforeprefetch');
                 store.fireEvent('pageadd');
+                store.fireEvent('pageremove');
+                feature.pageMapFeeder.fireEvent('cn_core-pagemapfeeder-pageremoveveto');
                 t.expect(BEFOREPREFETCH).toBe(1);
                 t.expect(CACHEMISS).toBe(1);
                 t.expect(PAGEADD).toBe(1);
+                t.expect(PAGEREMOVE).toBe(1);
+                t.expect(PAGEREMOVEVETO).toBe(1);
 
                 store.getAt(0).set('testProp', 'u');
                 store.getAt(0).commit();
@@ -223,6 +248,25 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
                 store = null;
             });
         });
+
+
+        t.it("scroller registered", function(t) {
+
+            let grid, feature;
+            t.isCalled('onScroll', conjoon.cn_comp.grid.feature.Livegrid.prototype);
+            grid    = getGrid({autoLoad : true});
+            feature = grid.view.getFeature('livegrid');
+
+            t.waitForMs(750, function() {
+                feature.grid.view.getScrollable().scrollTo(0, 4200);
+                t.waitForMs(250, function() {
+                    grid.destroy();
+                    grid = null;
+                });
+
+            });
+        });
+
 
 
         t.it("onGridReconfigure() - callback", function(t) {
@@ -522,8 +566,6 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
 
             t.waitForMs(1250, function() {
 
-                t.isCalledNTimes('removeFeedAt', feature.pageMapFeeder, 2);
-
                 feature.onPageAdd(pageMap, 1);
                 feature.pageMapFeeder.swapMapToFeed(3, 2);
                 t.expect(feature.pageMapFeeder.getFeedAt(3)).toBeTruthy();
@@ -727,5 +769,317 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
         });
 
 
+        t.it("refreshView() - indexes properly passed to view's refreshView", function(t) {
+
+            let grid           = getGrid({autoLoad : true}),
+                view           = grid.view,
+                store          = grid.getStore(),
+                feature        = grid.view.getFeature('livegrid'),
+                feeder         = feature.pageMapFeeder,
+                pageMap        = feature.getPageMap(),
+                map            = pageMap.map,
+                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
+                RecordPosition =  conjoon.cn_core.data.pageMap.RecordPosition;
+
+
+            t.waitForMs(1250, function() {
+
+                let scrollable = view.getScrollable(),
+                    rowHeight  = view.bufferedRenderer.rowHeight;
+
+                scrollable.scrollTo(0, 300 * rowHeight);
+
+                t.waitForMs(1250, function() {
+
+                    let rec      = map[4].value[5],
+                        pos      = PageMapUtil.findRecord(rec, feeder),
+                        checkRec = map[4].value[1];
+
+                    t.expect(feature.getCurrentViewRange().contains(pos)).toBe(true);
+
+                    grid.getSelectionModel().select(rec);
+
+                    feature.remove(rec);
+
+                    t.expect(feature.getCurrentViewRange().contains(
+                        PageMapUtil.findRecord(checkRec, feeder))
+                    ).toBe(true);
+
+                    grid.destroy();
+                    grid = null;
+                });
+            });
+        });
+
+
+        t.it("add()", function(t) {
+
+            let grid           = getGrid({sorters : {property : 'testProp', dir : 'ASC'}, autoLoad : true}),
+                view           = grid.view,
+                store          = grid.getStore(),
+                feature        = grid.view.getFeature('livegrid'),
+                feeder         = feature.pageMapFeeder,
+                pageMap        = feature.getPageMap(),
+                map            = pageMap.map,
+                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
+                RecordPosition =  conjoon.cn_core.data.pageMap.RecordPosition;
+
+
+            t.waitForMs(1250, function() {
+
+                let scrollable = view.getScrollable(),
+                    rowHeight  = view.bufferedRenderer.rowHeight;
+
+                scrollable.scrollTo(0, 300 * rowHeight);
+
+                t.waitForMs(1250, function() {
+
+                    let rec      = Ext.create('MockModel', {
+                        testProp : 306.5,
+                        subject  : '+++ NEW +++'
+                    });
+
+                    feature.add(rec);
+
+                    t.expect(feature.getCurrentViewRange().contains(
+                        PageMapUtil.findRecord(rec, feeder))
+                    ).toBe(true);
+
+                    grid.destroy();
+                    grid = null;
+                });
+            });
+        });
+
+
+        t.it("add() - start of view", function(t) {
+
+            let grid           = getGrid({sorters : {property : 'testProp', dir : 'ASC'}, autoLoad : true}),
+                view           = grid.view,
+                store          = grid.getStore(),
+                feature        = grid.view.getFeature('livegrid'),
+                feeder         = feature.pageMapFeeder,
+                pageMap        = feature.getPageMap(),
+                map            = pageMap.map,
+                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
+                RecordPosition =  conjoon.cn_core.data.pageMap.RecordPosition;
+
+
+            t.waitForMs(1250, function() {
+
+                let scrollable = view.getScrollable(),
+                    rowHeight  = view.bufferedRenderer.rowHeight;
+
+
+                t.waitForMs(1250, function() {
+
+                    for (var i = 0; i < 78; i++) {
+                        let rec      = Ext.create('MockModel', {
+                            testProp : 0 - i,
+                            subject  : '+++ NEW (' + i + ') +++'
+                        });
+                        feature.add(rec);
+
+                        t.expect(feature.getCurrentViewRange().contains(
+                            PageMapUtil.findRecord(rec, feeder))
+                        ).toBe(true);
+
+                    }
+
+
+                    grid.destroy();
+                    grid = null;
+                });
+            });
+        });
+
+
+        t.it("onPageAdd()", function(t) {
+
+            let grid = getGrid({
+                    sorters: {property: 'testProp', dir: 'ASC'},
+                    autoLoad: true
+                }),
+                feature = grid.view.getFeature('livegrid');
+
+            t.waitForMs(1250, function () {
+
+                t.isCalledNTimes('cleanFeedsAndVetoed', feature, 1);
+
+                feature.onPageAdd(feature.getPageMap(), 3);
+
+                grid.destroy();
+                grid = null;
+            });
+        });
+
+
+
+        t.it("onPageRemove()", function(t) {
+
+            let grid = getGrid({
+                    sorters: {property: 'testProp', dir: 'ASC'},
+                    autoLoad: true
+                }),
+                feature = grid.view.getFeature('livegrid');
+
+            t.waitForMs(1250, function () {
+
+                t.isCalledNTimes('cleanFeedsAndVetoed', feature, 1);
+
+                feature.onPageRemove(feature.getPageMap(), 3);
+
+                grid.destroy();
+                grid = null;
+            });
+        });
+
+
+        t.it("onPageRemoveVeto()", function(t) {
+
+            let grid = getGrid({
+                    sorters: {property: 'testProp', dir: 'ASC'},
+                    autoLoad: true
+                }),
+                feature = grid.view.getFeature('livegrid');
+
+            t.waitForMs(1250, function () {
+
+                t.expect(feature.vetoedPages).toEqual([]);
+
+                feature.onPageRemoveVeto(feature.pageMapFeeder, 3);
+                feature.onPageRemoveVeto(feature.pageMapFeeder, 2);
+
+                t.expect(feature.vetoedPages).toEqual([3, 2]);
+
+                feature.onPageRemoveVeto(feature.pageMapFeeder, 2);
+                feature.onPageRemoveVeto(feature.pageMapFeeder, 1);
+
+                t.expect(feature.vetoedPages).toEqual([3, 2, 1]);
+
+            });
+
+        });
+
+
+        t.it("onScroll()", function(t) {
+
+            let grid = getGrid({
+                    sorters: {property: 'testProp', dir: 'ASC'},
+                    autoLoad: true
+                }),
+                feature        = grid.view.getFeature('livegrid'),
+                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
+                RecordPosition = conjoon.cn_core.data.pageMap.RecordPosition;
+
+            t.waitForMs(1250, function () {
+
+                let rowHeight = feature.grid.view.bufferedRenderer.rowHeight,
+                    posToY = function(pos) {
+                        let y = PageMapUtil.positionToStoreIndex(pos, feature.getPageMap()) * rowHeight;
+                        console.log(y);
+                        return y;
+                    };
+
+
+
+                feature.vetoedPages = [1, 3];
+                t.expect(feature.getPageMap().map[1]).toBeDefined();
+                t.expect(feature.getPageMap().map[3]).toBeDefined();
+
+                feature.onScroll(null, 0, posToY(RecordPosition.create(1, 2)));
+                t.expect(feature.vetoedPages).toEqual([1]);
+                t.expect(feature.getPageMap().map[1]).toBeDefined();
+                t.expect(feature.getPageMap().map[3]).toBeUndefined();
+
+                feature.onScroll(null, 0, posToY(RecordPosition.create(2, 13)));
+                t.expect(feature.vetoedPages).toEqual([]);
+                t.expect(feature.getPageMap().map[1]).toBeUndefined();
+
+                grid.destroy();
+                grid = null;
+            });
+
+        });
+
+
+        t.it("cleanFeedsAndVetoed()", function(t) {
+
+            let grid = getGrid({
+                    sorters: {property: 'testProp', dir: 'ASC'},
+                    autoLoad: true
+                }),
+                feature = grid.view.getFeature('livegrid');
+
+            t.waitForMs(1250, function () {
+
+                feature.pageMapFeeder.swapMapToFeed(3, 2);
+                feature.vetoedPages = [3];
+
+                t.expect(feature.pageMapFeeder.getFeedAt(3)).toBeTruthy();
+                t.expect(feature.vetoedPages).toEqual([3]);
+
+                feature.cleanFeedsAndVetoed(3);
+
+                t.expect(feature.pageMapFeeder.getFeedAt(3)).toBeFalsy();
+                t.expect(feature.vetoedPages).toEqual([]);
+
+                grid.destroy();
+                grid = null;
+            });
+        });
+
+
+        t.it("add() - start of view, last page vetoed", function(t) {
+
+            let grid           = getGrid({sorters : {property : 'testProp', dir : 'ASC'}, autoLoad : true}),
+                view           = grid.view,
+                store          = grid.getStore(),
+                feature        = grid.view.getFeature('livegrid'),
+                feeder         = feature.pageMapFeeder,
+                pageMap        = feature.getPageMap(),
+                map            = pageMap.map,
+                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
+                RecordPosition = conjoon.cn_core.data.pageMap.RecordPosition;
+
+
+            t.waitForMs(1250, function() {
+
+                let scrollable = view.getScrollable(),
+                    rowHeight  = view.bufferedRenderer.rowHeight,
+                    lastPage   = PageMapUtil.getLastPossiblePageNumber(pageMap);
+
+                t.expect(lastPage).toBe(100);
+
+
+                scrollable.scrollTo(0, 100000 * rowHeight);
+
+                t.waitForMs(1250, function() {
+
+                    for (var i = 0; i < 1; i++) {
+                        let rec      = Ext.create('MockModel', {
+                            testProp : 0 - i,
+                            subject  : '+++ NEW (' + i + ') +++'
+                        });
+
+                        let op  = feature.add(rec);
+
+                        conjoon.cn_comp.fixtures.sim.ItemTable.items.splice(0, 0, rec.data);
+                        t.expect(feature.vetoedPages.indexOf(lastPage)).not.toBe(-1);
+                    }
+
+                    scrollable.scrollTo(0, 0);
+
+                    t.waitForMs(750, function() {
+                        t.expect(feature.vetoedPages.indexOf(lastPage)).toBe(-1);
+                        t.expect(pageMap.map[lastPage]).toBeUndefined();
+
+                        grid.destroy();
+                        grid = null;
+                    });
+
+                });
+            });
+        });
 
     })})});
