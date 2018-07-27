@@ -26,38 +26,22 @@
  * grid configurations with enabled rowBodies.
  *
  *
- * Note:
- * =====
- *  - You must still override #getAdditionalData() to make sure the RowBody is
- *  rendered. Make sure you return "undefined" if this feature is disabled.
- *  - This feature hides the column headers when it gets enabled.
- *
  *  @example
  *
  *  Ext.define('MyGrid', {
  *
  *      extend : 'Ext.grid.Panel',
-  *
+ *
  *      features : [{
- *          ftype              : 'cn_comp-gridfeature-rowbodyswitch',
- *          id                 : 'rowbodyswitchfeature',
- *          getAdditionalData  : function (data, idx, record, orig) {
- *
- *              var me = this;
- *
- *              if (me.disabled) {
- *                  return undefined;
- *              }
- *
- *              return {
- *                  rowBody : 'Subject: <div>' + record.get('subject') + '</div>'
- *              };
- *          },
- *          previewColumnConfig : {
- *              'isRead'         : {visible : false},
- *              'subject'        : {visible : false},
- *              'to'             : {}
- *          }
+ *          ftype : 'cn_comp-gridfeature-rowflymenu',
+ *          id    : 'cn_mail-mailMessageFeature-rowFlyMenu',
+ *          items  : [{
+ *              cls    : 'fa fa-envelope-o',
+ *              title  : 'Mark as Unread',
+ *              action : 'markunread',
+ *              id     : 'cn_mail-mailMessageFeature-rowFlyMenu-markUnread'
+ *         }],
+ *         alignTo : ['tr-tr', [-12, 4]]
  *      }],
  *
  *      store : {
@@ -87,11 +71,6 @@
  *   var myGrid = Ext.create('MyGrid', {
  *      renderTo : document.body
  *   ));
- *
- *   var feature = myGrid.view.getFeature('rowbodyswitchfeature');
- *
- *   feature.disable();
- *   feature.enable();
  *
  *
  *
@@ -258,6 +237,8 @@ Ext.define('conjoon.cn_comp.grid.feature.RowFlyMenu', {
      * @param {Object} eOpts
      *
      * @private
+     *
+     * @see detachMenuAndUnset
      */
     onItemMouseLeave : function(view, record, item, index, e, eOpts) {
 
@@ -268,9 +249,7 @@ Ext.define('conjoon.cn_comp.grid.feature.RowFlyMenu', {
         }
 
         e.stopEvent();
-
-        me.currentRecord = null;
-        me.menu.hide();
+        me.detachMenuAndUnset();
     },
 
 
@@ -286,14 +265,17 @@ Ext.define('conjoon.cn_comp.grid.feature.RowFlyMenu', {
 
         const me = this;
 
+        grid.view.on('beforerefresh', me.onBeforeGridViewRefresh, me);
         grid.on('itemmouseenter', me.onItemMouseEnter, me);
         grid.on('itemmouseleave', me.onItemMouseLeave, me);
     },
 
 
     /**
-     * Processes tha specified items and creates an Ext.dom.Element wrapping the
-     * native HTMLElement.
+     * Processes the specified items and creates an Ext.dom.Element wrapping the
+     * native HTMLElement. The created  Ext.Element's skipGarbageCollection-property
+     * is explicitely set to true to prevend it from being removed by ExtJS'
+     * (DOM-)GarbageCollector.
      *
      * @param {Array} items The items for this RowFlyMenu
      *
@@ -315,7 +297,8 @@ Ext.define('conjoon.cn_comp.grid.feature.RowFlyMenu', {
             children : childs
         }, true);
 
-        el = Ext.get(Ext.get(re));
+        el = Ext.create('Ext.Element', re);
+        el.skipGarbageCollection = true;
 
         return el;
     },
@@ -367,10 +350,43 @@ Ext.define('conjoon.cn_comp.grid.feature.RowFlyMenu', {
 
         const me = this;
 
-        me.menu.hide();
-        me.currentRecord = null;
+        me.detachMenuAndUnset();
 
         me.callParent(arguments);
+    },
+
+
+    /**
+     * Callback for the grid view's beforerefresh-event.
+     * Delegates to #detachMenu
+     *
+     * @private
+     *
+     * @see detachMenuAndUnset
+     */
+    onBeforeGridViewRefresh : function() {
+
+        const me = this;
+
+        me.detachMenuAndUnset();
+    },
+
+
+    /**
+     * Detaches the #menu from any parent it currently has and sets the
+     * #currentRecord for this menu to null.
+     *
+     * @private
+     */
+    detachMenuAndUnset : function() {
+
+        const me    = this,
+              menu  = me.menu;
+
+        if (menu.dom.parentNode) {
+            Ext.fly(menu.dom.parentNode).removeChild(menu);
+        }
+        me.currentRecord = null;
     },
 
 

@@ -190,15 +190,12 @@ describe('conjoon.cn_comp.grid.feature.RowFlyMenuTest', function(t) {
 
             feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent : Ext.emptyFn});
 
-            t.expect(menu.isVisible()).toBe(true);
             t.expect(feature.currentRecord).toBe(rec);
             t.expect(menu.dom.parentNode).toBe(targetRow);
 
             feature.onItemMouseLeave(null, rec, targetRow, 0, {stopEvent : Ext.emptyFn});
             t.expect(feature.currentRecord).toBe(null);
-
-            t.expect(menu.isVisible()).toBe(false);
-            t.expect(menu.dom.parentNode).toBe(targetRow);
+            t.expect(menu.dom.parentNode).toBe(null);
 
             grid.destroy();
         });
@@ -238,11 +235,11 @@ describe('conjoon.cn_comp.grid.feature.RowFlyMenuTest', function(t) {
             feature.disable();
 
             t.expect(feature.currentRecord).toBe(null);
-            t.expect(menu.isVisible()).toBe(false);
+            t.expect(menu.dom.parentNode).toBe(null);
 
             feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent : Ext.emptyFn});
 
-            t.expect(menu.isVisible()).toBe(false);
+            t.expect(menu.dom.parentNode).toBe(null);
             t.expect(feature.currentRecord).toBe(null);
 
             grid.destroy();
@@ -353,7 +350,7 @@ describe('conjoon.cn_comp.grid.feature.RowFlyMenuTest', function(t) {
 
             t.expect(CALLED).toBe(0);
             feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent : Ext.emptyFn});
-            t.expect(menu.isVisible()).toBe(true);
+            t.expect(menu.dom.parentNode).toBe(targetRow);
             t.expect(CALLED).toBe(1);
 
 
@@ -370,23 +367,66 @@ describe('conjoon.cn_comp.grid.feature.RowFlyMenuTest', function(t) {
                 rec       = {id : 1};
 
             feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent : Ext.emptyFn});
-            t.expect(menu.isVisible()).toBe(true);
+            t.expect(menu.dom.parentNode).toBe(targetRow);
 
             feature.onItemMouseLeave(null, rec, targetRow, 0, {stopEvent : Ext.emptyFn});
-            t.expect(menu.isVisible()).toBe(false);
+            t.expect(menu.dom.parentNode).toBe(null);
 
             feature.on('beforemenushow', function() {
                 return false;
             });
 
             feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent : Ext.emptyFn});
-            t.expect(menu.isVisible()).toBe(false);
+            t.expect(menu.dom.parentNode).toBe(null);
 
 
             grid.destroy();
         });
 
-    });
+
+        t.it("skipGarbageCollection should be set to \"true\"", function(t) {
+
+            let grid      = getGrid(false),
+                feature   = grid.view.getFeature('rowflymenu'),
+                menu      = feature.menu,
+                targetRow = grid.view.getRow(0),
+                rec       = {id : 1};
+
+            t.expect(menu.skipGarbageCollection).toBe(true);
+            grid.destroy();
+        });
+
+        t.it("detachMenuAndUnset()", function(t) {
+
+            let grid      = getGrid(false),
+                feature   = grid.view.getFeature('rowflymenu'),
+                menu      = feature.menu,
+                targetRow = grid.view.getRow(0),
+                rec       = {id : 1};
+
+            feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent : Ext.emptyFn});
+            t.expect(menu.dom.parentNode).toBe(targetRow);
+            t.expect(feature.currentRecord).toBe(rec);
+            feature.detachMenuAndUnset();
+            t.expect(menu.dom.parentNode).toBe(null);
+            t.expect(feature.currentRecord).toBe(null);
+            grid.destroy();
+        });
 
 
-});
+        t.it("grid view refresh - detachMenuAndUnset is called", function(t) {
+
+            let grid      = getGrid(false),
+                feature   = grid.view.getFeature('rowflymenu'),
+                menu      = feature.menu,
+                targetRow = grid.view.getRow(0),
+                rec       = {id : 1};
+
+            t.isCalled('detachMenuAndUnset', feature);
+            grid.view.refresh();
+            grid.destroy();
+        });
+
+
+
+});});
