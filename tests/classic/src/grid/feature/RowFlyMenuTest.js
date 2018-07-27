@@ -37,7 +37,7 @@ describe('conjoon.cn_comp.grid.feature.RowFlyMenuTest', function(t) {
                 disabled           : !!disabled,
                 ftype              : 'cn_comp-gridfeature-rowflymenu',
                 id                 : 'rowflymenu',
-                items : [{cls : 'foo', title : 'foobar'}, {html : 'bar'}]
+                items : [{cls : 'foo', title : 'foobar', id : 'rowflytestid'}, {html : 'bar'}]
             }],
 
             store : {
@@ -112,17 +112,17 @@ describe('conjoon.cn_comp.grid.feature.RowFlyMenuTest', function(t) {
 
             t.expect(pis).toEqual([{
                 tag   : 'div',
-                cls   : 'item foo',
+                cls   : 'cn-item foo',
                 title : 'foobar',
                 id    : 'meh'
             }, {
                 tag   : 'div',
-                cls   : 'item',
+                cls   : 'cn-item',
                 html  : 'bar',
                 id    : '3e'
             }, {
                 tag : 'span',
-                cls : 'item',
+                cls : 'cn-item',
                 id  : pis[2].id
             }]);
 
@@ -427,6 +427,28 @@ describe('conjoon.cn_comp.grid.feature.RowFlyMenuTest', function(t) {
             grid.destroy();
         });
 
+
+        t.it("onMenuMouseOver() / onMenuMouseOut()", function(t) {
+
+            let grid      = getGrid(false),
+                feature   = grid.view.getFeature('rowflymenu'),
+                menu      = feature.menu,
+                targetRow = grid.view.getRow(0),
+                rec       = {id : 1};
+
+            feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent : Ext.emptyFn});
+            t.expect(menu.dom.parentNode).toBe(targetRow);
+            let dom = document.getElementById('rowflytestid');
+
+            menu.fireEvent('mouseover', {}, menu.dom);
+            t.expect(dom.className).not.toContain('cn-over');
+
+            menu.fireEvent('mouseover', {}, dom);
+            t.expect(dom.className).toContain('cn-over');
+
+            menu.fireEvent('mouseout', {}, dom);
+            t.expect(dom.className).not.toContain('cn-over');
+        });
 
 
 });});

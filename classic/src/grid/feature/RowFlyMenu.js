@@ -151,13 +151,44 @@ Ext.define('conjoon.cn_comp.grid.feature.RowFlyMenu', {
 
         me.menu = me.buildMenu(me.items);
 
-        me.menu.on('tap', me.onMenuClick, me);
+        me.mon(me.menu, {
+            'tap'       : me.onMenuClick,
+            'mouseover' : me.onMenuMouseOver,
+            'mouseout'  : me.onMenuMouseOut,
+             scope      : me
+        });
 
         delete me.items;
 
         me.installListeners(grid);
 
         me.callParent(arguments);
+    },
+
+
+    /**
+     * Callback for the menu's mouseover event.
+     *
+     * @param {Ext.Event}evt
+     * @param {HtmlElement} target
+     */
+    onMenuMouseOver : function(evt, target) {
+        if (target.className.indexOf('cn-item') !== -1) {
+            Ext.fly(target).addCls('cn-over')
+        }
+    },
+
+
+    /**
+     * Callback for the menu's mouseout event.
+     *
+     * @param {Ext.Event}evt
+     * @param {HtmlElement} target
+     */
+    onMenuMouseOut : function(evt, target) {
+        if (target.className.indexOf('cn-item') !== -1) {
+            Ext.fly(target).removeCls('cn-over')
+        }
     },
 
 
@@ -327,7 +358,7 @@ Ext.define('conjoon.cn_comp.grid.feature.RowFlyMenu', {
 
             item.tag = item.tag ? item.tag : 'div';
 
-            item.cls = item.cls ? 'item ' + item.cls : 'item';
+            item.cls = item.cls ? 'cn-item ' + item.cls : 'cn-item';
 
             item.id = item.id ? item.id : Ext.id();
 
