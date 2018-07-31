@@ -407,7 +407,6 @@ Ext.define('conjoon.cn_comp.grid.feature.RowFlyMenu', {
      * Detaches the #menu from any parent it currently has and sets the
      * #currentRecord for this menu to null.
      *
-     * @private
      */
     detachMenuAndUnset : function() {
 
