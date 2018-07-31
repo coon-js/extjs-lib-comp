@@ -88,7 +88,8 @@ harness.start({
     }, {
         group : 'window',
         items : [
-            'classic/src/window/LockingWindowTest.js'
+            'classic/src/window/LockingWindowTest.js',
+            'classic/src/window/ToastTest.js'
         ]
     }]
 }, {
