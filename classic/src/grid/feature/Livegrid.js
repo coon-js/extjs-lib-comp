@@ -41,7 +41,8 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
     requires : [
         'conjoon.cn_core.data.pageMap.PageMapFeeder',
         'conjoon.cn_core.data.pageMap.RecordPosition',
-        'conjoon.cn_core.data.pageMap.IndexRange'
+        'conjoon.cn_core.data.pageMap.IndexRange',
+        'conjoon.cn_core.data.pageMap.PageMapUtil'
     ],
 
 
@@ -88,6 +89,26 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
         me.mon(me.grid.view.getScrollable(), 'scroll', me.onScroll, me);
 
         me.vetoedPages = [];
+    },
+
+
+    /**
+     * Helper function to find and return the record specified by the id.
+     * Returns the record-instance or null if not found.
+     *
+     * @param {String} the id or record to look for
+     *
+     * @return {Ext.data.Model|null}
+     *
+     * @see conjoon.cn_core.data.pageMap.PageMapUtil#getRecordById
+     */
+    getRecordById : function(id) {
+
+        const me = this;
+
+        return conjoon.cn_core.data.pageMap.PageMapUtil.getRecordById(
+            id, me.pageMapFeeder
+        );
     },
 
 

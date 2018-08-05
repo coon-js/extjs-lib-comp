@@ -1082,4 +1082,25 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
             });
         });
 
+
+        t.it("getRecordById()", function(t) {
+
+            let grid           = getGrid({sorters : {property : 'testProp', dir : 'ASC'}, autoLoad : true}),
+                feature        = grid.view.getFeature('livegrid'),
+                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil;
+
+
+            t.waitForMs(750, function() {
+
+                t.isCalledOnce('getRecordById', PageMapUtil);
+
+                feature.getRecordById('foo');
+
+                t.waitForMs(750, function() {
+                    grid.destroy();
+                    grid = null;
+                });
+            });
+        });
+
     })})});
