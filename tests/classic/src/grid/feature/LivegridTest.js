@@ -1103,4 +1103,39 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
             });
         });
 
+
+        t.it("lib-cn_comp#4", function(t) {
+
+            var grid     = getGrid({autoLoad : true, sorters : {property : 'testProp', dir : 'ASC'}}),
+                store    = grid.getStore(),
+                selModel = grid.getSelectionModel();
+
+            t.isntCalled('ensureVisible' ,grid);
+
+            t.waitForMs(500, function() {
+
+                let rogueRec = Ext.create('Ext.data.Model', {text : 'foo'}),
+                    rec      = store.getAt(0);
+
+                selModel.select(rogueRec);
+
+                t.expect(selModel.isSelected(rec)).toBe(false);
+                t.expect(selModel.isSelected(rogueRec)).toBe(true);
+
+
+                rec.set('subject', 'foo');
+                rec.set('testProp', 2);
+                rec.commit();
+
+
+                grid.destroy();
+                grid = null;
+
+
+            });
+        });
+
+
+
+
     })})});

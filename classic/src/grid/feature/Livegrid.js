@@ -261,6 +261,7 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
 
         const me       = this,
               sorters  = me.grid.store.getSorters(),
+              selModel = me.grid.getSelectionModel(),
               property = sorters && sorters.getAt(0)
                          ? sorters.getAt(0).getProperty()
                          : null;
@@ -282,7 +283,7 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
             }
         }
 
-        return me.refreshView(pos);
+        return me.refreshView(pos, selModel.isSelected(record));
     },
 
 
