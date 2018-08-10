@@ -145,6 +145,7 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
             store.isEmptyStore = true;
 
             feature = createLivegrid();
+            t.expect(feature.isConfigured()).toBe(false);
             t.expect(feature.configure(store)).toBe(false);
 
             // exceptions
@@ -168,6 +169,7 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
             t.isCalledNTimes('destroy', feature.pageMapFeeder, 1);
             t.expect(feature.pageMapFeeder).toBe(oldPageMapFeeder);
             t.expect(feature.configure(Ext.create('Ext.data.BufferedStore'))).toBe(true);
+            t.expect(feature.isConfigured()).toBe(true);
             t.expect(feature.pageMapFeeder instanceof conjoon.cn_core.data.pageMap.PageMapFeeder).toBe(true);
             t.expect(feature.pageMapFeeder).not.toBe(oldPageMapFeeder);
 

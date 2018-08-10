@@ -93,6 +93,19 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
 
 
     /**
+     * Returns true if this feature is configured to be used with a PageMapFeeder,
+     * otherwise false. This is so the API can check whether a bind has already
+     * occured, since relying on the rendered-state of the grid or its view
+     * isn't enough in most cases.
+     *
+     * @return {Boolean}
+     */
+    isConfigured : function() {
+        return !!this.pageMapFeeder;
+    },
+
+
+    /**
      * Helper function to find and return the record specified by the id.
      * Returns the record-instance or null if not found.
      *
