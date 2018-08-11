@@ -55,4 +55,15 @@ describe('conjoon.cn_comp.window.ToastTest', function(t) {
     });
 
 
+    t.it("conjoon.Toast.info", function(t) {
+
+        let message = "This is an info.",
+            toast   = conjoon.Toast.info(message);
+
+        t.isInstanceOf(toast, 'conjoon.cn_comp.window.Toast');
+
+        let node = Ext.dom.Query.selectNode('div[class=x-autocontainer-innerCt]', toast.el.dom);
+        t.expect(node.innerHTML).toBe(message);
+    });
+
 });

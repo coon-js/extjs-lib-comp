@@ -84,13 +84,35 @@ Ext.define('conjoon.cn_comp.window.Toast', {
 
             /**
              * Creates a Toast Window that presents a message in the context "warning".
-             * @param message
-             * @returns {*}
+             *
+             * @param {String} message
+             *
+             * @return {conjoon.cn_comp.window.Toast}
              */
             warn : function(message) {
 
                 let toast, cfg = {
                     context : 'warning',
+                    html    : message
+                };
+
+                toast = new Toast(cfg);
+                toast.show();
+                return toast;
+            },
+
+
+            /**
+             * Creates a Toast Window that presents a message in the context "info".
+             *
+             * @param {String} message
+             *
+             * @return {conjoon.cn_comp.window.Toast}
+             */
+            info : function(message) {
+
+                let toast, cfg = {
+                    context : 'info',
                     html    : message
                 };
 
