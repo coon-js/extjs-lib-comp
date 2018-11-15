@@ -445,6 +445,11 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
                 t.waitForMs(500, function() {
                     t.expect(grid.getStore().getSorters().length).toBe(1);
                     t.expect(grid.getStore().getSorters().getAt(0).getProperty()).toBe('subject');
+
+                    // trigger commit and check regarding previousValues
+                    rec.commit();
+                    t.expect(feature.onStoreUpdate(store, rec)).toBe(false);
+
                     rec.set('testProp', 1);
                     rec.commit();
                     t.expect(feature.onStoreUpdate(store, rec)).toBe(false);
@@ -959,6 +964,8 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
 
                 t.expect(feature.vetoedPages).toEqual([3, 2, 1]);
 
+                grid.destroy();
+                grid = null;
             });
 
         });

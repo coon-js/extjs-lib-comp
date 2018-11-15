@@ -277,9 +277,10 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
               selModel = me.grid.getSelectionModel(),
               property = sorters && sorters.getAt(0)
                          ? sorters.getAt(0).getProperty()
-                         : null;
+                         : null,
+              prev = record.previousValues;
 
-        if (!property || !record.previousValues.hasOwnProperty(property)) {
+        if (!property || !prev || !prev.hasOwnProperty(property)) {
             return false;
         }
 
