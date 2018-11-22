@@ -448,7 +448,50 @@ describe('conjoon.cn_comp.grid.feature.RowFlyMenuTest', function(t) {
 
             menu.fireEvent('mouseout', {}, dom);
             t.expect(dom.className).not.toContain('cn-over');
+            grid.destroy();
         });
 
 
-});});
+        t.it("app-cn_mail#74", function(t) {
+
+            let grid      = getGrid(false),
+                feature   = grid.view.getFeature('rowflymenu'),
+                menu      = feature.menu,
+                targetRow = grid.view.getRow(0),
+                rec       = {id : 1};
+
+            feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent : Ext.emptyFn});
+            t.expect(menu.dom.parentNode).toBe(targetRow);
+            let dom = document.getElementById('rowflytestid');
+
+            grid.getSelectionModel().select(grid.getStore().getAt(1));
+            t.expect(grid.getSelection().length).toBe(1);
+
+
+            menu.fireEvent('mouseover', {}, dom);
+            t.expect(dom.className).toContain('cn-over');
+            grid.getSelectionModel().select(grid.getStore().getAt(0));
+            t.expect(grid.getSelection()[0]).not.toBe(grid.getStore().getAt(0));
+
+
+            menu.fireEvent('mouseout', {}, dom);
+            t.expect(dom.className).not.toContain('cn-over');
+
+            grid.getSelectionModel().select(grid.getStore().getAt(0));
+            t.expect(grid.getSelection()[0]).toBe(grid.getStore().getAt(0));
+
+            grid.getSelectionModel().deselectAll();
+
+            menu.fireEvent('mouseover', {}, dom);
+            grid.getSelectionModel().select(grid.getStore().getAt(0));
+            t.expect(grid.getSelection()[0]).not.toBe(grid.getStore().getAt(0));
+
+            grid.fireEvent('beforeitemkeydown', {}, dom);
+            grid.getSelectionModel().select(grid.getStore().getAt(0));
+            t.expect(grid.getSelection()[0]).toBe(grid.getStore().getAt(0));
+
+            grid.destroy();
+        });
+
+
+    });});

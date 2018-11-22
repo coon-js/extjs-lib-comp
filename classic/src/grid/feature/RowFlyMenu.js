@@ -174,6 +174,7 @@ Ext.define('conjoon.cn_comp.grid.feature.RowFlyMenu', {
      */
     onMenuMouseOver : function(evt, target) {
         if (target.className.indexOf('cn-item') !== -1) {
+            this.grid.on('beforeselect', this.preventSelection);
             Ext.fly(target).addCls('cn-over')
         }
     },
@@ -187,6 +188,7 @@ Ext.define('conjoon.cn_comp.grid.feature.RowFlyMenu', {
      */
     onMenuMouseOut : function(evt, target) {
         if (target.className.indexOf('cn-item') !== -1) {
+            this.grid.un('beforeselect', this.preventSelection);
             Ext.fly(target).removeCls('cn-over')
         }
     },
@@ -299,13 +301,15 @@ Ext.define('conjoon.cn_comp.grid.feature.RowFlyMenu', {
         grid.view.on('beforerefresh', me.onBeforeGridViewRefresh, me);
         grid.on('itemmouseenter', me.onItemMouseEnter, me);
         grid.on('itemmouseleave', me.onItemMouseLeave, me);
+        grid.on('beforeitemkeydown', me.onBeforeItemKeyDown, me);
+
     },
 
 
     /**
      * Processes the specified items and creates an Ext.dom.Element wrapping the
      * native HTMLElement. The created  Ext.Element's skipGarbageCollection-property
-     * is explicitely set to true to prevend it from being removed by ExtJS'
+     * is explicitly set to true to prevent it from being removed by ExtJS'
      * (DOM-)GarbageCollector.
      *
      * @param {Array} items The items for this RowFlyMenu
@@ -416,6 +420,7 @@ Ext.define('conjoon.cn_comp.grid.feature.RowFlyMenu', {
         if (menu.dom.parentNode) {
             Ext.fly(menu.dom.parentNode).removeChild(menu);
         }
+        me.grid.un('beforeselect', me.preventSelection);
         me.currentRecord = null;
     },
 
@@ -433,6 +438,31 @@ Ext.define('conjoon.cn_comp.grid.feature.RowFlyMenu', {
         me.menu = null;
 
         return me.callParent(arguments);
+    },
+
+
+    /**
+     * Named helper function used by the beforeselect-listener of this menu.
+     * Makes sure no grid item is selected when the menu is clicked.
+     *
+     * @returns {boolean} false
+     *
+     * @private
+     */
+    preventSelection : function() {
+        return false;
+    },
+
+
+    /**
+     * Named helper function to make sure itemkeydown invokes detachMenuAndUnset
+     * to make sure #preventSelection does not block key navigation and selection.
+     *
+     * @private
+     */
+    onBeforeItemKeyDown : function() {
+        this.detachMenuAndUnset();
     }
+
 
 });
