@@ -1,6 +1,6 @@
 /**
  * conjoon
- * (c) 2007-2016 conjoon.org
+ * (c) 2007-2018 conjoon.org
  * licensing@conjoon.org
  *
  * lib-cn_comp
@@ -42,28 +42,30 @@ describe('conjoon.cn_comp.window.ToastTest', function(t) {
         t.expect(conjoon.Toast).toBeTruthy();
     });
 
+    const TOASTTEST = function(t, message, type) {
 
-    t.it("conjoon.Toast.warn", function(t) {
-
-        let message = "This is a warning.",
-            toast   = conjoon.Toast.warn(message);
+        let toast = conjoon.Toast[type](message);
 
         t.isInstanceOf(toast, 'conjoon.cn_comp.window.Toast');
 
         let node = Ext.dom.Query.selectNode('div[class=x-autocontainer-innerCt]', toast.el.dom);
         t.expect(node.innerHTML).toBe(message);
+    };
+
+    t.it("conjoon.Toast.warn", function(t) {
+
+        TOASTTEST(t, "This is a warning.", 'warn');
     });
 
 
     t.it("conjoon.Toast.info", function(t) {
 
-        let message = "This is an info.",
-            toast   = conjoon.Toast.info(message);
-
-        t.isInstanceOf(toast, 'conjoon.cn_comp.window.Toast');
-
-        let node = Ext.dom.Query.selectNode('div[class=x-autocontainer-innerCt]', toast.el.dom);
-        t.expect(node.innerHTML).toBe(message);
+        TOASTTEST(t, "This is an info", 'info');
     });
 
+
+    t.it("conjoon.Toast.fail", function(t) {
+
+        TOASTTEST(t, "This is a failure.", 'fail');
+    });
 });
