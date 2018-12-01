@@ -67,6 +67,7 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
         t.expect(conjoon.cn_comp.component.MessageMask.YESNO).toBeDefined();
         t.expect(conjoon.cn_comp.component.MessageMask.QUESTION).toBeDefined();
+        t.expect(conjoon.cn_comp.component.MessageMask.FAILURE).toBeDefined();
         t.expect(conjoon.cn_comp.component.MessageMask.OK).toBeDefined();
         t.expect(conjoon.cn_comp.component.MessageMask.ERROR).toBeDefined();
         t.expect(conjoon.cn_comp.component.MessageMask.OKCANCEL).toBeDefined();
@@ -74,6 +75,9 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
         t.isInstanceOf(mask, 'Ext.LoadMask');
 
         t.expect(mask.cls).toContain('cn_comp-messagemask');
+        t.expect(mask.cls).toContain('dialog');
+
+        t.expect(mask.dialogStyle).toBe(true);
 
         t.expect(mask.icon).toBeUndefined();
         t.expect(mask.msg).toBeUndefined();
@@ -88,6 +92,18 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
         t.expect(mask.buttonText).toEqual({
             yes : 'Yes', no : 'No', ok : 'Ok', cancel : 'Cancel'
         });
+
+        mask.destroy();
+        mask = null;
+
+        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+            target : panel,
+            dialogStyle : false
+        });
+
+        t.expect(mask.cls).toContain('cn_comp-messagemask');
+        t.expect(mask.cls).not.toContain('dialog');
+
     });
 
 
@@ -345,6 +361,22 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
     });
 
 
+    t.it('button visibility - no buttons', function(t) {
+
+        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+            target      : panel
+        });
+
+        t.expect(getTextField(mask.el.dom).parentNode.style.display).toBe('none');
+        t.expect(Ext.dom.Query.select("span[data-ref=yesButton]")[0].parentNode.style.display).toBe('none');
+        t.expect(Ext.dom.Query.select("span[data-ref=noButton]")[0].parentNode.style.display).toBe('none');
+        t.expect(Ext.dom.Query.select("span[data-ref=okButton]")[0].parentNode.style.display).toBe('none');
+        t.expect(Ext.dom.Query.select("span[data-ref=cancelButton]")[0].parentNode.style.display).toBe('none');
+
+        mask.close();
+    });
+
+    
     t.it('button visibility - YESNO', function(t) {
 
         mask = Ext.create('conjoon.cn_comp.component.MessageMask', {

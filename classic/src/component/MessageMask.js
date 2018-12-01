@@ -86,6 +86,12 @@ Ext.define('conjoon.cn_comp.component.MessageMask', {
         QUESTION : 'fa fa-question-circle',
 
         /**
+         * Glyph cls for Question mark
+         * @type {String} [QUESTION=fa fa-question-circle]
+         */
+        FAILURE : 'fa fa-frown-o',
+
+        /**
          * Glyph cls for Exclamation mark
          * @type {String} [ERROR=fa fa-exclamation-circle]
          */
@@ -123,6 +129,11 @@ Ext.define('conjoon.cn_comp.component.MessageMask', {
     ],
 
     cls :  Ext.baseCSSPrefix + 'mask' + ' cn_comp-messagemask',
+
+    /**
+     * true to style the mask as a dialog, otherwise false.
+     */
+    dialogStyle : true,
 
     msg : undefined,
 
@@ -188,6 +199,14 @@ Ext.define('conjoon.cn_comp.component.MessageMask', {
 
         config.msg = config.title;
 
+        if (config.dialogStyle === false) {
+            me.dialogStyle = false;
+        }
+
+        if (me.dialogStyle !== false) {
+            me.cls += ' dialog';
+        }
+
         delete config.title;
 
         me.callParent([config]);
@@ -249,6 +268,13 @@ Ext.define('conjoon.cn_comp.component.MessageMask', {
             case me.statics().OKCANCEL:
                 me.yesButton.dom.parentNode.style.display = "none";
                 me.noButton.dom.parentNode.style.display  = "none";
+                break;
+
+            default:
+                me.yesButton.dom.parentNode.style.display    = "none";
+                me.noButton.dom.parentNode.style.display     = "none";
+                me.cancelButton.dom.parentNode.style.display = "none";
+                me.okButton.dom.parentNode.style.display     = "none";
                 break;
         }
 
