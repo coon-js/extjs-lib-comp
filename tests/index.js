@@ -52,6 +52,7 @@ harness.start({
     items : [{
         group : 'component',
         items : [
+            'classic/src/component/IframeTest.js',
             'classic/src/component/LoadMaskTest.js',
             'classic/src/component/MessageMaskTest.js'
         ]
