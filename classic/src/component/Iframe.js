@@ -46,7 +46,7 @@ Ext.define('conjoon.cn_comp.component.Iframe', {
     alias : 'widget.cn_comp-iframe',
 
     renderTpl: [
-        '<iframe sandbox="{sandbox}" seamless scrolling="{scrolling}" id="{id}-cn_iframeEl" data-ref="cn_iframeEl" name="{name}" width="100%" height="100%" frameborder="0"></iframe>'
+        '<iframe sandbox="{sandbox}" scrolling="{scrolling}" id="{id}-cn_iframeEl" data-ref="cn_iframeEl" name="{name}" width="100%" height="100%" frameborder="0"></iframe>'
     ],
 
     childEls: ['cn_iframeEl'],
@@ -93,12 +93,17 @@ Ext.define('conjoon.cn_comp.component.Iframe', {
 
 
     /**
-     * Sets the srcdoc of this iframe to the specified value.
+     * Sets the srcdoc of this iframe to the specified value. If a falsy value
+     * is submitted, srcdoc will be set to an empty string.
      *
      * @param {String} value
      */
     setSrcDoc : function(value) {
         const me = this;
+
+        if (!value) {
+            value = "";
+        }
 
         me.cn_iframeEl.dom.srcdoc = value;
     },

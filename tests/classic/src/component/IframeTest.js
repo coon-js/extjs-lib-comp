@@ -89,7 +89,14 @@ describe('conjoon.cn_comp.component.IframeTest', function(t) {
         iframe.setSrcDoc("foo");
 
         t.expect(iframe.getSrcDoc()).toBe("foo");
+
+
+        iframe.setSrcDoc(null);
+
+        t.expect(iframe.getSrcDoc()).toBe("");
+
     });
+
 
 
     t.it('sandbox / scrolling', function(t) {
