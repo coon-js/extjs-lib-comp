@@ -112,4 +112,42 @@ describe('conjoon.cn_comp.component.IframeTest', function(t) {
     });
 
 
+    t.it('getBody()', function(t) {
+
+        iframe = createIframe({
+        });
+
+        t.expect(iframe.getBody()).toBeTruthy();
+        t.expect(iframe.getBody().toString()).toContain("HTMLBodyElement");
+
+    });
+
+
+    t.it('load event', function(t) {
+
+        iframe = createIframe({
+        });
+
+        let CALLED = 0;
+
+        iframe.on('load', function() {
+            CALLED++;
+        });
+
+        t.expect(CALLED).toBe(0);
+        iframe.setSrcDoc("foo");
+
+        t.waitForMs(250, function() {
+
+            t.expect(CALLED).toBe(1);
+            iframe.setSrcDoc("bar");
+
+            t.waitForMs(250, function() {
+
+                t.expect(CALLED).toBe(2);
+            });
+        });
+
+
+    });
 });

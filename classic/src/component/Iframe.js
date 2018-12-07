@@ -52,6 +52,12 @@ Ext.define('conjoon.cn_comp.component.Iframe', {
     childEls: ['cn_iframeEl'],
 
     /**
+     * Fired when the iframe loaded it's url/srcdoc.
+     * @event load
+     * @param this
+     */
+
+    /**
      * @cfg {String} name
      */
     name : undefined,
@@ -80,6 +86,36 @@ Ext.define('conjoon.cn_comp.component.Iframe', {
 
     /**
      * @inheritdoc
+     *
+     * @see #onLoad
+     */
+    initEvents : function() {
+
+        const me = this;
+
+        me.callParent(arguments);
+
+        me.cn_iframeEl.on('load', me.onLoad, me);
+    },
+
+
+    /**
+     * Named callback to make sure this Ext.Component triggers the "load" event
+     * once the iframe triggered it.
+     *
+     * @private
+     */
+    onLoad : function() {
+
+        const me = this;
+
+        me.fireEvent('load', me);
+
+    },
+
+
+    /**
+     * @inheritdoc
      */
     initRenderData: function() {
         const me = this;
@@ -91,6 +127,19 @@ Ext.define('conjoon.cn_comp.component.Iframe', {
         });
     },
 
+
+    /**
+     * Returns the body of this iframe.
+     *
+     * @return {HTMLElement}
+     */
+
+    getBody : function() {
+
+        const me = this;
+
+        return me.cn_iframeEl.dom.contentWindow.document.body;
+    },
 
     /**
      * Sets the srcdoc of this iframe to the specified value. If a falsy value
