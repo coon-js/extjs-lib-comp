@@ -1,10 +1,10 @@
 /**
  * conjoon
- * (c) 2007-2018 conjoon.org
+ * (c) 2007-2019 conjoon.org
  * licensing@conjoon.org
  *
  * lib-cn_comp
- * Copyright (C) 2018 Thorsten Suckow-Homberg/conjoon.org
+ * Copyright (C) 2019 Thorsten Suckow-Homberg/conjoon.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,8 +65,9 @@ Ext.define('conjoon.cn_comp.fixtures.sim.ItemSim', {
 
         data: function(ctx) {
 
-            var idPart  = ctx.url.match(this.url)[1],
-                filters = ctx.params.filter,
+            var idPart    = ctx.url.match(this.url)[1],
+                filters   = ctx.params.filter,
+                isEmpty   = ctx.params.isEmpty,
                 id,
                 ItemTable = conjoon.cn_comp.fixtures.sim.ItemTable,
                 items     = ItemTable.getItems();
@@ -83,6 +84,9 @@ Ext.define('conjoon.cn_comp.fixtures.sim.ItemSim', {
                 Ext.raise('no filter supported');
             } else {
 
+                if (isEmpty) {
+                    return [];
+                }
                 return items;
             }
         }

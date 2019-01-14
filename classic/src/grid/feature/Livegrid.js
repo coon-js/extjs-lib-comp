@@ -1,10 +1,10 @@
 /**
  * conjoon
- * (c) 2007-2018 conjoon.org
+ * (c) 2007-2019 conjoon.org
  * licensing@conjoon.org
  *
  * lib-cn_comp
- * Copyright (C) 2018 Thorsten Suckow-Homberg/conjoon.org
+ * Copyright (C) 2019 Thorsten Suckow-Homberg/conjoon.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -320,16 +320,22 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
             grid        = me.grid,
             view        = grid.getView(),
             pageMap     = me.getPageMap(),
-            PageMapUtil = conjoon.cn_core.data.pageMap.PageMapUtil;
+            PageMapUtil = conjoon.cn_core.data.pageMap.PageMapUtil,
+            viewRange   = me.getCurrentViewRange();
 
-        let i, len, indexes = [];
+        let i, len, indexes = [], renderGuess = false;
 
         for (i = 0, len = positions.length; i < len; i++) {
             indexes.push(PageMapUtil.positionToStoreIndex(positions[i], pageMap));
         }
 
+        // make a check if the view was rendered but contains NO elements yet
+        if (grid.getStore().isLoaded() && view.rendered && Ext.Object.isEmpty(view.all.elements)) {
+            renderGuess = true;
+        }
+
         // if from or to is in the rendered rect, refresh view
-        if (me.getCurrentViewRange().contains(positions)) {
+        if (renderGuess || viewRange.contains(positions)) {
             indexes.push(view.all.startIndex);
 
             view.refreshView(Math.min(...indexes));

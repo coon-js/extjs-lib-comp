@@ -1,10 +1,10 @@
 /**
  * conjoon
- * (c) 2007-2018 conjoon.org
+ * (c) 2007-2019 conjoon.org
  * licensing@conjoon.org
  *
  * lib-cn_comp
- * Copyright (C) 2018 Thorsten Suckow-Homberg/conjoon.org
+ * Copyright (C) 2019 Thorsten Suckow-Homberg/conjoon.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@
  */
 
 describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
+
+    const TIMEOUT = 1250;
 
     Ext.define('MockModel', {
         extend : 'Ext.data.Model',
@@ -49,10 +51,11 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
                 proxy : {
                     type : 'rest',
                         url  : 'cn_comp/fixtures/Livegrid',
+                        extraParams : cfg.extraParams || {},
                         reader : {
-                        type         : 'json',
-                        rootProperty : 'data'
-                    }
+                            type         : 'json',
+                            rootProperty : 'data'
+                        }
                 }
             });
 
@@ -1144,6 +1147,45 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
             });
         });
 
+
+        t.it("lib-cn_comp#5", function(t) {
+
+            let grid = getGrid({
+                    sorters     : {property : 'testProp', dir : 'ASC'},
+                    autoLoad    : true,
+                    extraParams : {isEmpty : true}
+                }),
+                view           = grid.view,
+                store          = grid.getStore(),
+                feature        = grid.view.getFeature('livegrid'),
+                feeder         = feature.pageMapFeeder,
+                pageMap        = feature.getPageMap(),
+                map            = pageMap.map,
+                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
+                RecordPosition = conjoon.cn_core.data.pageMap.RecordPosition;
+
+
+            t.waitForMs(TIMEOUT, function() {
+
+                for (var i = 0; i < 78; i++) {
+                    let rec      = Ext.create('MockModel', {
+                        testProp : 0 - i,
+                        subject  : '+++ NEW (' + i + ') +++'
+                    });
+                    feature.add(rec);
+
+                    t.expect(feature.getCurrentViewRange().contains(
+                        PageMapUtil.findRecord(rec, feeder))
+                    ).toBe(true);
+
+                }
+
+
+                grid.destroy();
+                grid = null;
+
+            });
+        });
 
 
 
