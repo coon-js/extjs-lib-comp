@@ -1,10 +1,10 @@
 /**
  * conjoon
- * (c) 2007-2017 conjoon.org
+ * (c) 2007-2019 conjoon.org
  * licensing@conjoon.org
  *
  * lib-cn_comp
- * Copyright (C) 2017 Thorsten Suckow-Homberg/conjoon.org
+ * Copyright (C) 2019 Thorsten Suckow-Homberg/conjoon.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -135,7 +135,10 @@ Ext.define('conjoon.cn_comp.component.LoadMask', {
 
 
     /**
-     * @inheritdoc
+     * We also add a listener to this #target's destroy-event, which
+     * will trigger destroying THIS LoadMask.
+     *
+     *  @inheritdoc
      */
     afterRender : function() {
         var me = this;
@@ -143,6 +146,10 @@ Ext.define('conjoon.cn_comp.component.LoadMask', {
         me.callParent(arguments);
 
         me.updateProgress(me.progress);
+
+        if (me.target && me.target.isComponent) {
+            me.target.on('destroy', me.destroy, me);
+        }
     },
 
 
