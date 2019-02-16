@@ -23,7 +23,7 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe('conjoon.cn_comp.grid.feature.RowBodySwitchTest', function(t) {
+describe('coon.comp.grid.feature.RowBodySwitchTest', function(t) {
 
     var grid;
 
@@ -96,14 +96,14 @@ describe('conjoon.cn_comp.grid.feature.RowBodySwitchTest', function(t) {
 // |                    =~. Tests .~=
 // +----------------------------------------------------------------------------
 
-    t.requireOk('conjoon.cn_comp.grid.feature.RowBodySwitch', function() {
+    t.requireOk('coon.comp.grid.feature.RowBodySwitch', function() {
 
 
         t.it('test class and configuration', function(t) {
             var grid    = getGrid(false),
                 feature = grid.view.getFeature('rowbodyswitchfeature');
 
-            t.isInstanceOf(feature, 'conjoon.cn_comp.grid.feature.RowBodySwitch');
+            t.isInstanceOf(feature, 'coon.comp.grid.feature.RowBodySwitch');
 
             t.expect(feature.alias).toContain('feature.cn_comp-gridfeature-rowbodyswitch');
 

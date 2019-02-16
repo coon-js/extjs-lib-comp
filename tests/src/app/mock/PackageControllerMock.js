@@ -26,9 +26,9 @@
 /**
  * PackageControllerMock.
  */
-Ext.define('conjoon.universal.test.app.mock.PackageControllerMock', {
+Ext.define('coon.universal.test.app.mock.PackageControllerMock', {
 
-    extend : 'conjoon.cn_core.app.PackageController',
+    extend : 'coon.core.app.PackageController',
 
     postLaunchHook : function() {
 

@@ -32,7 +32,7 @@
  *      @example
  *      Ext.define('MyApp.FileButton', {
  *
- *          extend : 'conjoon.cn_comp.form.FileButton',
+ *          extend : 'coon.comp.form.FileButton',
  *
  *          text : 'Browse',
  *
@@ -55,7 +55,7 @@
  *      });
  *
  */
-Ext.define('conjoon.cn_comp.form.field.FileButton', {
+Ext.define('coon.comp.form.field.FileButton', {
 
     extend : 'Ext.form.field.FileButton',
 
@@ -72,7 +72,7 @@ Ext.define('conjoon.cn_comp.form.field.FileButton', {
 
     /**
      * @event change
-     * @param {conjoon.cn_comp.form.FileButton} this
+     * @param {coon.comp.form.FileButton} this
      * @param {Ext.event.Event} evt
      * @param {String} value
      * @param {FileList} fileList

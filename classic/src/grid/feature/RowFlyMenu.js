@@ -77,7 +77,7 @@
  *
  *
  */
-Ext.define('conjoon.cn_comp.grid.feature.RowFlyMenu', {
+Ext.define('coon.comp.grid.feature.RowFlyMenu', {
 
     extend : 'Ext.grid.feature.Feature',
 

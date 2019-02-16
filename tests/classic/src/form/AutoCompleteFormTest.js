@@ -23,14 +23,14 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe('conjoon.cn_comp.form.AutCompleteFormTest', function(t) {
+describe('coon.comp.form.AutCompleteFormTest', function(t) {
 
 
 // +----------------------------------------------------------------------------
 // |                    =~. Unit Tests .~=
 // +----------------------------------------------------------------------------
 
-    t.requireOk('conjoon.cn_comp.form.AutoCompleteForm', function() {
+    t.requireOk('coon.comp.form.AutoCompleteForm', function() {
 
         var form,
             formConfig,

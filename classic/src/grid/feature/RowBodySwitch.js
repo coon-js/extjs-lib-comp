@@ -103,7 +103,7 @@
  *
  *
  */
-Ext.define('conjoon.cn_comp.grid.feature.RowBodySwitch', {
+Ext.define('coon.comp.grid.feature.RowBodySwitch', {
 
     extend : 'Ext.grid.feature.RowBody',
 

@@ -23,7 +23,7 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe('conjoon.cn_comp.list.TreeTest', function(t) {
+describe('coon.comp.list.TreeTest', function(t) {
 
     var tree,
         treeConfig;
@@ -45,30 +45,30 @@ describe('conjoon.cn_comp.list.TreeTest', function(t) {
 // +----------------------------------------------------------------------------
 
     t.it("Should create and show the tree", function(t) {
-        tree = Ext.create('conjoon.cn_comp.list.Tree', treeConfig);
+        tree = Ext.create('coon.comp.list.Tree', treeConfig);
 
         t.expect(tree instanceof Ext.list.Tree).toBe(true);
         t.expect(tree.alias).toContain('widget.cn_comp-listtree');
     });
 
     t.it("Should evaluate getMicro to false", function(t) {
-        var tree = Ext.create('conjoon.cn_comp.list.Tree', {width : 200});
+        var tree = Ext.create('coon.comp.list.Tree', {width : 200});
         t.expect(tree.getMicro()).toBeFalsy();
         tree.destroy();
     });
 
     t.it("Should process width properly", function(t) {
-        var tree = Ext.create('conjoon.cn_comp.list.Tree', {width : 200});
+        var tree = Ext.create('coon.comp.list.Tree', {width : 200});
         t.expect(tree.defaultWidth).toBe(200);
         tree.destroy();
 
-        tree = Ext.create('conjoon.cn_comp.list.Tree');
+        tree = Ext.create('coon.comp.list.Tree');
         t.expect(tree.defaultWidth).toBe(250);
         tree.destroy();
     });
 
     t.it("Should process setHidden properly", function(t) {
-        var tree = Ext.create('conjoon.cn_comp.list.Tree', {
+        var tree = Ext.create('coon.comp.list.Tree', {
                 renderTo : document.body,
                 width    : 200
             }),
@@ -88,7 +88,7 @@ describe('conjoon.cn_comp.list.TreeTest', function(t) {
         t.expect(tree.isHidden()).toBe(false);
         tree.destroy();
 
-        tree = Ext.create('conjoon.cn_comp.list.Tree');
+        tree = Ext.create('coon.comp.list.Tree');
         t.expect(tree.getWidth()).toBeNull();
         tree.setHidden(true);
         t.expect(tree.isVisible()).toBe(false);

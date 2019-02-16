@@ -23,7 +23,7 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
+describe('coon.comp.container.MessageMaskTest', function(t) {
 
     var panel,
         mask,
@@ -64,16 +64,16 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 // +----------------------------------------------------------------------------
 
     t.it('test class and configuration', function(t) {
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+        mask = Ext.create('coon.comp.component.MessageMask', {
             target : panel
         });
 
-        t.expect(conjoon.cn_comp.component.MessageMask.YESNO).toBeDefined();
-        t.expect(conjoon.cn_comp.component.MessageMask.QUESTION).toBeDefined();
-        t.expect(conjoon.cn_comp.component.MessageMask.FAILURE).toBeDefined();
-        t.expect(conjoon.cn_comp.component.MessageMask.OK).toBeDefined();
-        t.expect(conjoon.cn_comp.component.MessageMask.ERROR).toBeDefined();
-        t.expect(conjoon.cn_comp.component.MessageMask.OKCANCEL).toBeDefined();
+        t.expect(coon.comp.component.MessageMask.YESNO).toBeDefined();
+        t.expect(coon.comp.component.MessageMask.QUESTION).toBeDefined();
+        t.expect(coon.comp.component.MessageMask.FAILURE).toBeDefined();
+        t.expect(coon.comp.component.MessageMask.OK).toBeDefined();
+        t.expect(coon.comp.component.MessageMask.ERROR).toBeDefined();
+        t.expect(coon.comp.component.MessageMask.OKCANCEL).toBeDefined();
 
         t.isInstanceOf(mask, 'Ext.LoadMask');
 
@@ -99,7 +99,7 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
         mask.destroy();
         mask = null;
 
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+        mask = Ext.create('coon.comp.component.MessageMask', {
             target : panel,
             dialogStyle : false
         });
@@ -114,7 +114,7 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
         var nodes, ids;
 
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+        mask = Ext.create('coon.comp.component.MessageMask', {
             target : panel,
             title  : 'foo'
         });
@@ -139,7 +139,7 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
 
     t.it('constructor()', function(t) {
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+        mask = Ext.create('coon.comp.component.MessageMask', {
             target : panel,
             title  : 'foo'
         });
@@ -150,7 +150,7 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
 
     t.it('initRenderData()', function(t) {
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+        mask = Ext.create('coon.comp.component.MessageMask', {
             target      : panel,
             buttonText  : {yes : 'foo', no : 'bar', ok : 'test', cancel : 'abort'},
             message     : 'snafu',
@@ -169,7 +169,7 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
         mask.destroy();
 
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+        mask = Ext.create('coon.comp.component.MessageMask', {
                 target : panel,
                 input  : true
             }),
@@ -179,7 +179,7 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
         mask.destroy();
 
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+        mask = Ext.create('coon.comp.component.MessageMask', {
                 target : panel
             }),
             result = mask.initRenderData();
@@ -192,9 +192,9 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
     t.it('afterRender()', function(t) {
 
-        t.isCalledOnce('onClick', conjoon.cn_comp.component.MessageMask.prototype);
+        t.isCalledOnce('onClick', coon.comp.component.MessageMask.prototype);
 
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+        mask = Ext.create('coon.comp.component.MessageMask', {
             target : panel,
             title  : 'foo'
         });
@@ -211,7 +211,7 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
                 type = arg;
             };
 
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+        mask = Ext.create('coon.comp.component.MessageMask', {
             target   : panel,
             callback : callback
         });
@@ -229,7 +229,7 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
     t.it('getButtonIdForIndex()', function(t) {
 
         var exc, e, res;
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+        mask = Ext.create('coon.comp.component.MessageMask', {
             target : panel
         });
 
@@ -257,7 +257,7 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
     t.it('yesButton onClick()', function(t) {
 
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+        mask = Ext.create('coon.comp.component.MessageMask', {
             target : panel
         });
 
@@ -270,7 +270,7 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
     t.it('noButton onClick()', function(t) {
 
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+        mask = Ext.create('coon.comp.component.MessageMask', {
             target : panel
         });
 
@@ -283,7 +283,7 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
     t.it('okButton onClick()', function(t) {
 
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+        mask = Ext.create('coon.comp.component.MessageMask', {
             target : panel
         });
 
@@ -296,7 +296,7 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
     t.it('cancelButton onClick()', function(t) {
 
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+        mask = Ext.create('coon.comp.component.MessageMask', {
             target : panel
         });
 
@@ -309,7 +309,7 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
     t.it('invalid target onClick()', function(t) {
 
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+        mask = Ext.create('coon.comp.component.MessageMask', {
             target : panel
         });
 
@@ -322,7 +322,7 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
     t.it('close()', function(t) {
 
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+        mask = Ext.create('coon.comp.component.MessageMask', {
             target : panel
         });
 
@@ -333,7 +333,7 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
 
     t.it('bindStore()', function(t) {
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+        mask = Ext.create('coon.comp.component.MessageMask', {
             target : panel
         });
         t.expect(mask.bindStore).toBe(Ext.emptyFn);
@@ -341,7 +341,7 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
 
     t.it('getStoreListeners()', function(t) {
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+        mask = Ext.create('coon.comp.component.MessageMask', {
             target : panel
         });
         t.expect(mask.getStoreListeners).toBe(Ext.emptyFn);
@@ -349,7 +349,7 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
 
     t.it('onLoad()', function(t) {
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+        mask = Ext.create('coon.comp.component.MessageMask', {
             target : panel
         });
         t.expect(mask.onLoad).toBe(Ext.emptyFn);
@@ -357,7 +357,7 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
 
     t.it('onBeforeLoad()', function(t) {
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+        mask = Ext.create('coon.comp.component.MessageMask', {
             target : panel
         });
         t.expect(mask.onBeforeLoad).toBe(Ext.emptyFn);
@@ -366,7 +366,7 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
     t.it('button visibility - no buttons', function(t) {
 
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+        mask = Ext.create('coon.comp.component.MessageMask', {
             target      : panel
         });
 
@@ -382,8 +382,8 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
     
     t.it('button visibility - YESNO', function(t) {
 
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
-            buttons : conjoon.cn_comp.component.MessageMask.YESNO,
+        mask = Ext.create('coon.comp.component.MessageMask', {
+            buttons : coon.comp.component.MessageMask.YESNO,
             target  : panel
         });
 
@@ -399,8 +399,8 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
     t.it('button visibility - OK', function(t) {
 
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
-            buttons : conjoon.cn_comp.component.MessageMask.OK,
+        mask = Ext.create('coon.comp.component.MessageMask', {
+            buttons : coon.comp.component.MessageMask.OK,
             target  : panel
         });
 
@@ -416,8 +416,8 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
     t.it('button visibility - OKCANCEL', function(t) {
 
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
-            buttons : conjoon.cn_comp.component.MessageMask.OKCANCEL,
+        mask = Ext.create('coon.comp.component.MessageMask', {
+            buttons : coon.comp.component.MessageMask.OKCANCEL,
             target  : panel
         });
 
@@ -433,8 +433,8 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
     t.it('input visibility', function(t) {
 
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
-            buttons : conjoon.cn_comp.component.MessageMask.OKCANCEL,
+        mask = Ext.create('coon.comp.component.MessageMask', {
+            buttons : coon.comp.component.MessageMask.OKCANCEL,
             target  : panel,
             input   : true
         });
@@ -453,8 +453,8 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
                 VALUE    = value;
             };
 
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
-            buttons  : conjoon.cn_comp.component.MessageMask.OKCANCEL,
+        mask = Ext.create('coon.comp.component.MessageMask', {
+            buttons  : coon.comp.component.MessageMask.OKCANCEL,
             target   : panel,
             input    : {emptyText : 'foobar'},
             callback : func
@@ -483,8 +483,8 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
                 VALUE    = value;
             };
 
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
-            buttons  : conjoon.cn_comp.component.MessageMask.OKCANCEL,
+        mask = Ext.create('coon.comp.component.MessageMask', {
+            buttons  : coon.comp.component.MessageMask.OKCANCEL,
             target   : panel,
             input    : {emptyText : 'foobar'},
             callback : func
@@ -507,8 +507,8 @@ describe('conjoon.cn_comp.container.MessageMaskTest', function(t) {
 
     t.it('textfield focus', function(t) {
 
-        mask = Ext.create('conjoon.cn_comp.component.MessageMask', {
-            buttons  : conjoon.cn_comp.component.MessageMask.OKCANCEL,
+        mask = Ext.create('coon.comp.component.MessageMask', {
+            buttons  : coon.comp.component.MessageMask.OKCANCEL,
             target   : panel,
             input    : true
         });

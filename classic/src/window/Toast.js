@@ -27,9 +27,9 @@
  * This class provides a Toast Window to present system messages to the user.
  *
  * @example
- *    conjoon.Toast.warn("This is a warning");
+ *    coon.Toast.warn("This is a warning");
  */
-Ext.define('conjoon.cn_comp.window.Toast', {
+Ext.define('coon.comp.window.Toast', {
 
 
     extend : 'Ext.window.Toast',
@@ -81,7 +81,7 @@ Ext.define('conjoon.cn_comp.window.Toast', {
 
 }, function(Toast) {
 
-    conjoon.Toast = function() {
+    coon.Toast = function() {
 
         const show = function(message, context) {
             let toast, cfg = {
@@ -102,7 +102,7 @@ Ext.define('conjoon.cn_comp.window.Toast', {
              *
              * @param {String} message
              *
-             * @return {conjoon.cn_comp.window.Toast}
+             * @return {coon.comp.window.Toast}
              */
             fail : function(message) {
 
@@ -115,7 +115,7 @@ Ext.define('conjoon.cn_comp.window.Toast', {
              *
              * @param {String} message
              *
-             * @return {conjoon.cn_comp.window.Toast}
+             * @return {coon.comp.window.Toast}
              */
             warn : function(message) {
 
@@ -128,7 +128,7 @@ Ext.define('conjoon.cn_comp.window.Toast', {
              *
              * @param {String} message
              *
-             * @return {conjoon.cn_comp.window.Toast}
+             * @return {coon.comp.window.Toast}
              */
             info : function(message) {
 

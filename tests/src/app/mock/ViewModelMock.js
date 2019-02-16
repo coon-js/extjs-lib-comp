@@ -26,6 +26,6 @@
 /**
  * ViewModelMock.
  */
-Ext.define('conjoon.universal.test.app.mock.ViewModelMock', {
+Ext.define('coon.universal.test.app.mock.ViewModelMock', {
     extend : 'Ext.app.ViewModel'
 });

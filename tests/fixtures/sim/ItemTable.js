@@ -26,7 +26,7 @@
 /**
  *
  */
-Ext.define('conjoon.cn_comp.fixtures.sim.ItemTable', {
+Ext.define('coon.comp.fixtures.sim.ItemTable', {
 
     singleton : true,
 
@@ -151,7 +151,7 @@ Ext.define('conjoon.cn_comp.fixtures.sim.ItemTable', {
         }
 
         subjects = [
-            'Welcome to conjoon',
+            'Welcome to coon',
             'Re: Ihre Buchung in der Unterkunft',
             'Achtung! DVBT Antennen sind bald nutzlos, Thorsten Suckow-Homberg',
             'Verbindliche Bestellung Banshee Headbadge',

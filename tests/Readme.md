@@ -10,6 +10,6 @@ index.html.template -> index.html
 tests.config.js.template -> tests.config.js
 ```
 
-The tests require lib-cn_core. Make sure you adjust the paths to this library in
-the index.js if both packages are not part of a regular local package directory
-layout in a sencha workspace.
+The tests require [lib-cn_core](https://github.com/coon-js/lib-cn_core). Make sure you adjust 
+the paths to this library in the `index.js` if both packages are not part of a regular local 
+package directory layout in a Sencha ExtJS workspace.

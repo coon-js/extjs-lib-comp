@@ -39,12 +39,12 @@
  *         title    : 'Foo'
  *     });
  *
- *     var myMask = Ext.create('conjoon.cn_comp.component.MessageMask', {
+ *     var myMask = Ext.create('coon.comp.component.MessageMask', {
  *         title    : 'Saving failed',
  *         message  : 'Saving the data failed. Do you want to try again?',
  *         target   : myPanel,
- *         buttons  : conjoon.cn_comp.component.MessageMask.YESNO,
- *         icon     : conjoon.cn_comp.component.MessageMask.QUESTION,
+ *         buttons  : coon.comp.component.MessageMask.YESNO,
+ *         icon     : coon.comp.component.MessageMask.QUESTION,
  *         callback : function(btnAction) {
  *             alert("You clicked " + btnAction);
  *         }
@@ -58,7 +58,7 @@
  *
  *
  */
-Ext.define('conjoon.cn_comp.component.MessageMask', {
+Ext.define('coon.comp.component.MessageMask', {
 
     extend: 'Ext.LoadMask',
 

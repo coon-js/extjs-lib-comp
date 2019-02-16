@@ -34,22 +34,22 @@
  * the prefetching mechanism of the BufferedStore.
  *
  */
-Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
+Ext.define('coon.comp.grid.feature.Livegrid', {
 
     extend : 'Ext.grid.feature.Feature',
 
     alias : 'feature.cn_comp-gridfeature-livegrid',
 
     requires : [
-        'conjoon.cn_core.data.pageMap.PageMapFeeder',
-        'conjoon.cn_core.data.pageMap.RecordPosition',
-        'conjoon.cn_core.data.pageMap.IndexRange',
-        'conjoon.cn_core.data.pageMap.PageMapUtil'
+        'coon.core.data.pageMap.PageMapFeeder',
+        'coon.core.data.pageMap.RecordPosition',
+        'coon.core.data.pageMap.IndexRange',
+        'coon.core.data.pageMap.PageMapUtil'
     ],
 
 
     /**
-     * @type {conjoon.cn_core.data.pageMap.PageMapFeeder} pageMapFeeder
+     * @type {coon.core.data.pageMap.PageMapFeeder} pageMapFeeder
      * @private
      */
     pageMapFeeder : null,
@@ -115,13 +115,13 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
      *
      * @return {Ext.data.Model|null}
      *
-     * @see conjoon.cn_core.data.pageMap.PageMapUtil#getRecordById
+     * @see coon.core.data.pageMap.PageMapUtil#getRecordById
      */
     getRecordById : function(id) {
 
         const me = this;
 
-        return conjoon.cn_core.data.pageMap.PageMapUtil.getRecordById(
+        return coon.core.data.pageMap.PageMapUtil.getRecordById(
             id, me.pageMapFeeder
         );
     },
@@ -260,7 +260,7 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
     /**
      * Callback for the store's update event. Will check if this
      * grid's store sorter and sort order is affected by the update, and forward
-     * to this PageMapFeeder's #update method. If a conjoon.cn_core.data.pageMap.Operation
+     * to this PageMapFeeder's #update method. If a coon.core.data.pageMap.Operation
      * instance is returned by this method, either its from or to (or both)
      * position(s) will be forwarded to #refreshView, which has the to decide
      * if the view is re-rendered.
@@ -307,7 +307,7 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
      * Refreshes the view if any of the positions found in positions is contained
      * in the current view.
      *
-     * @param {Array|conjoon.cn_core.data.pageMap.RecordPosition} positions
+     * @param {Array|coon.core.data.pageMap.RecordPosition} positions
      * @param {Boolean=true} ensureVisible true to call the grid's ensureVisible()
      * method IF the grid has a selection
      *
@@ -322,7 +322,7 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
             grid        = me.grid,
             view        = grid.getView(),
             pageMap     = me.getPageMap(),
-            PageMapUtil = conjoon.cn_core.data.pageMap.PageMapUtil,
+            PageMapUtil = coon.core.data.pageMap.PageMapUtil,
             viewRange   = me.getCurrentViewRange();
 
         let i, len, indexes = [], renderGuess = false;
@@ -362,7 +362,7 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
      * store, since this method might get called after a record has been
      * removed locally, but the view wasn't updated yet.
      *
-     * @return {conjoon.cn_core.data.pageMap.IndexRange} the current range or
+     * @return {coon.core.data.pageMap.IndexRange} the current range or
      * null if no range could be determined
      *
      * @private
@@ -373,7 +373,7 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
               grid        = me.grid,
               view        = grid.getView(),
               rows        = view.all,
-              PageMapUtil = conjoon.cn_core.data.pageMap.PageMapUtil;
+              PageMapUtil = coon.core.data.pageMap.PageMapUtil;
 
         if (rows.endIndex === -1) {
             return null;
@@ -419,7 +419,7 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
 
         const me            = this,
               pageMap       = me.getPageMap(),
-              PageMapUtil   = conjoon.cn_core.data.pageMap.PageMapUtil,
+              PageMapUtil   = coon.core.data.pageMap.PageMapUtil,
               pageMapFeeder = me.pageMapFeeder;
 
         let startPos = PageMapUtil.storeIndexToPosition(start, pageMap),
@@ -489,7 +489,7 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
         const me             = this,
               page           = operation.getPage(),
               pageMapFeeder  = me.pageMapFeeder,
-              RecordPosition = conjoon.cn_core.data.pageMap.RecordPosition;
+              RecordPosition = coon.core.data.pageMap.RecordPosition;
 
         if (pageMapFeeder.getFeedAt(page) &&
             !me.getCurrentViewRange().contains(RecordPosition.create(page, 0))) {
@@ -578,7 +578,7 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
             me.pageMapFeeder = null;
         }
 
-        me.pageMapFeeder = Ext.create('conjoon.cn_core.data.pageMap.PageMapFeeder', {
+        me.pageMapFeeder = Ext.create('coon.core.data.pageMap.PageMapFeeder', {
             pageMap : pageMap
         });
 
@@ -603,7 +603,7 @@ Ext.define('conjoon.cn_comp.grid.feature.Livegrid', {
         const me   = this,
               view = me.view;
 
-        view.saveFocusState = conjoon.cn_comp.grid.feature.Livegrid.prototype.saveFocusState;
+        view.saveFocusState = coon.comp.grid.feature.Livegrid.prototype.saveFocusState;
 
         return true;
     },

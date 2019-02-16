@@ -23,12 +23,12 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe('conjoon.cn_comp.component.IframeTest', function(t) {
+describe('coon.comp.component.IframeTest', function(t) {
 
     let iframe;
 
     const createIframe = function(cfg) {
-        let iframe = Ext.create('conjoon.cn_comp.component.Iframe', Ext.apply({
+        let iframe = Ext.create('coon.comp.component.Iframe', Ext.apply({
             renderTo : document.body,
             height : 400,
             width : 600

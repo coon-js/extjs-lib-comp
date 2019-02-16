@@ -23,11 +23,11 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe('conjoon.cn_comp.window.LockingWindowTest', function(t) {
+describe('coon.comp.window.LockingWindowTest', function(t) {
 
     t.it("Sanitize tests for LockingWindow specifics", function(t) {
 
-        var w =Ext.create('conjoon.cn_comp.window.LockingWindow', {
+        var w =Ext.create('coon.comp.window.LockingWindow', {
             modal     : false,
             maximized : false,
             closable  : true,

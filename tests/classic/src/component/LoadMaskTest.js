@@ -23,7 +23,7 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
+describe('coon.comp.container.LoadMaskTest', function(t) {
 
     var panel;
 
@@ -49,7 +49,7 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
 // +----------------------------------------------------------------------------
 
     t.it('test class and configuration', function(t) {
-        var w = Ext.create('conjoon.cn_comp.component.LoadMask', {
+        var w = Ext.create('coon.comp.component.LoadMask', {
                 target : panel
             });
 
@@ -66,7 +66,7 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
 
 
     t.it('initRenderData()', function(t) {
-        var w = Ext.create('conjoon.cn_comp.component.LoadMask', {
+        var w = Ext.create('coon.comp.component.LoadMask', {
                 target    : panel,
                 glyphCls  : 'fa fa-envelope',
                 msgWidth  : 300,
@@ -82,7 +82,7 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
 
 
     t.it('updateActionMsg()', function(t) {
-        var w = Ext.create('conjoon.cn_comp.component.LoadMask', {
+        var w = Ext.create('coon.comp.component.LoadMask', {
                 target    : panel,
                 msgAction : 'foo'
             }),
@@ -98,7 +98,7 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
 
 
     t.it('updateProgress()', function(t) {
-        var w = Ext.create('conjoon.cn_comp.component.LoadMask', {
+        var w = Ext.create('coon.comp.component.LoadMask', {
                 target    : panel
             }),
             node, m;
@@ -116,7 +116,7 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
 
 
     t.it('loopProgress()', function(t) {
-        var w = Ext.create('conjoon.cn_comp.component.LoadMask', {
+        var w = Ext.create('coon.comp.component.LoadMask', {
                 target    : panel
             }),
             m, node;
@@ -146,7 +146,7 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
 
 
     t.it('clearTimer()', function(t) {
-        var w = Ext.create('conjoon.cn_comp.component.LoadMask', {
+        var w = Ext.create('coon.comp.component.LoadMask', {
                 target : panel
             });
 
@@ -164,7 +164,7 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
 
 
     t.it('stop task with Ext.TaskManager.stop()', function(t) {
-        var w = Ext.create('conjoon.cn_comp.component.LoadMask', {
+        var w = Ext.create('coon.comp.component.LoadMask', {
                 target : panel
             });
 
@@ -183,7 +183,7 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
 
 
     t.it('resetBar()', function(t) {
-        var w = Ext.create('conjoon.cn_comp.component.LoadMask', {
+        var w = Ext.create('coon.comp.component.LoadMask', {
                 target : panel
             }),
             node, m;
@@ -210,7 +210,7 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
 
 
     t.it('hide()', function(t) {
-        var w = Ext.create('conjoon.cn_comp.component.LoadMask', {
+        var w = Ext.create('coon.comp.component.LoadMask', {
                 target    : panel,
                 msgAction : 'foo'
             });
@@ -223,7 +223,7 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
 
 
     t.it('resetProgress()', function(t) {
-        var w = Ext.create('conjoon.cn_comp.component.LoadMask', {
+        var w = Ext.create('coon.comp.component.LoadMask', {
                 target : panel
             }),
             m;
@@ -238,7 +238,7 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
 
 
     t.it('resetProgress(true)', function(t) {
-        var w = Ext.create('conjoon.cn_comp.component.LoadMask', {
+        var w = Ext.create('coon.comp.component.LoadMask', {
                 target : panel
             }),
             m;
@@ -253,7 +253,7 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
 
 
     t.it('calculatePercFromTask()', function(t) {
-        var w = Ext.create('conjoon.cn_comp.component.LoadMask', {
+        var w = Ext.create('coon.comp.component.LoadMask', {
             target : panel
         });
 
@@ -274,7 +274,7 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
 
 
     t.it('doDestroy()', function(t) {
-        var w = Ext.create('conjoon.cn_comp.component.LoadMask', {
+        var w = Ext.create('coon.comp.component.LoadMask', {
                 target : panel
             });
 
@@ -286,7 +286,7 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
 
 
     t.it('setTransitionDuration()', function(t) {
-        var w = Ext.create('conjoon.cn_comp.component.LoadMask', {
+        var w = Ext.create('coon.comp.component.LoadMask', {
                 target : panel
             }),
             node;
@@ -301,7 +301,7 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
 
 
     t.it('Should start with specified progress', function(t) {
-        var w = Ext.create('conjoon.cn_comp.component.LoadMask', {
+        var w = Ext.create('coon.comp.component.LoadMask', {
                 target    : panel,
                 progress  : 0.3
             }),
@@ -313,7 +313,7 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
 
 
     t.it('Manual call to updateProcess() should stop loop timer', function(t) {
-        var w = Ext.create('conjoon.cn_comp.component.LoadMask', {
+        var w = Ext.create('coon.comp.component.LoadMask', {
                 target    : panel
             }),
             m, node;
@@ -330,7 +330,7 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
 
 
     t.it('updateMsg()', function(t) {
-        var w = Ext.create('conjoon.cn_comp.component.LoadMask', {
+        var w = Ext.create('coon.comp.component.LoadMask', {
                 target : panel,
                 msg    : 'foo'
             }),
@@ -346,7 +346,7 @@ describe('conjoon.cn_comp.container.LoadMaskTest', function(t) {
 
 
     t.it('make sure load mask is destroyed', function(t) {
-        var w = Ext.create('conjoon.cn_comp.component.LoadMask', {
+        var w = Ext.create('coon.comp.component.LoadMask', {
             target : panel
         });
 

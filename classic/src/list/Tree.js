@@ -26,7 +26,7 @@
 /**
  * An {@link Ext.list.Tree} which provides functionality for showing/hiding it.
  */
-Ext.define('conjoon.cn_comp.list.Tree', {
+Ext.define('coon.comp.list.Tree', {
 
     extend :  'Ext.list.Tree',
 

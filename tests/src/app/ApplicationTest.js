@@ -23,7 +23,7 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe('conjoon.cn_comp.app.ApplicationTest', function(t) {
+describe('coon.comp.app.ApplicationTest', function(t) {
 
 
 // +----------------------------------------------------------------------------
@@ -33,9 +33,9 @@ describe('conjoon.cn_comp.app.ApplicationTest', function(t) {
     t.it('Should throw an error when applicationSchemaConfig is an object and schema was not loaded yet', function(t) {
         var exc = undefined;
         try {
-            Ext.create('conjoon.cn_comp.app.Application', {
+            Ext.create('coon.comp.app.Application', {
                 name                          : 'test',
-                mainView                      : 'conjoon.cn_comp.container.Viewport',
+                mainView                      : 'coon.comp.container.Viewport',
                 applicationSchemaConfig       : {type : 'maschema'},
                 applicationViewModelClassName : 'Ext.app.ViewModel'
             });
@@ -49,9 +49,9 @@ describe('conjoon.cn_comp.app.ApplicationTest', function(t) {
     t.it('Should not throw an error when applicationSchemaConfig is not specified', function(t) {
         var exc = undefined;
         try {
-            Ext.create('conjoon.cn_comp.app.Application', {
+            Ext.create('coon.comp.app.Application', {
                 name                          : 'test',
-                mainView                      : 'conjoon.cn_comp.container.Viewport',
+                mainView                      : 'coon.comp.container.Viewport',
                 applicationSchemaConfig       : undefined,
                 applicationViewModelClassName : 'Ext.app.ViewModel'
             });
@@ -65,9 +65,9 @@ describe('conjoon.cn_comp.app.ApplicationTest', function(t) {
         var exc = undefined;
 
         try {
-            Ext.create('conjoon.cn_comp.app.Application', {
+            Ext.create('coon.comp.app.Application', {
                 name                          : 'test',
-                mainView                      : 'conjoon.cn_comp.container.Viewport',
+                mainView                      : 'coon.comp.container.Viewport',
                 applicationSchemaConfig       : 'Ext.data.schema.Schema',
                 applicationViewModelClassName : undefined
             });
@@ -78,11 +78,11 @@ describe('conjoon.cn_comp.app.ApplicationTest', function(t) {
 
     });
 
-    t.it('Should throw an error if setup is complete, but mainView is no instance of conjoon.cn_comp.container.Viewport', function(t) {
+    t.it('Should throw an error if setup is complete, but mainView is no instance of coon.comp.container.Viewport', function(t) {
         var exc = undefined;
 
         try {
-            var w = Ext.create('conjoon.cn_comp.app.Application', {
+            var w = Ext.create('coon.comp.app.Application', {
                     name                          : 'test',
                     mainView                      : 'Ext.Panel',
                 applicationSchemaConfig           : 'Ext.data.schema.Schema',
@@ -95,22 +95,22 @@ describe('conjoon.cn_comp.app.ApplicationTest', function(t) {
     });
 
     t.it('Should create mainView if configured properly', function(t) {
-        var w = Ext.create('conjoon.cn_comp.app.Application', {
+        var w = Ext.create('coon.comp.app.Application', {
             name                          : 'test',
-            mainView                      : 'conjoon.cn_comp.container.Viewport',
+            mainView                      : 'coon.comp.container.Viewport',
             applicationSchemaConfig       : 'Ext.data.schema.Schema',
             applicationViewModelClassName : 'Ext.app.ViewModel'
         });
 
-        t.expect(w.getMainView() instanceof conjoon.cn_comp.container.Viewport).toBeTruthy();
+        t.expect(w.getMainView() instanceof coon.comp.container.Viewport).toBeTruthy();
     });
 
     t.it('Should throw exception if mainView is set in post-launch call', function(t) {
         var exc = undefined;
 
-        var w = Ext.create('conjoon.cn_comp.app.Application', {
+        var w = Ext.create('coon.comp.app.Application', {
             name                          : 'test',
-            mainView                      : 'conjoon.cn_comp.container.Viewport',
+            mainView                      : 'coon.comp.container.Viewport',
             applicationSchemaConfig       : 'Ext.data.schema.Schema',
             applicationViewModelClassName : 'Ext.app.ViewModel'
         });
@@ -128,11 +128,11 @@ describe('conjoon.cn_comp.app.ApplicationTest', function(t) {
 
     t.it('Should NOT call ViewportMock\'s postLaunchHook', function(t) {
 
-        t.requireOk('conjoon.classic.test.container.mock.ViewportMock', function () {
+        t.requireOk('coon.classic.test.container.mock.ViewportMock', function () {
 
-            var w = Ext.create('conjoon.cn_comp.app.Application', {
+            var w = Ext.create('coon.comp.app.Application', {
                 name                          : 'test',
-                mainView                      : 'conjoon.classic.test.container.mock.ViewportMock',
+                mainView                      : 'coon.classic.test.container.mock.ViewportMock',
                 applicationSchemaConfig       : 'Ext.data.schema.Schema',
                 applicationViewModelClassName : 'Ext.app.ViewModel'
             });
@@ -147,16 +147,16 @@ describe('conjoon.cn_comp.app.ApplicationTest', function(t) {
     t.it('Should call ViewportMock\'s postLaunchHook', function(t) {
 
         t.requireOk(
-            'conjoon.classic.test.container.mock.ViewportMock',
-            'conjoon.universal.test.app.mock.PackageControllerMock',
+            'coon.classic.test.container.mock.ViewportMock',
+            'coon.universal.test.app.mock.PackageControllerMock',
             function () {
 
-                var w = Ext.create('conjoon.cn_comp.app.Application', {
+                var w = Ext.create('coon.comp.app.Application', {
                     controllers : [
-                        'conjoon.universal.test.app.mock.PackageControllerMock'
+                        'coon.universal.test.app.mock.PackageControllerMock'
                     ],
                     name                          : 'test',
-                    mainView                      : 'conjoon.classic.test.container.mock.ViewportMock',
+                    mainView                      : 'coon.classic.test.container.mock.ViewportMock',
                     applicationSchemaConfig       : 'Ext.data.schema.Schema',
                     applicationViewModelClassName : 'Ext.app.ViewModel'
                 });
@@ -171,18 +171,18 @@ describe('conjoon.cn_comp.app.ApplicationTest', function(t) {
     t.it('Should call ViewportMock\'s postLaunchHook 2 times', function(t) {
 
         t.requireOk(
-            'conjoon.classic.test.container.mock.ViewportMock',
-            'conjoon.universal.test.app.mock.PackageControllerMock',
-            'conjoon.universal.test.app.mock.PackageControllerMock1',
+            'coon.classic.test.container.mock.ViewportMock',
+            'coon.universal.test.app.mock.PackageControllerMock',
+            'coon.universal.test.app.mock.PackageControllerMock1',
             function () {
 
-                var w = Ext.create('conjoon.cn_comp.app.Application', {
+                var w = Ext.create('coon.comp.app.Application', {
                     controllers : [
-                        'conjoon.universal.test.app.mock.PackageControllerMock',
-                        'conjoon.universal.test.app.mock.PackageControllerMock1'
+                        'coon.universal.test.app.mock.PackageControllerMock',
+                        'coon.universal.test.app.mock.PackageControllerMock1'
                     ],
                     name                          : 'test',
-                    mainView                      : 'conjoon.classic.test.container.mock.ViewportMock',
+                    mainView                      : 'coon.classic.test.container.mock.ViewportMock',
                     applicationSchemaConfig       : 'Ext.data.schema.Schema',
                     applicationViewModelClassName : 'Ext.app.ViewModel'
                 });
@@ -195,22 +195,22 @@ describe('conjoon.cn_comp.app.ApplicationTest', function(t) {
     t.it('4 controllers, 1 returns undefined, should call ViewportMock\'s postLaunchHook 3 times', function(t) {
 
         t.requireOk(
-            'conjoon.classic.test.container.mock.ViewportMock',
-            'conjoon.universal.test.app.mock.PackageControllerMock',
-            'conjoon.universal.test.app.mock.PackageControllerMock1',
-            'conjoon.universal.test.app.mock.PackageControllerMock2',
-            'conjoon.universal.test.app.mock.PackageControllerMock3',
+            'coon.classic.test.container.mock.ViewportMock',
+            'coon.universal.test.app.mock.PackageControllerMock',
+            'coon.universal.test.app.mock.PackageControllerMock1',
+            'coon.universal.test.app.mock.PackageControllerMock2',
+            'coon.universal.test.app.mock.PackageControllerMock3',
             function () {
 
-                var w = Ext.create('conjoon.cn_comp.app.Application', {
+                var w = Ext.create('coon.comp.app.Application', {
                     controllers : [
-                        'conjoon.universal.test.app.mock.PackageControllerMock',
-                        'conjoon.universal.test.app.mock.PackageControllerMock1',
-                        'conjoon.universal.test.app.mock.PackageControllerMock2',
-                        'conjoon.universal.test.app.mock.PackageControllerMock3'
+                        'coon.universal.test.app.mock.PackageControllerMock',
+                        'coon.universal.test.app.mock.PackageControllerMock1',
+                        'coon.universal.test.app.mock.PackageControllerMock2',
+                        'coon.universal.test.app.mock.PackageControllerMock3'
                     ],
                     name                          : 'test',
-                    mainView                      : 'conjoon.classic.test.container.mock.ViewportMock',
+                    mainView                      : 'coon.classic.test.container.mock.ViewportMock',
                     applicationSchemaConfig       : 'Ext.data.schema.Schema',
                     applicationViewModelClassName : 'Ext.app.ViewModel'
                 });
@@ -221,17 +221,17 @@ describe('conjoon.cn_comp.app.ApplicationTest', function(t) {
     });
 
     t.requireOk(
-        'conjoon.universal.test.app.mock.PackageControllerMockFalse',
+        'coon.universal.test.app.mock.PackageControllerMockFalse',
         function() {
 
             t.it('Should throw exception when applicationSchemaConfig is not representing Ext.data.schema.Schema', function(t) {
 
                 var exc;
 
-                var w = Ext.create('conjoon.cn_comp.app.Application', {
-                    controllers                : ['conjoon.universal.test.app.mock.PackageControllerMockFalse'],
+                var w = Ext.create('coon.comp.app.Application', {
+                    controllers                : ['coon.universal.test.app.mock.PackageControllerMockFalse'],
                     name                       : 'test',
-                    mainView                   : 'conjoon.cn_comp.container.Viewport',
+                    mainView                   : 'coon.comp.container.Viewport',
                     applicationSchemaConfig    : 'Ext.Panel'
                 });
 
@@ -254,9 +254,9 @@ describe('conjoon.cn_comp.app.ApplicationTest', function(t) {
         var exc;
 
         try{
-            var w = Ext.create('conjoon.cn_comp.app.Application', {
+            var w = Ext.create('coon.comp.app.Application', {
                 name                       : 'test',
-                mainView                   : 'conjoon.cn_comp.container.Viewport',
+                mainView                   : 'coon.comp.container.Viewport',
                 applicationSchemaConfig : 'Ext.Panel'
             });
         } catch (e) {
@@ -270,9 +270,9 @@ describe('conjoon.cn_comp.app.ApplicationTest', function(t) {
 
     t.it('Should return Ext.data.Session with custom schema', function(t) {
 
-        var w = Ext.create('conjoon.cn_comp.app.Application', {
+        var w = Ext.create('coon.comp.app.Application', {
             name                          : 'test',
-            mainView                      : 'conjoon.cn_comp.container.Viewport',
+            mainView                      : 'coon.comp.container.Viewport',
             applicationSchemaConfig       : 'Ext.data.schema.Schema'
         });
 
@@ -282,27 +282,27 @@ describe('conjoon.cn_comp.app.ApplicationTest', function(t) {
 
     t.it('Should return Ext.data.Session with default schema', function(t) {
 
-        var w = Ext.create('conjoon.cn_comp.app.Application', {
+        var w = Ext.create('coon.comp.app.Application', {
             name     : 'test',
-            mainView : 'conjoon.cn_comp.container.Viewport'
+            mainView : 'coon.comp.container.Viewport'
         });
 
-        t.expect(Ext.getClassName(w.getApplicationSession().getSchema())).toBe('conjoon.cn_core.data.schema.BaseSchema');
+        t.expect(Ext.getClassName(w.getApplicationSession().getSchema())).toBe('coon.core.data.schema.BaseSchema');
 
     });
 
     t.requireOk(
-        'conjoon.universal.test.app.mock.PackageControllerMockFalse',
+        'coon.universal.test.app.mock.PackageControllerMockFalse',
         function() {
 
             t.it('Should throw exception when applicationViewModelClassName is not representing Ext.app.ViewModel', function(t) {
 
                 var exc;
 
-                var w = Ext.create('conjoon.cn_comp.app.Application', {
-                    controllers                   : ['conjoon.universal.test.app.mock.PackageControllerMockFalse'],
+                var w = Ext.create('coon.comp.app.Application', {
+                    controllers                   : ['coon.universal.test.app.mock.PackageControllerMockFalse'],
                     name                          : 'test',
-                    mainView                      : 'conjoon.cn_comp.container.Viewport',
+                    mainView                      : 'coon.comp.container.Viewport',
                     applicationViewModelClassName : 'Ext.Panel'
                 });
 
@@ -325,9 +325,9 @@ describe('conjoon.cn_comp.app.ApplicationTest', function(t) {
         var exc;
 
         try{
-            var w = Ext.create('conjoon.cn_comp.app.Application', {
+            var w = Ext.create('coon.comp.app.Application', {
                 name                          : 'test',
-                mainView                      : 'conjoon.cn_comp.container.Viewport',
+                mainView                      : 'coon.comp.container.Viewport',
                 applicationViewModelClassName : 'Ext.Panel'
             });
         } catch (e) {
@@ -339,17 +339,17 @@ describe('conjoon.cn_comp.app.ApplicationTest', function(t) {
     });
 
     t.requireOk(
-        'conjoon.universal.test.app.mock.ViewModelMock',
+        'coon.universal.test.app.mock.ViewModelMock',
         function() {
             t.it('Should return view with custom viewModel', function(t) {
 
-                var w = Ext.create('conjoon.cn_comp.app.Application', {
+                var w = Ext.create('coon.comp.app.Application', {
                     name                          : 'test',
-                    mainView                      : 'conjoon.cn_comp.container.Viewport',
-                    applicationViewModelClassName : 'conjoon.universal.test.app.mock.ViewModelMock'
+                    mainView                      : 'coon.comp.container.Viewport',
+                    applicationViewModelClassName : 'coon.universal.test.app.mock.ViewModelMock'
                 });
 
-                t.expect(Ext.getClassName(w.getApplicationViewModel())).toBe('conjoon.universal.test.app.mock.ViewModelMock');
+                t.expect(Ext.getClassName(w.getApplicationViewModel())).toBe('coon.universal.test.app.mock.ViewModelMock');
                 t.expect(w.getMainView().getViewModel()).toBe(w.getApplicationViewModel());
             });
         }
@@ -358,9 +358,9 @@ describe('conjoon.cn_comp.app.ApplicationTest', function(t) {
 
     t.it('Should return default ViewModel', function(t) {
 
-        var w = Ext.create('conjoon.cn_comp.app.Application', {
+        var w = Ext.create('coon.comp.app.Application', {
             name     : 'test',
-            mainView : 'conjoon.cn_comp.container.Viewport'
+            mainView : 'coon.comp.container.Viewport'
         });
 
         t.expect(Ext.getClassName(w.getApplicationViewModel())).toBe('Ext.app.ViewModel');
@@ -371,9 +371,9 @@ describe('conjoon.cn_comp.app.ApplicationTest', function(t) {
 
     t.it('ViewModel and Session should equal to those returned by the methods', function(t) {
 
-        var w = Ext.create('conjoon.cn_comp.app.Application', {
+        var w = Ext.create('coon.comp.app.Application', {
             name     : 'test',
-            mainView : 'conjoon.cn_comp.container.Viewport'
+            mainView : 'coon.comp.container.Viewport'
         });
 
         t.expect(w.getApplicationViewModel()).toBe(w.getMainView().getViewModel());
@@ -383,9 +383,9 @@ describe('conjoon.cn_comp.app.ApplicationTest', function(t) {
 
     t.it('activateViewForHash()', function(t) {
 
-        var w = Ext.create('conjoon.cn_comp.app.Application', {
+        var w = Ext.create('coon.comp.app.Application', {
                 name     : 'test',
-                mainView : 'conjoon.cn_comp.container.Viewport'
+                mainView : 'coon.comp.container.Viewport'
             }),
             called = false;;
 

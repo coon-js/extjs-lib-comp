@@ -23,7 +23,7 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe('conjoon.cn_comp.grid.feature.RowFlyMenuTest', function(t) {
+describe('coon.comp.grid.feature.RowFlyMenuTest', function(t) {
 
     var grid;
 
@@ -80,13 +80,13 @@ describe('conjoon.cn_comp.grid.feature.RowFlyMenuTest', function(t) {
 // |                    =~. Tests .~=
 // +----------------------------------------------------------------------------
 
-    t.requireOk('conjoon.cn_comp.grid.feature.RowFlyMenu', function() {
+    t.requireOk('coon.comp.grid.feature.RowFlyMenu', function() {
 
 
         t.it('test class and configuration', function(t) {
-            let feature = Ext.create('conjoon.cn_comp.grid.feature.RowFlyMenu');
+            let feature = Ext.create('coon.comp.grid.feature.RowFlyMenu');
 
-            t.isInstanceOf(feature, 'conjoon.cn_comp.grid.feature.RowFlyMenu');
+            t.isInstanceOf(feature, 'coon.comp.grid.feature.RowFlyMenu');
 
             t.expect(feature.alias).toContain('feature.cn_comp-gridfeature-rowflymenu');
 
@@ -94,7 +94,7 @@ describe('conjoon.cn_comp.grid.feature.RowFlyMenuTest', function(t) {
             t.expect(feature.alignTo).toBe('tr-tr');
 
             let at = ['tr-tr', [10, 10]];
-            feature = Ext.create('conjoon.cn_comp.grid.feature.RowFlyMenu', {
+            feature = Ext.create('coon.comp.grid.feature.RowFlyMenu', {
                 alignTo : at
             });
 
@@ -251,7 +251,7 @@ describe('conjoon.cn_comp.grid.feature.RowFlyMenuTest', function(t) {
 
         t.it('onMenuClick() - installed', function(t) {
 
-            let feature = Ext.create('conjoon.cn_comp.grid.feature.RowFlyMenu', {
+            let feature = Ext.create('coon.comp.grid.feature.RowFlyMenu', {
                 items : []
             });
 
@@ -274,7 +274,7 @@ describe('conjoon.cn_comp.grid.feature.RowFlyMenuTest', function(t) {
 
         t.it('onMenuClick()', function(t) {
 
-            let feature = Ext.create('conjoon.cn_comp.grid.feature.RowFlyMenu', {
+            let feature = Ext.create('coon.comp.grid.feature.RowFlyMenu', {
                 items : []
             });
 

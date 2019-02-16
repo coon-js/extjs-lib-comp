@@ -26,8 +26,8 @@
 /**
  * @private
  */
-Ext.define('conjoon.universal.test.app.mock.PackageControllerMock1', {
-    extend : 'conjoon.universal.test.app.mock.PackageControllerMock',
+Ext.define('coon.universal.test.app.mock.PackageControllerMock1', {
+    extend : 'coon.universal.test.app.mock.PackageControllerMock',
 
     postLaunchHook : function() {
 

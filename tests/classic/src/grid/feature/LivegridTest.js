@@ -23,7 +23,7 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
+describe('coon.comp.grid.feature.LivegridTest', function(t) {
 
     const TIMEOUT = 1250;
 
@@ -112,7 +112,7 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
             });
         },
         createLivegrid = function() {
-            return Ext.create('conjoon.cn_comp.grid.feature.Livegrid');
+            return Ext.create('coon.comp.grid.feature.Livegrid');
         };
 
 
@@ -122,8 +122,8 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
 // |                    =~. Tests .~=
 // +----------------------------------------------------------------------------
 
-    t.requireOk('conjoon.cn_comp.grid.feature.Livegrid', function() {
-    t.requireOk('conjoon.cn_comp.fixtures.sim.ItemSim', function(){
+    t.requireOk('coon.comp.grid.feature.Livegrid', function() {
+    t.requireOk('coon.comp.fixtures.sim.ItemSim', function(){
 
 
         t.it('Livegrid will not work with multiColumnSort', function(t) {
@@ -168,7 +168,7 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
             // pageMapFeeder setting
             feature = createLivegrid();
             t.expect(feature.pageMapFeeder).toBeFalsy();
-            oldPageMapFeeder = Ext.create('conjoon.cn_core.data.pageMap.PageMapFeeder', {
+            oldPageMapFeeder = Ext.create('coon.core.data.pageMap.PageMapFeeder', {
                 pageMap : createStore().getData()
             });
             feature.pageMapFeeder = oldPageMapFeeder;
@@ -176,7 +176,7 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
             t.expect(feature.pageMapFeeder).toBe(oldPageMapFeeder);
             t.expect(feature.configure(Ext.create('Ext.data.BufferedStore'))).toBe(true);
             t.expect(feature.isConfigured()).toBe(true);
-            t.expect(feature.pageMapFeeder instanceof conjoon.cn_core.data.pageMap.PageMapFeeder).toBe(true);
+            t.expect(feature.pageMapFeeder instanceof coon.core.data.pageMap.PageMapFeeder).toBe(true);
             t.expect(feature.pageMapFeeder).not.toBe(oldPageMapFeeder);
 
             store = createStore();
@@ -261,7 +261,7 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
         t.it("scroller registered", function(t) {
 
             let grid, feature;
-            t.isCalled('onScroll', conjoon.cn_comp.grid.feature.Livegrid.prototype);
+            t.isCalled('onScroll', coon.comp.grid.feature.Livegrid.prototype);
             grid    = getGrid({autoLoad : true});
             feature = grid.view.getFeature('livegrid');
 
@@ -283,7 +283,7 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
 
             t.isCalledNTimes(
                 'onGridReconfigure',
-                conjoon.cn_comp.grid.feature.Livegrid.prototype,
+                coon.comp.grid.feature.Livegrid.prototype,
                 1
             );
 
@@ -345,7 +345,7 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
 
             var grid           = getGrid({autoLoad : true}),
                 feature        = grid.view.getFeature('livegrid'),
-                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil;
+                PageMapUtil    = coon.core.data.pageMap.PageMapUtil;
 
 
             t.expect(feature.getCurrentViewRange()).toBe(null);
@@ -354,7 +354,7 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
 
                 t.expect(
                     feature.getCurrentViewRange() instanceof
-                        conjoon.cn_core.data.pageMap.IndexRange).toBe(true);
+                        coon.core.data.pageMap.IndexRange).toBe(true);
 
                 t.expect(
                     feature.getCurrentViewRange().getStart().equalTo(
@@ -379,8 +379,8 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
 
             var grid           = getGrid({autoLoad : true}),
                 feature        = grid.view.getFeature('livegrid'),
-                RecordPosition = conjoon.cn_core.data.pageMap.RecordPosition,
-                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
+                RecordPosition = coon.core.data.pageMap.RecordPosition,
+                PageMapUtil    = coon.core.data.pageMap.PageMapUtil,
                 viewRange, SIGNAL = 0;
 
 
@@ -411,7 +411,7 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
 
             t.isCalledNTimes(
                 'onStoreUpdate',
-                conjoon.cn_comp.grid.feature.Livegrid.prototype,
+                coon.comp.grid.feature.Livegrid.prototype,
                 1
             );
             var grid    = getGrid({autoLoad : true}),
@@ -434,8 +434,8 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
                 store          = grid.getStore(),
                 feature        = grid.view.getFeature('livegrid'),
                 pageMap        = feature.getPageMap(),
-                RecordPosition = conjoon.cn_core.data.pageMap.RecordPosition,
-                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
+                RecordPosition = coon.core.data.pageMap.RecordPosition,
+                PageMapUtil    = coon.core.data.pageMap.PageMapUtil,
                 rec;
 
             t.waitForMs(750, function() {
@@ -519,13 +519,13 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
                 feature = grid.view.getFeature('livegrid'),
                 pageMap = feature.getPageMap();
 
-            t.isCalledNTimes('saveFocusState', conjoon.cn_comp.grid.feature.Livegrid.prototype, 1);
+            t.isCalledNTimes('saveFocusState', coon.comp.grid.feature.Livegrid.prototype, 1);
 
             t.waitForMs(750, function() {
 
                 t.expect(feature.swapSaveFocusState()).toBe(true);
                 t.expect(grid.view.saveFocusState).toBe(
-                    conjoon.cn_comp.grid.feature.Livegrid.prototype.saveFocusState
+                    coon.comp.grid.feature.Livegrid.prototype.saveFocusState
                 );
 
                 t.expect(Ext.isFunction(grid.view.saveFocusState())).toBe(true);
@@ -624,7 +624,7 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
                 store       = grid.getStore(),
                 feature     = grid.view.getFeature('livegrid'),
                 pageMap     = feature.getPageMap(),
-                PageMapUtil = conjoon.cn_core.data.pageMap.PageMapUtil;
+                PageMapUtil = coon.core.data.pageMap.PageMapUtil;
 
 
             t.waitForMs(750, function() {
@@ -638,7 +638,7 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
                 view.all.endIndex = oldEnd;
 
                 let range = feature.getCurrentViewRange();
-                t.expect(range instanceof conjoon.cn_core.data.pageMap.IndexRange);
+                t.expect(range instanceof coon.core.data.pageMap.IndexRange);
 
                 t.expect(PageMapUtil.positionToStoreIndex(range.getStart(), pageMap)).toBe(view.all.startIndex);
                 t.expect(PageMapUtil.positionToStoreIndex(range.getEnd(), pageMap)).toBe(view.all.endIndex);
@@ -657,8 +657,8 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
                 store          = grid.getStore(),
                 feature        = grid.view.getFeature('livegrid'),
                 pageMap        = feature.getPageMap(),
-                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
-                RecordPosition =  conjoon.cn_core.data.pageMap.RecordPosition;
+                PageMapUtil    = coon.core.data.pageMap.PageMapUtil,
+                RecordPosition =  coon.core.data.pageMap.RecordPosition;
 
 
             t.waitForMs(750, function() {
@@ -692,8 +692,8 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
                 store          = grid.getStore(),
                 feature        = grid.view.getFeature('livegrid'),
                 pageMap        = feature.getPageMap(),
-                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
-                RecordPosition =  conjoon.cn_core.data.pageMap.RecordPosition;
+                PageMapUtil    = coon.core.data.pageMap.PageMapUtil,
+                RecordPosition =  coon.core.data.pageMap.RecordPosition;
 
 
             t.waitForMs(750, function() {
@@ -723,8 +723,8 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
                 store          = grid.getStore(),
                 feature        = grid.view.getFeature('livegrid'),
                 pageMap        = feature.getPageMap(),
-                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
-                RecordPosition =  conjoon.cn_core.data.pageMap.RecordPosition;
+                PageMapUtil    = coon.core.data.pageMap.PageMapUtil,
+                RecordPosition =  coon.core.data.pageMap.RecordPosition;
 
 
             t.waitForMs(750, function() {
@@ -754,8 +754,8 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
                 store          = grid.getStore(),
                 feature        = grid.view.getFeature('livegrid'),
                 pageMap        = feature.getPageMap(),
-                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
-                RecordPosition =  conjoon.cn_core.data.pageMap.RecordPosition;
+                PageMapUtil    = coon.core.data.pageMap.PageMapUtil,
+                RecordPosition =  coon.core.data.pageMap.RecordPosition;
 
 
             t.waitForMs(750, function() {
@@ -791,8 +791,8 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
                 feeder         = feature.pageMapFeeder,
                 pageMap        = feature.getPageMap(),
                 map            = pageMap.map,
-                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
-                RecordPosition =  conjoon.cn_core.data.pageMap.RecordPosition;
+                PageMapUtil    = coon.core.data.pageMap.PageMapUtil,
+                RecordPosition =  coon.core.data.pageMap.RecordPosition;
 
 
             t.waitForMs(1250, function() {
@@ -834,8 +834,8 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
                 feeder         = feature.pageMapFeeder,
                 pageMap        = feature.getPageMap(),
                 map            = pageMap.map,
-                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
-                RecordPosition =  conjoon.cn_core.data.pageMap.RecordPosition;
+                PageMapUtil    = coon.core.data.pageMap.PageMapUtil,
+                RecordPosition =  coon.core.data.pageMap.RecordPosition;
 
 
             t.waitForMs(1250, function() {
@@ -874,8 +874,8 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
                 feeder         = feature.pageMapFeeder,
                 pageMap        = feature.getPageMap(),
                 map            = pageMap.map,
-                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
-                RecordPosition =  conjoon.cn_core.data.pageMap.RecordPosition;
+                PageMapUtil    = coon.core.data.pageMap.PageMapUtil,
+                RecordPosition =  coon.core.data.pageMap.RecordPosition;
 
 
             t.waitForMs(1250, function() {
@@ -984,8 +984,8 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
                     autoLoad: true
                 }),
                 feature        = grid.view.getFeature('livegrid'),
-                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
-                RecordPosition = conjoon.cn_core.data.pageMap.RecordPosition;
+                PageMapUtil    = coon.core.data.pageMap.PageMapUtil,
+                RecordPosition = coon.core.data.pageMap.RecordPosition;
 
             t.waitForMs(1250, function () {
 
@@ -1054,8 +1054,8 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
                 feeder         = feature.pageMapFeeder,
                 pageMap        = feature.getPageMap(),
                 map            = pageMap.map,
-                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
-                RecordPosition = conjoon.cn_core.data.pageMap.RecordPosition;
+                PageMapUtil    = coon.core.data.pageMap.PageMapUtil,
+                RecordPosition = coon.core.data.pageMap.RecordPosition;
 
 
             t.waitForMs(1250, function() {
@@ -1079,7 +1079,7 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
 
                         let op  = feature.add(rec);
 
-                        conjoon.cn_comp.fixtures.sim.ItemTable.items.splice(0, 0, rec.data);
+                        coon.comp.fixtures.sim.ItemTable.items.splice(0, 0, rec.data);
                         t.expect(feature.vetoedPages.indexOf(lastPage)).not.toBe(-1);
                     }
 
@@ -1102,7 +1102,7 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
 
             let grid           = getGrid({sorters : {property : 'testProp', dir : 'ASC'}, autoLoad : true}),
                 feature        = grid.view.getFeature('livegrid'),
-                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil;
+                PageMapUtil    = coon.core.data.pageMap.PageMapUtil;
 
 
             t.waitForMs(750, function() {
@@ -1164,8 +1164,8 @@ describe('conjoon.cn_comp.grid.feature.LivegridTest', function(t) {
                 feeder         = feature.pageMapFeeder,
                 pageMap        = feature.getPageMap(),
                 map            = pageMap.map,
-                PageMapUtil    = conjoon.cn_core.data.pageMap.PageMapUtil,
-                RecordPosition = conjoon.cn_core.data.pageMap.RecordPosition;
+                PageMapUtil    = coon.core.data.pageMap.PageMapUtil,
+                RecordPosition = coon.core.data.pageMap.RecordPosition;
 
 
             t.waitForMs(TIMEOUT, function() {

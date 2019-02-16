@@ -26,11 +26,11 @@
 /**
  * Ext.ux.ajax.SimManager hook for fixture data.
  */
-Ext.define('conjoon.cn_comp.fixtures.sim.ItemSim', {
+Ext.define('coon.comp.fixtures.sim.ItemSim', {
 
     requires : [
-        'conjoon.cn_comp.fixtures.sim.Init',
-        'conjoon.cn_comp.fixtures.sim.ItemTable'
+        'coon.comp.fixtures.sim.Init',
+        'coon.comp.fixtures.sim.ItemTable'
     ]
 
 }, function() {
@@ -44,7 +44,7 @@ Ext.define('conjoon.cn_comp.fixtures.sim.ItemSim', {
 
             var me        = this,
                 ret       = {},
-                ItemTable = conjoon.cn_comp.fixtures.sim.ItemTable,
+                ItemTable = coon.comp.fixtures.sim.ItemTable,
                 values    = {};
 
             for (var i in ctx.xhr.options.jsonData) {
@@ -72,7 +72,7 @@ Ext.define('conjoon.cn_comp.fixtures.sim.ItemSim', {
                 filters   = ctx.params.filter,
                 isEmpty   = ctx.params.isEmpty,
                 id,
-                ItemTable = conjoon.cn_comp.fixtures.sim.ItemTable,
+                ItemTable = coon.comp.fixtures.sim.ItemTable,
                 items     = ItemTable.getItems();
 
             if (idPart) {

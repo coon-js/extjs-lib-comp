@@ -33,7 +33,7 @@
  * Example usage:
  *
  *     @example
- *     let iframe = Ext.create('conjoon.cn_comp.component.Iframe({
+ *     let iframe = Ext.create('coon.comp.component.Iframe({
  *         renderTo : document.body,
  *         height   : 400,
  *         width    : 800
@@ -42,7 +42,7 @@
  *     iframe.setSrcDoc("Hello World");
  *
  */
-Ext.define('conjoon.cn_comp.component.Iframe', {
+Ext.define('coon.comp.component.Iframe', {
 
     extend : 'Ext.Component',
 

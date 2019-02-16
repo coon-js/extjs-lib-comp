@@ -40,7 +40,7 @@
  *         title    : 'Foo'
  *     });
  *
- *     var myMask = Ext.create('conjoon.cn_comp.component.LoadMask', {
+ *     var myMask = Ext.create('coon.comp.component.LoadMask', {
  *         msg       : 'Saving Data',
  *         msgAction : 'Stand by...',
  *         glyphCls  : 'fa fa-envelope',
@@ -68,7 +68,7 @@
  * animations from Ext itself. The loopProgress method will alter the
  * transitionDuration of the bar-element according to the selected interval.
  */
-Ext.define('conjoon.cn_comp.component.LoadMask', {
+Ext.define('coon.comp.component.LoadMask', {
 
     extend: 'Ext.LoadMask',
 
@@ -161,7 +161,7 @@ Ext.define('conjoon.cn_comp.component.LoadMask', {
      *
      * @param {String} value
      *
-     * @return {conjoon.cn_comp.component.LoadMask}
+     * @return {coon.comp.component.LoadMask}
      */
     updateActionMsg : function(value) {
         var me = this;
@@ -177,7 +177,7 @@ Ext.define('conjoon.cn_comp.component.LoadMask', {
      *
      * @param {String} value
      *
-     * @return {conjoon.cn_comp.component.LoadMask}
+     * @return {coon.comp.component.LoadMask}
      */
     updateMsg : function(value) {
         var me = this;
@@ -196,7 +196,7 @@ Ext.define('conjoon.cn_comp.component.LoadMask', {
      * If not submitted or set to false, this value will stop any timers
      * previously created by #loopProgress
      *
-     * @return {conjoon.cn_comp.component.LoadMask}
+     * @return {coon.comp.component.LoadMask}
      */
     updateProgress: function(value, isInternal) {
         var me    = this,
@@ -227,7 +227,7 @@ Ext.define('conjoon.cn_comp.component.LoadMask', {
      * config.interval ms. Once the end of the segments was reached,
      * the bar will begin in the first segment again.
 
-     * @returns {conjoon.cn_comp.component.LoadMask}
+     * @returns {coon.comp.component.LoadMask}
      */
     loopProgress : function(config) {
 

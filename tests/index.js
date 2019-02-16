@@ -1,7 +1,7 @@
 var harness = new Siesta.Harness.Browser.ExtJS();
 
 harness.configure({
-    title          : 'lib-cn_comp Tests',
+    title          : 'lib-cn_comp',
     disableCaching : true,
     loaderPath     : {
 
@@ -13,37 +13,37 @@ harness.configure({
         /**
          * fixtures
          */
-        'conjoon.cn_comp.fixtures' : './fixtures',
+        'coon.comp.fixtures' : './fixtures',
 
         /**
          * Classic Toolkit
          */
-        'conjoon.cn_comp.container' : '../classic/src/container',
-        'conjoon.cn_comp.component' : '../classic/src/component',
-        'conjoon.cn_comp.window'    : '../classic/src/window',
-        'conjoon.cn_comp.form'      : '../classic/src/form',
-        'conjoon.cn_comp.list'      : '../classic/src/list',
-        'conjoon.cn_comp.grid'      : '../classic/src/grid',
+        'coon.comp.container' : '../classic/src/container',
+        'coon.comp.component' : '../classic/src/component',
+        'coon.comp.window'    : '../classic/src/window',
+        'coon.comp.form'      : '../classic/src/form',
+        'coon.comp.list'      : '../classic/src/list',
+        'coon.comp.grid'      : '../classic/src/grid',
 
         /**
          * Universal
          */
-        'conjoon.cn_comp.app' : '../src/app',
+        'coon.comp.app' : '../src/app',
 
         /**
          * Requirements
          */
-        'conjoon.cn_core' : '../../lib-cn_core/src',
+        'coon.core' : '../../lib-cn_core/src',
 
         /**
          * Mocks
          */
-        'conjoon.classic.test'    : './classic/src',
-        'conjoon.universal.test'  : './src'
+        'coon.classic.test'    : './classic/src',
+        'coon.universal.test'  : './src'
     },
     preload        : [
-        conjoon.tests.config.paths.extjs.css.url,
-        conjoon.tests.config.paths.extjs.js.url
+        coon.tests.config.paths.extjs.css.url,
+        coon.tests.config.paths.extjs.js.url
     ]
 });
 

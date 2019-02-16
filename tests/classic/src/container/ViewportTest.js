@@ -23,7 +23,7 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe('conjoon.cn_comp.container.ViewportTest', function(t) {
+describe('coon.comp.container.ViewportTest', function(t) {
 
 
 // +----------------------------------------------------------------------------
@@ -31,28 +31,28 @@ describe('conjoon.cn_comp.container.ViewportTest', function(t) {
 // +----------------------------------------------------------------------------
 
     t.it('should be instance of Ext.container.Viewport', function(t) {
-        var w = Ext.create('conjoon.cn_comp.container.Viewport', {
+        var w = Ext.create('coon.comp.container.Viewport', {
         });
 
         t.expect(w instanceof Ext.container.Viewport).toBeTruthy();
     });
 
     t.it('postLaunchHook should be Ext.emptyFn', function(t) {
-        var w = Ext.create('conjoon.cn_comp.container.Viewport', {
+        var w = Ext.create('coon.comp.container.Viewport', {
         });
 
         t.expect(w.addPostLaunchInfo).toBe(Ext.emptyFn);
     });
 
     t.it('activateViewForHash()', function(t) {
-        var w = Ext.create('conjoon.cn_comp.container.Viewport', {
+        var w = Ext.create('coon.comp.container.Viewport', {
         });
 
         t.expect(w.activateViewForHash).toBe(Ext.emptyFn);
     });
 
     t.it('cleanup()', function(t) {
-        var w = Ext.create('conjoon.cn_comp.container.Viewport', {
+        var w = Ext.create('coon.comp.container.Viewport', {
         });
 
         t.expect(w.cleanup).toBe(Ext.emptyFn);

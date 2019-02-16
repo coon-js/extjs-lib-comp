@@ -28,7 +28,7 @@
  * It's configured to be modal, not resizable, not closable via userinput and
  * maximized to block/hide the underlying application.
  */
-Ext.define('conjoon.cn_comp.window.LockingWindow', {
+Ext.define('coon.comp.window.LockingWindow', {
 
     extend : 'Ext.window.Window',
 

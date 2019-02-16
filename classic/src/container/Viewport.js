@@ -25,14 +25,14 @@
 
 /**
  * A viewport implementation capable of consuming postLaunchHook-information
- * of {@link conjoon.cn_comp.app.Application}s
+ * of {@link coon.comp.app.Application}s
  */
-Ext.define('conjoon.cn_comp.container.Viewport', {
+Ext.define('coon.comp.container.Viewport', {
 
     extend : 'Ext.container.Viewport',
 
     /**
-     * Method gets called by {@link conjoon.cn_comp.app.Application#postLaunchHookProcess}
+     * Method gets called by {@link coon.comp.app.Application#postLaunchHookProcess}
      * if any attached controller's postLaunchHook returns viable information
      * this view can use.
      *

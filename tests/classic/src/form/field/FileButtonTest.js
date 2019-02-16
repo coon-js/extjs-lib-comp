@@ -23,7 +23,7 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe('conjoon.cn_comp.form.field.FileButtonTest', function(t) {
+describe('coon.comp.form.field.FileButtonTest', function(t) {
 
 
 // +----------------------------------------------------------------------------
@@ -32,7 +32,7 @@ describe('conjoon.cn_comp.form.field.FileButtonTest', function(t) {
 
     t.it('Sanitize FileButton class', function(t) {
 
-        var button = Ext.create('conjoon.cn_comp.form.field.FileButton');
+        var button = Ext.create('coon.comp.form.field.FileButton');
 
         t.expect(button instanceof Ext.form.field.FileButton).toBe(true);
         t.expect(button.alias).toContain('widget.cn_comp-formfieldfilebutton');
@@ -44,7 +44,7 @@ describe('conjoon.cn_comp.form.field.FileButtonTest', function(t) {
 
     t.it('Make sure fireChange() passes fourth argument', function(t) {
 
-        var button = Ext.create('conjoon.cn_comp.form.field.FileButton', {
+        var button = Ext.create('coon.comp.form.field.FileButton', {
                 renderTo : document.body
             }),
             checkA, checkB, checkC, checkD;

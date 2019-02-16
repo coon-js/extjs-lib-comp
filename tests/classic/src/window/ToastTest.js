@@ -23,10 +23,10 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe('conjoon.cn_comp.window.ToastTest', function(t) {
+describe('coon.comp.window.ToastTest', function(t) {
 
     t.it("prerequisites", function(t) {
-        let toast = Ext.create('conjoon.cn_comp.window.Toast', {
+        let toast = Ext.create('coon.comp.window.Toast', {
             context : 'foo',
             html    : 'Test'
         });
@@ -41,33 +41,33 @@ describe('conjoon.cn_comp.window.ToastTest', function(t) {
     });
 
 
-    t.it("conjoon.Toast", function(t) {
-        t.expect(conjoon.Toast).toBeTruthy();
+    t.it("coon.Toast", function(t) {
+        t.expect(coon.Toast).toBeTruthy();
     });
 
     const TOASTTEST = function(t, message, type) {
 
-        let toast = conjoon.Toast[type](message);
+        let toast = coon.Toast[type](message);
 
-        t.isInstanceOf(toast, 'conjoon.cn_comp.window.Toast');
+        t.isInstanceOf(toast, 'coon.comp.window.Toast');
 
         let node = Ext.dom.Query.selectNode('div[class=x-autocontainer-innerCt]', toast.el.dom);
         t.expect(node.innerHTML).toBe(message);
     };
 
-    t.it("conjoon.Toast.warn", function(t) {
+    t.it("coon.Toast.warn", function(t) {
 
         TOASTTEST(t, "This is a warning.", 'warn');
     });
 
 
-    t.it("conjoon.Toast.info", function(t) {
+    t.it("coon.Toast.info", function(t) {
 
         TOASTTEST(t, "This is an info", 'info');
     });
 
 
-    t.it("conjoon.Toast.fail", function(t) {
+    t.it("coon.Toast.fail", function(t) {
 
         TOASTTEST(t, "This is a failure.", 'fail');
     });

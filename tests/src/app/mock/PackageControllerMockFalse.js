@@ -26,9 +26,9 @@
 /**
  * PackageControllerMock returns false in its preLaunchHook method.
  */
-Ext.define('conjoon.universal.test.app.mock.PackageControllerMockFalse', {
+Ext.define('coon.universal.test.app.mock.PackageControllerMockFalse', {
 
-    extend : 'conjoon.cn_core.app.PackageController',
+    extend : 'coon.core.app.PackageController',
 
     preLaunchHook : function() {
 

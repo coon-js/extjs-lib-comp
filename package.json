@@ -16,7 +16,7 @@
      * As a general rule, all classes that belong to this package should be under this namespace
      * if multiple namespaces are part of this package, set this to "".
      */
-    "namespace": "conjoon.cn_comp",
+    "namespace": "coon.comp",
 
     /**
      * The package type.
@@ -46,17 +46,17 @@
      * Required only if you are distributing this package through a Sencha Cmd repository,
      * in which case it should match the name you assign to your local package repository.
      */
-    "creator": "conjoon Open Source Project",
+    "creator": "coon.js",
 
     /**
      * A summarized description of this package.
      */
-    "summary": "A collection of core view functionality for the conjoon Open Source Project.",
+    "summary": "A collection of enhanced views and related functionality for Sencha ExtJS applications.",
 
     /**
      * A detailed description of this package.
      */
-    "detailedDescription": "This package contains extended and advanced implementations for ExtJS projects which are related to view components. Requires lib-cn_core.",
+    "detailedDescription": "This package contains extended and advanced implementations for ExtJS projects which are related to view components. Requires lib-cn_core. Also home of the Livegrid-plugin.",
 
     /**
      * The package version.

@@ -27,9 +27,9 @@
  * PackageControllerMock. This instance's postLaunchHook returns null.
  * This value should be passed to the mainView's addPostlaunchInfo method.
  */
-Ext.define('conjoon.universal.test.app.mock.PackageControllerMock3', {
+Ext.define('coon.universal.test.app.mock.PackageControllerMock3', {
 
-    extend : 'conjoon.cn_core.app.PackageController',
+    extend : 'coon.core.app.PackageController',
 
     postLaunchHook : function() {
         return null;

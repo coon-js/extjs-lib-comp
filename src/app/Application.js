@@ -24,23 +24,23 @@
  */
 
 /**
- * An implementation of {@link conjoon.cn_core.app.Aplication} to be working with
- * Viewports of the type {@link conjoon.cn_comp.container.Viewport}.
+ * An implementation of {@link coon.core.app.Aplication} to be working with
+ * Viewports of the type {@link coon.comp.container.Viewport}.
  *
  * @inheritdoc
  */
-Ext.define('conjoon.cn_comp.app.Application', {
+Ext.define('coon.comp.app.Application', {
 
-    extend: 'conjoon.cn_core.app.Application',
+    extend: 'coon.core.app.Application',
 
     requires: [
-        'conjoon.cn_core.data.schema.BaseSchema',
-        'conjoon.cn_core.app.PackageController',
-        'conjoon.cn_comp.container.Viewport'
+        'coon.core.data.schema.BaseSchema',
+        'coon.core.app.PackageController',
+        'coon.comp.container.Viewport'
     ],
 
     /**
-     * @cfg {Object/String} [applicationSchemaConfig={type:'cn_core-baseschema', id : 'cn_core-baseschema', namespace : 'conjoon.cn_core.data'}] (required)
+     * @cfg {Object/String} [applicationSchemaConfig={type:'cn_core-baseschema', id : 'cn_core-baseschema', namespace : 'coon.core.data'}] (required)
      * The fqn of the class representing the schema to be used for {@link #applicationViewModel},
      * or the object configuration for creating the schema.
      * The representing classes should have been loaded before this class
@@ -49,7 +49,7 @@ Ext.define('conjoon.cn_comp.app.Application', {
     applicationSchemaConfig : {
         type      : 'cn_core-baseschema',
         id        : 'cn_core-baseschema',
-        namespace : 'conjoon.cn_core.data'
+        namespace : 'coon.core.data'
     },
 
     /**
@@ -71,7 +71,7 @@ Ext.define('conjoon.cn_comp.app.Application', {
     /**
      * @type {Ext.data.Session} applicationSession
      * The application's session which is owned by {@link #applicationViewModel}
-     * It's schema will default to {@link conjoon.cn_core.data.schema.BaseSchema}
+     * It's schema will default to {@link coon.core.data.schema.BaseSchema}
      */
     applicationSession : null,
 
@@ -96,10 +96,10 @@ Ext.define('conjoon.cn_comp.app.Application', {
 
         if (!me.applicationViewModelClassName || !me.applicationSchemaConfig) {
             Ext.raise({
-                sourceClass                   : 'conjoon.cn_comp.app.Application',
+                sourceClass                   : 'coon.comp.app.Application',
                 applicationViewModelClassName : me.applicationViewModelClassName,
                 applicationSchemaConfig       : me.applicationSchemaConfig,
-                msg                           : "conjoon.cn_comp.app.Application requires both applicationSchemaConfig and applicationViewModelClassName to be defined."
+                msg                           : "coon.comp.app.Application requires both applicationSchemaConfig and applicationViewModelClassName to be defined."
             });
         }
 
@@ -108,12 +108,12 @@ Ext.define('conjoon.cn_comp.app.Application', {
              (Ext.isObject(me.applicationSchemaConfig) && !Ext.ClassManager.getNameByAlias('schema.' + me.applicationSchemaConfig.type))
             )) {
             Ext.raise({
-                sourceClass               : 'conjoon.cn_comp.app.Application',
+                sourceClass               : 'coon.comp.app.Application',
                 applicationViewModelClass : Ext.ClassManager.get(me.applicationViewModelClassName),
                 applicationSchemaConfig   : Ext.isString(me.applicationSchemaConfig)
                                             ? Ext.ClassManager.get(me.applicationSchemaConfig)
                                             : Ext.ClassManager.getNameByAlias('schema.' + me.applicationSchemaConfig.type),
-                msg                       : "conjoon.cn_comp.app.Application requires both applicationSchemaConfig and applicationViewModelClass to be loaded."
+                msg                       : "coon.comp.app.Application requires both applicationSchemaConfig and applicationViewModelClass to be loaded."
             });
         }
 
@@ -129,18 +129,18 @@ Ext.define('conjoon.cn_comp.app.Application', {
      * the return value of {@link #getApplicationViewModel}
      * @param value
      *
-     * @return {conjoon.cn_comp.container.Viewport}
+     * @return {coon.comp.container.Viewport}
      *
      * @throws if {@link #mainView} was already set and instantiated, or if
-     * the mainView ist no instance of {@link conjoon.cn_comp.container.Viewport}
+     * the mainView ist no instance of {@link coon.comp.container.Viewport}
      */
     applyMainView: function(value) {
 
         if (this.getMainView()) {
             Ext.raise({
-                sourceClass : 'conjoon.cn_comp.app.Application',
+                sourceClass : 'coon.comp.app.Application',
                 mainView    : this.getMainView(),
-                msg         : "conjoon.cn_comp.app.Application's mainView was already set."
+                msg         : "coon.comp.app.Application's mainView was already set."
             });
         }
 
@@ -149,11 +149,11 @@ Ext.define('conjoon.cn_comp.app.Application', {
             viewModel : this.getApplicationViewModel()
         });
 
-        if (!(view instanceof conjoon.cn_comp.container.Viewport)) {
+        if (!(view instanceof coon.comp.container.Viewport)) {
             Ext.raise({
-                sourceClass : 'conjoon.cn_comp.app.Application',
+                sourceClass : 'coon.comp.app.Application',
                 mainView    : this.getMainView(),
-                msg         : "conjoon.cn_comp.app.Application's mainView must be an instance of conjoon.cn_comp.container.Viewport."
+                msg         : "coon.comp.app.Application's mainView must be an instance of coon.comp.container.Viewport."
             });
         }
 
@@ -162,10 +162,10 @@ Ext.define('conjoon.cn_comp.app.Application', {
 
     /**
      * Iterates over this applications controllers and checks if any controller
-     * is of the type {@link conjoon.cn_core.app.PackageController}. Its method
-     * {@link conjoon.cn_core.app.PackageController#postLaunchHook} will then be called,
+     * is of the type {@link coon.core.app.PackageController}. Its method
+     * {@link coon.core.app.PackageController#postLaunchHook} will then be called,
      * if possible, and the returning items will be passed to its
-     * {@link conjoon.cn_comp.container.Viewport#addPostLaunchInfo} method.
+     * {@link coon.comp.container.Viewport#addPostLaunchInfo} method.
      *
      */
     postLaunchHookProcess : function() {
@@ -182,7 +182,7 @@ Ext.define('conjoon.cn_comp.app.Application', {
 
             ctrl = controllers[i];
 
-            if ((ctrl instanceof conjoon.cn_core.app.PackageController) &&
+            if ((ctrl instanceof coon.core.app.PackageController) &&
                 Ext.isFunction(ctrl.postLaunchHook)) {
                 info = ctrl.postLaunchHook();
                 if (info !== undefined) {
@@ -217,9 +217,9 @@ Ext.define('conjoon.cn_comp.app.Application', {
 
             if (!(schema instanceof Ext.data.schema.Schema)) {
                 Ext.raise({
-                    sourceClass : 'conjoon.cn_comp.app.Application',
+                    sourceClass : 'coon.comp.app.Application',
                     schema      : Ext.getClass(schema),
-                    msg         : "conjoon.cn_comp.app.Application requires schema to be an instance of Ext.data.schema.Schema."
+                    msg         : "coon.comp.app.Application requires schema to be an instance of Ext.data.schema.Schema."
                 });
             }
 
@@ -255,9 +255,9 @@ Ext.define('conjoon.cn_comp.app.Application', {
 
             if (!(me.applicationViewModel instanceof Ext.app.ViewModel)) {
                 Ext.raise({
-                    sourceClass          : 'conjoon.cn_comp.app.Application',
+                    sourceClass          : 'coon.comp.app.Application',
                     applicationViewModel : Ext.getClass(me.applicationViewModel),
-                    msg                  : "conjoon.cn_comp.app.Application requires applicationViewModel to be an instance of Ext.app.ViewModel."
+                    msg                  : "coon.comp.app.Application requires applicationViewModel to be an instance of Ext.app.ViewModel."
                 });
             }
 
@@ -285,7 +285,7 @@ Ext.define('conjoon.cn_comp.app.Application', {
      *
      * @return {Ext.Component} The view associated with the hash, if any.
      *
-     * @see {@link conjoon.cn_comp.container.Viewport#activateViewForHash}
+     * @see {@link coon.comp.container.Viewport#activateViewForHash}
      */
     activateViewForHash : function(hash) {
         var me = this;

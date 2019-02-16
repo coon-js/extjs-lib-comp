@@ -61,7 +61,7 @@
  *      @example
  *      Ext.define('MyApp.AutoCompleteForm', {
  *
- *          extend : 'conjoon.cn_comp.form.AutoCompleteForm',
+ *          extend : 'coon.comp.form.AutoCompleteForm',
  *
  *          autoCompleteTrigger : {
  *              reference : 'submitButton',
@@ -92,7 +92,7 @@
  *
  *
  */
-Ext.define('conjoon.cn_comp.form.AutoCompleteForm', {
+Ext.define('coon.comp.form.AutoCompleteForm', {
 
     extend : 'Ext.form.Panel',
 
