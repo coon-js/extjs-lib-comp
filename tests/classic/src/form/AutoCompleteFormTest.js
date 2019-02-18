@@ -189,21 +189,23 @@ describe('coon.comp.form.AutCompleteFormTest', function(t) {
             t.expect(wasClicked).toBe(false);
 
             if (Ext.isChrome) {
-                t.click(form.down('button[reference=somebuttonNew]'));
+                t.click(form.down('button[reference=somebuttonNew]'), function() {
+                    t.expect(wasClicked).toBe(true);
+                    t.expect(form.currentRogueField).toBeTruthy();
+                    var crf = form.currentRogueField;
+                    t.click(form.down('button[reference=somebuttonNew]'), function() {
+                        t.expect(wasClicked).toBe(true);
+                        t.expect(crf).not.toBe(form.currentRogueField);
+                    });
 
-                t.expect(wasClicked).toBe(true);
-                t.expect(form.currentRogueField).toBeTruthy();
-                var crf = form.currentRogueField;
-                t.click(form.down('button[reference=somebuttonNew]'));
-
-                t.expect(wasClicked).toBe(true);
-                t.expect(crf).not.toBe(form.currentRogueField);
+                });
 
             } else {
-                t.click(form.down('button[reference=somebuttonNew]'));
+                t.click(form.down('button[reference=somebuttonNew]'), function() {
+                    t.expect(wasClicked).toBe(true);
+                    t.expect(form.currentRogueField).toBeFalsy();
+                });
 
-                t.expect(wasClicked).toBe(true);
-                t.expect(form.currentRogueField).toBeFalsy();
             }
 
         });

@@ -62,6 +62,9 @@ describe('coon.comp.container.MessageMaskTest', function(t) {
 // +----------------------------------------------------------------------------
 // |                    =~. Tests .~=
 // +----------------------------------------------------------------------------
+t.requireOk('coon.comp.component.MessageMask', function() {
+
+
 
     t.it('test class and configuration', function(t) {
         mask = Ext.create('coon.comp.component.MessageMask', {
@@ -466,12 +469,14 @@ describe('coon.comp.container.MessageMaskTest', function(t) {
 
         getTextField(mask.el.dom).value = 'barfoo';
 
-        t.click("span[data-ref=okButton]");
+        t.click("span[data-ref=okButton]", function() {
+            t.expect(BUTTONID).toBe('okButton');
+            t.expect(VALUE).toBe('barfoo');
 
-        t.expect(BUTTONID).toBe('okButton');
-        t.expect(VALUE).toBe('barfoo');
+            t.expect(mask.destroyed).toBe(true);
+        });
 
-        t.expect(mask.destroyed).toBe(true);
+
     });
 
 
@@ -496,12 +501,15 @@ describe('coon.comp.container.MessageMaskTest', function(t) {
 
         getTextField(mask.el.dom).value = 'barfoo';
 
-        t.keyPress(getTextField(mask.el.dom), "ENTER");
+        t.keyPress(getTextField(mask.el.dom), "[ENTER]", undefined, function() {
 
-        t.expect(BUTTONID).toBe('okButton');
-        t.expect(VALUE).toBe('barfoo');
+            t.expect(BUTTONID).toBe('okButton');
+            t.expect(VALUE).toBe('barfoo');
 
-        t.expect(mask.destroyed).toBe(true);
+            t.expect(mask.destroyed).toBe(true);
+        });
+
+
     });
 
 
@@ -519,4 +527,5 @@ describe('coon.comp.container.MessageMaskTest', function(t) {
             t.expect(getTextField(mask.el.dom)).toBe(document.activeElement);
         });
     });
+})
 });
