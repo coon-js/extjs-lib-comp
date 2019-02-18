@@ -21,7 +21,7 @@ Tests are written with [Siesta](https://bryntum.com/siesta)
 
 # Usage
 ## Requirements
-This package requires the [lib-cn_core](https://github.com/coon-js/lib-cn_comp) package of the [coon.js](https://github.com/coon-js) project.
+This package requires the [lib-cn_core](https://github.com/coon-js/lib-cn_core) package of the [coon.js](https://github.com/coon-js) project.
 
 ## Resources
 The folder `resources/html` with it's contents and subfolders has to be copied into your
