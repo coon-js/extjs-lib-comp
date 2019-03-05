@@ -61,8 +61,8 @@
  *              };
  *          },
  *          previewColumnConfig : {
- *              'isRead'         : {visible : false},
- *              'subject'        : {visible : false},
+ *              'isRead'         : {hidden : true},
+ *              'subject'        : {hidden : true},
  *              'to'             : {}
  *          }
  *      }],
@@ -132,7 +132,7 @@ Ext.define('coon.comp.grid.feature.RowBodySwitch', {
      * Initial state of columns that should be shown along with the row body
      * when this feature gets enabled. The keys are the dataIndex of the column,
      * values are objects with information about their visibility, e.g.
-     * {visible : true/false}.
+     * {hidden : true/false}.
      */
     previewColumnConfig : null,
 
@@ -143,10 +143,32 @@ Ext.define('coon.comp.grid.feature.RowBodySwitch', {
 
     /**
      * @inheritdoc
+     *
+     * @see initFeatureForGrid
      */
     init : function(grid) {
 
         var me = this;
+
+        if (grid.rendered) {
+            me.initFeatureForGrid(grid);
+        } else {
+            grid.on('afterrender', me.initFeatureForGrid, me, {single : true});
+        }
+
+
+        me.callParent(arguments);
+    },
+
+
+    /**
+     * @param {Ext.grid.Panel} grid The grid this feature should be initiated with
+     *
+     * @private
+     */
+    initFeatureForGrid : function(grid) {
+
+        const me = this;
 
         if (!me.disabled) {
             me.saveColumns();
@@ -156,8 +178,6 @@ Ext.define('coon.comp.grid.feature.RowBodySwitch', {
         } else {
             grid.view.addCls(me.disableCls);
         }
-
-        me.callParent(arguments);
     },
 
 
@@ -167,6 +187,13 @@ Ext.define('coon.comp.grid.feature.RowBodySwitch', {
     disable : function() {
 
         var me = this;
+
+        if (!me.view.grid.rendered) {
+            Ext.raise({
+                msg : "Cannot disable since grid was not rendered yet."
+            });
+        }
+
         me.callParent(arguments);
 
         me.restoreColumns(me.columnConfig);
@@ -180,6 +207,12 @@ Ext.define('coon.comp.grid.feature.RowBodySwitch', {
     enable : function() {
 
         var me = this;
+
+        if (!me.view.grid.rendered) {
+            Ext.raise({
+                msg : "Cannot enable since grid was not rendered yet."
+            });
+        }
 
         me.callParent(arguments);
 
@@ -241,9 +274,9 @@ Ext.define('coon.comp.grid.feature.RowBodySwitch', {
             col = columns[i];
 
             columnConfig[col.dataIndex] = {
-                visible : col.rendered
-                         ? col.isVisible()
-                         : col.visible !== false,
+                hidden : col.rendered
+                         ? col.isHidden()
+                         : col.hidden === true,
                 width : col.rendered
                         ? col.getWidth() == 0
                           ? undefined
@@ -270,7 +303,7 @@ Ext.define('coon.comp.grid.feature.RowBodySwitch', {
      * Restores the column model and their positions based on the information
      * passed in the object, wheres the keys are the dataIndex of the associated
      * column, and the value is an object with information about the state (e.g.
-     * {visible : true/false}.
+     * {hidden : true/false}.
      *
      * @param {Object} columnConfig
      *
@@ -313,7 +346,7 @@ Ext.define('coon.comp.grid.feature.RowBodySwitch', {
         for (var i = 0, len = columns.length; i < len; i++) {
             col       = columns[i];
             configCol = columnConfig[col.dataIndex];
-            if (configCol.visible === false) {
+            if (configCol.hidden === true) {
                 col.setVisible(false);
             }
             if (configCol.flex !== undefined) {

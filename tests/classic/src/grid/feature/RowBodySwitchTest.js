@@ -27,11 +27,11 @@ describe('coon.comp.grid.feature.RowBodySwitchTest', function(t) {
 
     var grid;
 
-    var getGrid = function(disabled) {
+    var getGrid = function(disabled, rendered = true) {
 
         return Ext.create('Ext.grid.Panel', {
 
-            renderTo : document.body,
+            renderTo : rendered ? document.body : undefined,
 
             width  : 510,
             height : 200,
@@ -53,8 +53,8 @@ describe('coon.comp.grid.feature.RowBodySwitchTest', function(t) {
                     };
                 },
                 previewColumnConfig : {
-                    'isRead'  : {visible : false},
-                    'subject' : {visible : false},
+                    'isRead'  : {hidden : true},
+                    'subject' : {hidden : true},
                     'to'      : {flex : 1}
                 }
             }],
@@ -81,7 +81,7 @@ describe('coon.comp.grid.feature.RowBodySwitchTest', function(t) {
             }, {
                 text      : 'To',
                 dataIndex : 'to',
-                visible   : false
+                hidden    : true
             }]
 
         });
@@ -114,16 +114,40 @@ describe('coon.comp.grid.feature.RowBodySwitchTest', function(t) {
         });
 
 
+        t.it('enable()/disable() - excpetion', function(t) {
+
+            const grid    = getGrid(false, false),
+                  feature = grid.view.getFeature('rowbodyswitchfeature');
+
+            let exc, e;
+
+            try{feature.enable()}catch(e){exc=e;}
+            t.expect(exc).toBeDefined();
+            t.expect(exc.msg.toLowerCase()).toContain("cannot enable");
+
+            exc = e = undefined;
+
+            try{feature.disable()}catch(e){exc=e;}
+            t.expect(exc).toBeDefined();
+            t.expect(exc.msg.toLowerCase()).toContain("cannot disable");
+        });
+
+
         t.it('enable()/disable()', function(t) {
             var grid    = getGrid(false),
                 feature = grid.view.getFeature('rowbodyswitchfeature'),
                 columns = grid.getColumns(),
                 recalcWidth;
 
-            t.expect(feature.columnConfig).toEqual({
-                isRead  : {visible : true, flex : 1},
-                subject : {visible : true, flex : 1},
-                to      : {visible : false, width : columns[2].defaultWidth}
+            let fc = Ext.copy(feature.columnConfig);
+            for (let i in fc) {
+                delete fc[i].width;
+            }
+
+            t.expect(fc).toEqual({
+                isRead  : {hidden : false},
+                subject : {hidden : false},
+                to      : {hidden : true}
             });
 
             t.expect(feature.disabled).toBeFalsy();
@@ -186,6 +210,7 @@ describe('coon.comp.grid.feature.RowBodySwitchTest', function(t) {
 
             grid.destroy();
         });
+
 
         t.it('featured initially disabled', function(t) {
 
