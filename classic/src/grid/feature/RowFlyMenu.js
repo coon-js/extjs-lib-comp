@@ -436,8 +436,10 @@ Ext.define('coon.comp.grid.feature.RowFlyMenu', {
 
         const me = this;
 
-        me.menu.destroy();
-        me.menu = null;
+        if (me.menu) {
+            me.menu.destroy();
+            me.menu = null;
+        }
 
         return me.callParent(arguments);
     },

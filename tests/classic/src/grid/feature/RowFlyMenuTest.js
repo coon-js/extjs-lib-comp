@@ -33,14 +33,14 @@ describe('coon.comp.grid.feature.RowFlyMenuTest', function(t) {
 
             renderTo : document.body,
 
-            width  : 510,
-            height : 200,
+            width  : 800,
+            height : 600,
 
             features : [{
                 disabled           : !!disabled,
                 ftype              : 'cn_comp-gridfeature-rowflymenu',
                 id                 : 'rowflymenu',
-                items : [{cls : 'foo', title : 'foobar', id : 'rowflytestid'}, {html : 'bar'}]
+                items : [{cls : 'foo', title : 'foobar', html : 'foobar', id : 'rowflytestid'}, {html : 'bar'}]
             }],
 
             store : {
@@ -65,7 +65,7 @@ describe('coon.comp.grid.feature.RowFlyMenuTest', function(t) {
             }, {
                 text      : 'To',
                 dataIndex : 'to',
-                visible   : false
+                hidden    : true
             }]
 
         });
@@ -100,6 +100,7 @@ describe('coon.comp.grid.feature.RowFlyMenuTest', function(t) {
 
             t.expect(feature.alignTo).toEqual(at);
 
+            feature.destroy();
         });
 
 
@@ -269,6 +270,7 @@ describe('coon.comp.grid.feature.RowFlyMenuTest', function(t) {
 
             t.expect(CLICKED).toBe(1);
 
+            feature.destroy();
         });
 
 
@@ -303,6 +305,8 @@ describe('coon.comp.grid.feature.RowFlyMenuTest', function(t) {
                 foo : rec1,
                 bar : rec2
             });
+
+            feature.destroy();
         });
 
 
@@ -439,19 +443,28 @@ describe('coon.comp.grid.feature.RowFlyMenuTest', function(t) {
                 targetRow = grid.view.getRow(0),
                 rec       = {id : 1};
 
-            feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent : Ext.emptyFn});
-            t.expect(menu.dom.parentNode).toBe(targetRow);
-            let dom = document.getElementById('rowflytestid');
 
-            menu.fireEvent('mouseover', {}, menu.dom);
-            t.expect(dom.className).not.toContain('cn-over');
+            t.moveCursorTo(targetRow, function() {
 
-            menu.fireEvent('mouseover', {}, dom);
-            t.expect(dom.className).toContain('cn-over');
+                t.expect(menu.dom.parentNode).toBe(targetRow.parentNode.parentNode);
 
-            menu.fireEvent('mouseout', {}, dom);
-            t.expect(dom.className).not.toContain('cn-over');
-            grid.destroy();
+                let dom = document.getElementById('rowflytestid');
+
+                t.moveCursorTo(menu.dom, function() {
+                    t.expect(dom.className).not.toContain('cn-over');
+
+                    t.moveCursorTo(dom, function() {
+
+                        t.expect(dom.className).toContain('cn-over');
+
+                        t.moveCursorTo(menu.dom, function () {
+                            t.expect(dom.className).not.toContain('cn-over');
+
+                            grid.destroy();
+                        });
+                    });
+                });
+            });
         });
 
 
@@ -463,38 +476,49 @@ describe('coon.comp.grid.feature.RowFlyMenuTest', function(t) {
                 targetRow = grid.view.getRow(0),
                 rec       = {id : 1};
 
-            feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent : Ext.emptyFn});
-            t.expect(menu.dom.parentNode).toBe(targetRow);
-            let dom = document.getElementById('rowflytestid');
+            // mouseover row
+            t.moveCursorTo(targetRow, function() {
 
-            grid.getSelectionModel().select(grid.getStore().getAt(1));
-            t.expect(grid.getSelection().length).toBe(1);
+                t.expect(menu.dom.parentNode).toBe(targetRow.parentNode.parentNode);
+                let dom = document.getElementById('rowflytestid');
 
+                grid.getSelectionModel().select(grid.getStore().getAt(1));
+                t.expect(grid.getSelection().length).toBe(1);
 
-            menu.fireEvent('mouseover', {}, dom);
-            t.expect(dom.className).toContain('cn-over');
-            grid.getSelectionModel().select(grid.getStore().getAt(0));
-            t.expect(grid.getSelection()[0]).not.toBe(grid.getStore().getAt(0));
+                // mouseover menu
+                t.moveCursorTo(dom, function() {
 
+                    t.expect(dom.className).toContain('cn-over');
+                    grid.getSelectionModel().select(grid.getStore().getAt(0));
+                    t.expect(grid.getSelection()[0]).not.toBe(grid.getStore().getAt(0));
 
-            menu.fireEvent('mouseout', {}, dom);
-            t.expect(dom.className).not.toContain('cn-over');
+                    // mouseout
+                    t.moveCursorTo([0, 0], function() {
 
-            grid.getSelectionModel().select(grid.getStore().getAt(0));
-            t.expect(grid.getSelection()[0]).toBe(grid.getStore().getAt(0));
+                        t.expect(dom.className).not.toContain('cn-over');
 
-            grid.getSelectionModel().deselectAll();
+                        grid.getSelectionModel().select(grid.getStore().getAt(0));
+                        t.expect(grid.getSelection()[0]).toBe(grid.getStore().getAt(0));
 
-            menu.fireEvent('mouseover', {}, dom);
-            grid.getSelectionModel().select(grid.getStore().getAt(0));
-            t.expect(grid.getSelection()[0]).not.toBe(grid.getStore().getAt(0));
+                        grid.getSelectionModel().deselectAll();
 
-            grid.fireEvent('beforeitemkeydown', {}, dom);
-            grid.getSelectionModel().select(grid.getStore().getAt(0));
-            t.expect(grid.getSelection()[0]).toBe(grid.getStore().getAt(0));
+                        // mouseover row
+                        t.moveCursorTo(targetRow, function() {
 
-            grid.destroy();
+                            grid.getSelectionModel().select(grid.getStore().getAt(0));
+                            t.expect(grid.getSelection()[0]).not.toBe(grid.getStore().getAt(0));
+
+                            grid.fireEvent('beforeitemkeydown', {}, dom);
+                            grid.getSelectionModel().select(grid.getStore().getAt(0));
+                            t.expect(grid.getSelection()[0]).toBe(grid.getStore().getAt(0));
+
+                            grid.destroy();
+                        })
+                    });
+                })
+            }, null, [0, 0]);
         });
 
 
-    });});
+
+});});
