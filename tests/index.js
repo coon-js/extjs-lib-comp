@@ -35,6 +35,9 @@ harness.configure({
          */
         'coon.core' : '../../lib-cn_core/src',
 
+        'Ext.Package' : '../../../remote/package-loader/src/Package.js',
+        'Ext.package' : '../../../remote/package-loader/src/package',
+
         /**
          * Mocks
          */
