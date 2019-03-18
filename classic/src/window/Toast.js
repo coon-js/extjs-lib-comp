@@ -50,7 +50,7 @@ Ext.define('coon.comp.window.Toast', {
     /**
      * @type {String} bodyPadding="14 14 0 68"
      */
-    bodyPadding : "14 14 0 68",
+    bodyPadding : "14 28 14 68",
 
     /**
      * @type {String} align="tr"
