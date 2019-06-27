@@ -138,15 +138,6 @@ Ext.define('coon.comp.form.AutoCompleteForm', {
     submitHelperButton : null,
 
     /**
-     * For Chrome, this will hold a native HTMLElement referencing an input field
-     * which has to be created in order for Chrome's "save form data" dialog
-     * to appear.
-     * @type {HTMLElement}
-     * @private
-     */
-    currentRogueField : null,
-
-    /**
      * @inheritdoc
      *
      * @throws exception if autoCompleteTrigger was not properly configured
@@ -285,20 +276,6 @@ Ext.define('coon.comp.form.AutoCompleteForm', {
                 form, p, input;
 
             evt.preventDefault();
-
-            if (Ext.isChrome) {
-                var form  = me.el.dom,
-                    p     = form.parentNode,
-                    input = me.currentRogueField;
-                if (input) {
-                    form.removeChild(input);
-                }
-
-                input                 = document.createElement('input');
-                me.currentRogueField  = input;
-                input.id              = Ext.id();
-                me.el.dom.appendChild(input);
-            }
 
             var request = new XMLHttpRequest();
             request.open('POST', me.autoCompleteTrigger.actionUrl, true);

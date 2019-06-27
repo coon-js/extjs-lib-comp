@@ -188,25 +188,12 @@ describe('coon.comp.form.AutCompleteFormTest', function(t) {
 
             t.expect(wasClicked).toBe(false);
 
-            if (Ext.isChrome) {
-                t.click(form.down('button[reference=somebuttonNew]'), function() {
-                    t.expect(wasClicked).toBe(true);
-                    t.expect(form.currentRogueField).toBeTruthy();
-                    var crf = form.currentRogueField;
-                    t.click(form.down('button[reference=somebuttonNew]'), function() {
-                        t.expect(wasClicked).toBe(true);
-                        t.expect(crf).not.toBe(form.currentRogueField);
-                    });
 
-                });
+            t.click(form.down('button[reference=somebuttonNew]'), function() {
+                t.expect(wasClicked).toBe(true);
+            });
 
-            } else {
-                t.click(form.down('button[reference=somebuttonNew]'), function() {
-                    t.expect(wasClicked).toBe(true);
-                    t.expect(form.currentRogueField).toBeFalsy();
-                });
 
-            }
 
         });
 
