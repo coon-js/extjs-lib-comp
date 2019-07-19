@@ -61,6 +61,13 @@ Ext.define('coon.comp.component.Iframe', {
      */
 
     /**
+     * Fired before the srcdoc is set
+     * @event beforesrcdoc
+     * @param this
+     * @param {Mixed} value The value with which this frame's srcoc is being set
+     */
+
+    /**
      * @cfg {String} name
      */
     name : undefined,
@@ -144,10 +151,11 @@ Ext.define('coon.comp.component.Iframe', {
         return me.cn_iframeEl.dom.contentWindow.document.body;
     },
 
+
     /**
      * Sets the srcdoc of this iframe to the specified value. If a falsy value
      * is submitted, srcdoc will be set to an empty string.
-     *
+     * Fires the
      * @param {String} value
      */
     setSrcDoc : function(value) {
@@ -156,6 +164,8 @@ Ext.define('coon.comp.component.Iframe', {
         if (!value) {
             value = "";
         }
+
+        me.fireEvent("beforesrcdoc", me, value);
 
         me.cn_iframeEl.dom.srcdoc = value;
     },

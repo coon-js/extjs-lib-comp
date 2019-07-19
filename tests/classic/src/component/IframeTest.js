@@ -151,6 +151,27 @@ describe('coon.comp.component.IframeTest', function(t) {
             });
         });
 
+    });
+
+
+    t.it("beforesrcdoc event", function(t) {
+
+        iframe = createIframe({
+        });
+
+        let CALLED = {};
+
+        iframe.on('beforesrcdoc', function(iframe, value) {
+            CALLED[value] = iframe;;
+        });
+
+        iframe.setSrcDoc("foo");
+
+        t.expect(CALLED.foo).toBe(iframe);
+
+        iframe.setSrcDoc("bar");
+
+        t.expect(CALLED.bar).toBe(iframe);
 
     });
 });
