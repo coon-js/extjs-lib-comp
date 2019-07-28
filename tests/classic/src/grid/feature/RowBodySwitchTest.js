@@ -27,7 +27,34 @@ describe('coon.comp.grid.feature.RowBodySwitchTest', function(t) {
 
     var grid;
 
-    var getGrid = function(disabled, rendered = true) {
+    var getGrid = function(disabled, rendered = true, variableRowHeight = true) {
+
+        let featCfg = {
+            disabled           : !!disabled,
+            ftype              : 'cn_comp-gridfeature-rowbodyswitch',
+            id                 : 'rowbodyswitchfeature',
+            getAdditionalData  : function (data, idx, record, orig) {
+
+                var me = this;
+
+                if (me.disabled) {
+                    return undefined;
+                }
+
+                return {
+                    rowBody : 'Subject: <div>' + record.get('subject') + '</div>'
+                };
+            },
+            previewColumnConfig : {
+                'isRead'  : {hidden : true},
+                'subject' : {hidden : true},
+                'to'      : {flex : 1}
+            }
+        };
+
+        if (variableRowHeight === false) {
+            featCfg.variableRowHeight = false;
+        }
 
         return Ext.create('Ext.grid.Panel', {
 
@@ -36,28 +63,7 @@ describe('coon.comp.grid.feature.RowBodySwitchTest', function(t) {
             width  : 510,
             height : 200,
 
-            features : [{
-                disabled           : !!disabled,
-                ftype              : 'cn_comp-gridfeature-rowbodyswitch',
-                id                 : 'rowbodyswitchfeature',
-                getAdditionalData  : function (data, idx, record, orig) {
-
-                    var me = this;
-
-                    if (me.disabled) {
-                        return undefined;
-                    }
-
-                    return {
-                        rowBody : 'Subject: <div>' + record.get('subject') + '</div>'
-                    };
-                },
-                previewColumnConfig : {
-                    'isRead'  : {hidden : true},
-                    'subject' : {hidden : true},
-                    'to'      : {flex : 1}
-                }
-            }],
+            features : [featCfg],
 
             store : {
                 fields : ['isRead', 'subject', 'to'],
@@ -109,6 +115,10 @@ describe('coon.comp.grid.feature.RowBodySwitchTest', function(t) {
 
             t.expect(feature.enableCls).toContain('cn_comp-rowbodyswitch-enable');
             t.expect(feature.disableCls).toContain('cn_comp-rowbodyswitch-disable');
+
+            t.expect(feature.variableRowHeight).toBe(true);
+            t.expect(grid.variableRowHeight).toBe(true);
+            t.expect(grid.view.variableRowHeight).toBe(true);
 
             grid.destroy();
         });
@@ -226,6 +236,25 @@ describe('coon.comp.grid.feature.RowBodySwitchTest', function(t) {
 
             grid.destroy();
 
+        });
+
+
+        t.it('variableRowHeight = false', function(t) {
+
+            var grid    = getGrid(true, true, false),
+                feature = grid.view.getFeature('rowbodyswitchfeature');
+
+            t.expect(feature.variableRowHeight).toBe(false);
+            t.expect(grid.variableRowHeight).toBe(false);
+            t.expect(grid.view.variableRowHeight).toBe(false);
+            grid.destroy();
+
+            grid = getGrid(true, false, false);
+            t.expect(grid.variableRowHeight).toBe(false);
+            t.expect(grid.view.variableRowHeight).toBe(false);
+            grid.destroy();
+
+            
         });
 
     });

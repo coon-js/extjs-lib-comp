@@ -136,6 +136,22 @@ Ext.define('coon.comp.grid.feature.RowBodySwitch', {
      */
     previewColumnConfig : null,
 
+
+    /**
+     * Set this explicitely to "false" to prevent rendering issues with Ext6.7. The problem
+     * is that ExtJS set variableRowHeight for the grid/view automatically to "true" if a
+     * RowBody plugin is detected. That leads to re-calculating the average rowHeight once pages
+     * are loaded, and if the last page is loaded and only 34 remaining records are loaded into a page
+     * that would fit 50, the average row height suddenly changes, although it has been fix for the
+     * previous pages. This can cause trouble with BufferedStores where the user uses infinite scrolling.
+     * Set this to false only if the contents of the RowBody are always the same for each and every
+     * data loaded.
+     *
+     * @see BufferedRenderer#getScrollHeight
+     */
+    variableRowHeight : true,
+
+
     /**
      * @private
      */
@@ -156,8 +172,12 @@ Ext.define('coon.comp.grid.feature.RowBodySwitch', {
             grid.on('afterrender', me.initFeatureForGrid, me, {single : true});
         }
 
-
         me.callParent(arguments);
+
+        if (me.variableRowHeight === false) {
+            grid.variableRowHeight = grid.view.variableRowHeight = false;
+        }
+
     },
 
 
