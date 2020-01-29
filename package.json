@@ -7,7 +7,6 @@
     "sencha": {
         "namespace": "coon.comp",
         "type": "code",
-        "toolkit": "classic",
         "creator": "coon.js",
         "summary": "A collection of enhanced views and related functionality for Sencha ExtJS applications.",
         "detailedDescription": "This package contains extended and advanced implementations for ExtJS projects which are related to view components. Requires lib-cn_core. Also home of the Livegrid-plugin.",

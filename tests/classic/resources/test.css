@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2019 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -24,44 +24,18 @@
  */
 
 /**
- * This class provides the modal Ext.Window support.
- * It's configured to be modal, not resizable, not closable via userinput and
- * maximized to block/hide the underlying application.
+ * Various CSS definitions to make sure tests for views run as intended
  */
-Ext.define('coon.comp.window.LockingWindow', {
+.cn_comp-rowflymenu {
+    position: absolute;
+    width:100px;
+    z-index: 100000;
+    background-color: inherit;
+}
 
-    extend : 'Ext.window.Window',
-
-    alias : 'widget.cn_comp-lockingwindow',
-
-    cls : 'cn_comp-lockingwindow',
-
-    autoShow   : true,
-
-    titleAlign : 'center',
-
-    maximized  : true,
-    modal      : true,
-    closable   : false,
-    resizable  : false,
-
-    /**
-     * @inheritdoc
-     *
-     * @param config
-     */
-    constructor : function(config) {
-
-        var me = this;
-
-        config = config || {};
-
-        delete config.maximized;
-        delete config.modal;
-        delete config.closable;
-        delete config.resizable;
-
-        me.callParent(arguments);
-    }
-
-});
+.cn_comp-rowflymenu .cn-item {
+    font-size : 12px;
+    margin    : 4px 2px 2px 6px;
+    cursor    : pointer;
+    float     : left;
+}

@@ -506,13 +506,19 @@ describe('coon.comp.grid.feature.RowFlyMenuTest', function(t) {
                         t.moveCursorTo(targetRow, function() {
 
                             grid.getSelectionModel().select(grid.getStore().getAt(0));
-                            t.expect(grid.getSelection()[0]).not.toBe(grid.getStore().getAt(0));
-
-                            grid.fireEvent('beforeitemkeydown', {}, dom);
-                            grid.getSelectionModel().select(grid.getStore().getAt(0));
                             t.expect(grid.getSelection()[0]).toBe(grid.getStore().getAt(0));
 
-                            grid.destroy();
+                            t.moveCursorTo(dom, function() {
+                                t.expect(feature.menu.el.dom.parentNode).not.toBe(null);
+                                grid.fireEvent('beforeitemkeydown', {}, dom);
+                                t.expect(feature.menu.el.dom.parentNode).toBe(null);
+
+                                grid.getSelectionModel().select(grid.getStore().getAt(0));
+                                t.expect(grid.getSelection()[0]).toBe(grid.getStore().getAt(0));
+
+                                grid.destroy();
+                            });
+
                         })
                     });
                 })

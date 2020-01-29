@@ -1,14 +1,42 @@
-var harness = new Siesta.Harness.Browser.ExtJS();
+/**
+ * coon.js
+ * lib-cn_comp
+ * Copyright (C) 2019 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge,
+ * publish, distribute, sublicense, and/or sell copies of the Software,
+ * and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+ * USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+
+const harness = new Siesta.Harness.Browser.ExtJS();
+
+let isModern = window.location.href.indexOf("toolkit=modern") !== -1;
 
 harness.configure({
-    title          : 'lib-cn_comp',
+    title          : 'lib-cn_comp - ' + (isModern ? "modern" : "classic"),
     disableCaching : true,
     loaderPath     : {
 
         /**
          * ux
          */
-        'Ext.ux' : "../../../../ext/packages/ux/src/",////bryntum.com/examples/extjs-6.0.1/build/ext-all.js"
+        'Ext.ux' : "../../../../ext/packages/ux/src/",
 
         /**
          * fixtures
@@ -18,17 +46,18 @@ harness.configure({
         /**
          * Classic Toolkit
          */
-        'coon.comp.container' : '../classic/src/container',
         'coon.comp.component' : '../classic/src/component',
         'coon.comp.window'    : '../classic/src/window',
-        'coon.comp.form'      : '../classic/src/form',
-        'coon.comp.list'      : '../classic/src/list',
+        'coon.comp.form'      : (isModern ? '../modern/src/form' : '../classic/src/form'),
         'coon.comp.grid'      : '../classic/src/grid',
 
         /**
          * Universal
          */
+        'coon.comp.window.LockingWindow' : '../src/window/LockingWindow.js',
         'coon.comp.app' : '../src/app',
+        'coon.comp.container' : '../src/container',
+        'coon.comp.list'      : '../src/list',
 
         /**
          * Requirements
@@ -45,63 +74,102 @@ harness.configure({
         'coon.universal.test'  : './src'
     },
     preload        : [
-        coon.tests.config.paths.extjs.css.url,
-        coon.tests.config.paths.extjs.js.url
+        './classic/resources/test.css',
+        coon.tests.config.paths.extjs[isModern ? "modern" : "classic" ].css.url,
+        coon.tests.config.paths.extjs[isModern ? "modern" : "classic" ].js.url
     ]
 });
 
-harness.start({
-    group : 'classic',
-    items : [{
-        group : 'component',
-        items : [
-            'classic/src/component/IframeTest.js',
-            'classic/src/component/LoadMaskTest.js',
-            'classic/src/component/MessageMaskTest.js'
-        ]
-    }, {
-        group : 'container',
-        items : [
-            'classic/src/container/ViewportTest.js'
-        ]
-    }, {
-        group : 'form',
-        items : [
-            'classic/src/form/AutoCompleteFormTest.js',
-            {
-            group : 'field',
-            items : [
-                'classic/src/form/field/FileButtonTest.js'
-            ]
-        }]
-    }, {
-        group : 'grid',
+
+let groups = [];
+
+// +--------------------------------
+// | Classic Tests
+// +--------------------------------
+if (!isModern) {
+    groups.push({
+        group : 'classic',
         items : [{
-            group : 'feature',
+            group : 'component',
             items : [
-                'classic/src/grid/feature/RowBodySwitchTest.js',
-                'classic/src/grid/feature/RowFlyMenuTest.js',
-                'classic/src/grid/feature/LivegridTest.js'
+                'classic/src/component/IframeTest.js',
+                'classic/src/component/LoadMaskTest.js',
+                'classic/src/component/MessageMaskTest.js'
+            ]
+        }, {
+            group : 'form',
+            items : [
+                'classic/src/form/AutoCompleteFormTest.js',
+                {
+                    group : 'field',
+                    items : [
+                        'classic/src/form/field/FileButtonTest.js'
+                    ]
+                }]
+        }, {
+            group : 'grid',
+            items : [{
+                group : 'feature',
+                items : [
+                    'classic/src/grid/feature/RowBodySwitchTest.js',
+                    'classic/src/grid/feature/RowFlyMenuTest.js',
+                    'classic/src/grid/feature/LivegridTest.js'
+                ]
+            }]
+        }, {
+            group : 'window',
+            items : [
+                'classic/src/window/ToastTest.js'
             ]
         }]
-    }, {
-        group : 'list',
-        items : [
-            'classic/src/list/TreeTest.js'
-        ]
-    }, {
-        group : 'window',
-        items : [
-            'classic/src/window/LockingWindowTest.js',
-            'classic/src/window/ToastTest.js'
-        ]
-    }]
-}, {
+    });
+
+}
+
+
+// +--------------------------------
+// | Modern Tests
+// +--------------------------------
+if (isModern) {
+    groups.push({
+        group : 'modern',
+        items : [{
+            group : 'form',
+            items : [
+                'modern/src/form/AutoCompleteFormTest.js'
+            ]
+        }]
+    });
+
+}
+
+
+// +--------------------------------
+// | Universal Tests
+// +--------------------------------
+groups.push({
     group : 'universal',
     items : [{
         group : 'app',
         items : [
             'src/app/ApplicationTest.js'
         ]
+    }, {
+        group : 'container',
+        items : [
+            'src/container/ViewportTest.js'
+        ]
+    }, {
+        group : 'list',
+        items : [
+            'src/list/TreeTest.js'
+        ]
+    }, {
+        group : 'window',
+        items : [
+            'src/window/LockingWindowTest.js'
+        ]
     }]
-});
+})
+
+harness.start.apply(harness, groups);

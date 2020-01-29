@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2019 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -74,7 +74,25 @@
  *      renderTo : document.body
  *   ));
  *
+ *  Example css working with RowFlyMenu:
  *
+ *  .cn_comp-rowflymenu {
+ *
+ *       position : absolute;
+ *       z-index  : 100000;
+ *       background-color:inherit;
+ *
+ *        .cn-item {
+ *           margin    : 4px 2px 2px 6px;
+ *           cursor    : pointer;
+ *           float     : left;
+ *
+ *           &.cn-over {
+ *               color : grey;
+ *           }
+ *       }
+ *
+ *   }
  *
  */
 Ext.define('coon.comp.grid.feature.RowFlyMenu', {

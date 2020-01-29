@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2019 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -26,10 +26,13 @@
 /**
  * A viewport implementation capable of consuming postLaunchHook-information
  * of {@link coon.comp.app.Application}s
+ *
+ * For the modern toolkit, this instance extends from Ext.Panel,
+ * whereas for the classic toolkit Ext.container.Viewport is being used.
  */
 Ext.define('coon.comp.container.Viewport', {
 
-    extend : 'Ext.container.Viewport',
+    extend : Ext.isModern ? 'Ext.Panel' : 'Ext.container.Viewport',
 
     /**
      * Method gets called by {@link coon.comp.app.Application#postLaunchHookProcess}

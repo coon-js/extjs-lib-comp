@@ -38,6 +38,9 @@ describe('coon.comp.container.MessageMaskTest', function(t) {
 
 
     t.beforeEach(function() {
+
+        Ext.viewport.Viewport.setup();
+
         panel = Ext.create('Ext.Panel', {
             renderTo : document.body,
             width    : 600,

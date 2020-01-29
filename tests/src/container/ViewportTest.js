@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2019 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -31,10 +31,20 @@ describe('coon.comp.container.ViewportTest', function(t) {
 // +----------------------------------------------------------------------------
 
     t.it('should be instance of Ext.container.Viewport', function(t) {
-        var w = Ext.create('coon.comp.container.Viewport', {
+        const w = Ext.create('coon.comp.container.Viewport', {
         });
 
-        t.expect(w instanceof Ext.container.Viewport).toBeTruthy();
+        switch (Ext.isModern) {
+            case true:
+                t.expect(w instanceof Ext.Panel).toBeTruthy();
+                break;
+            case undefined:
+                t.expect(w instanceof Ext.container.Viewport).toBeTruthy();
+                break;
+            default:
+                throw("Unexpected value for \"Ext.isModern\": " + Ext.isModern);
+        }
+
     });
 
     t.it('postLaunchHook should be Ext.emptyFn', function(t) {
