@@ -27,7 +27,7 @@
  * ViewPortMock. This instance's addPostLaunchInfo collects the data in a
  * queryable property.
  */
-Ext.define('coon.classic.test.container.mock.ViewportMock', {
+Ext.define('coon.universal.test.container.mock.ViewportMock', {
 
     extend : 'coon.comp.container.Viewport',
 
