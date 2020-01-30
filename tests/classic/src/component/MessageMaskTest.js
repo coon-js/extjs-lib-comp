@@ -39,8 +39,6 @@ describe('coon.comp.container.MessageMaskTest', function(t) {
 
     t.beforeEach(function() {
 
-        Ext.isModern && Ext.viewport.Viewport.setup();
-
         panel = Ext.create('Ext.Panel', {
             renderTo : document.body,
             width    : 600,
@@ -58,11 +56,7 @@ describe('coon.comp.container.MessageMaskTest', function(t) {
             mask.destroy();
             mask = null;
         }
-
-        if (Ext.isModern && Ext.Viewport) {
-            Ext.Viewport.destroy();
-            Ext.Viewport = null;
-        }
+        
     });
 
 
