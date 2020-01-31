@@ -123,42 +123,6 @@ Ext.define('coon.comp.app.Application', {
         me.callParent([config]);
     },
 
-    /**
-     * @inheritdoc
-     * Overridden to make sure the viewmodel of the view gets created and set to
-     * the return value of {@link #getApplicationViewModel}
-     * @param value
-     *
-     * @return {coon.comp.container.Viewport}
-     *
-     * @throws if {@link #mainView} was already set and instantiated, or if
-     * the mainView ist no instance of {@link coon.comp.container.Viewport}
-     */
-    applyMainView: function(value) {
-
-        if (this.getMainView()) {
-            Ext.raise({
-                sourceClass : 'coon.comp.app.Application',
-                mainView    : this.getMainView(),
-                msg         : "coon.comp.app.Application's mainView was already set."
-            });
-        }
-
-        var view = this.getView(value),
-            view = view.create({
-            viewModel : this.getApplicationViewModel()
-        });
-
-        if (!(view instanceof coon.comp.container.Viewport)) {
-            Ext.raise({
-                sourceClass : 'coon.comp.app.Application',
-                mainView    : this.getMainView(),
-                msg         : "coon.comp.app.Application's mainView must be an instance of coon.comp.container.Viewport."
-            });
-        }
-
-        return view;
-    },
 
     /**
      * Iterates over this applications controllers and checks if any controller
@@ -290,6 +254,27 @@ Ext.define('coon.comp.app.Application', {
     activateViewForHash : function(hash) {
         var me = this;
         return me.getMainView().activateViewForHash(hash, me.getDefaultToken());
+    },
+
+
+    /**
+     * @inheritdoc
+     */
+    createApplicationView : function(view) {
+
+        const appView = view.create({
+            viewModel : this.getApplicationViewModel()
+        });
+
+        if (!(appView instanceof coon.comp.container.Viewport)) {
+            Ext.raise({
+                sourceClass : 'coon.comp.app.Application',
+                mainView    : this.getMainView(),
+                msg         : "coon.comp.app.Application's mainView must be an instance of coon.comp.container.Viewport."
+            });
+        }
+
+        return appView;
     }
 
 });

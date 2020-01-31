@@ -32,7 +32,7 @@
  */
 Ext.define('coon.comp.container.Viewport', {
 
-    extend : Ext.isModern ? 'Ext.Panel' : 'Ext.container.Viewport',
+    extend : 'Ext.Panel',
 
     /**
      * Method gets called by {@link coon.comp.app.Application#postLaunchHookProcess}

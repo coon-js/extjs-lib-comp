@@ -56,7 +56,7 @@ harness.configure({
          */
         'coon.comp.window.LockingWindow' : '../src/window/LockingWindow.js',
         'coon.comp.app' : '../src/app',
-        'coon.comp.container' : '../src/container',
+        'coon.comp.container' : (isModern ? '../modern/src/container' : '../classic/src/container'),
         'coon.comp.list'      : '../src/list',
 
         /**
@@ -97,6 +97,11 @@ if (!isModern) {
                 'classic/src/component/MessageMaskTest.js'
             ]
         }, {
+            group : 'container',
+            items : [
+                'src/container/ViewportTest.js'
+            ]
+        }, {
             group : 'form',
             items : [
                 'classic/src/form/AutoCompleteFormTest.js',
@@ -134,6 +139,11 @@ if (isModern) {
     groups.push({
         group : 'modern',
         items : [{
+            group : 'container',
+            items : [
+                'src/container/ViewportTest.js'
+            ]
+        }, {
             group : 'form',
             items : [
                 'modern/src/form/AutoCompleteFormTest.js'
@@ -153,11 +163,6 @@ groups.push({
         group : 'app',
         items : [
             'src/app/ApplicationTest.js'
-        ]
-    }, {
-        group : 'container',
-        items : [
-            'src/container/ViewportTest.js'
         ]
     }, {
         group : 'list',

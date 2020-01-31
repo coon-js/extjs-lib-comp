@@ -277,28 +277,6 @@ t.requireOk(
     });
 
 
-    t.it('Should throw exception if mainView is set in post-launch call', function(t) {
-        var exc = undefined;
-
-        app = Ext.create('coon.comp.app.Application', {
-            name                          : 'test',
-            mainView                      : 'coon.comp.container.Viewport',
-            applicationSchemaConfig       : 'Ext.data.schema.Schema',
-            applicationViewModelClassName : 'Ext.app.ViewModel'
-        });
-
-        try {
-            app.setMainView(new Ext.Panel);
-        } catch (e) {
-            exc = e;
-        }
-
-        t.expect(exc).toBeDefined();
-        t.expect(exc.msg).toBeDefined();
-
-    });
-
-
     t.it('Should throw exception when applicationSchemaConfig is not representing Ext.data.schema.Schema', function(t) {
 
         var exc;
