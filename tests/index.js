@@ -58,6 +58,7 @@ harness.configure({
         'coon.comp.app' : '../src/app',
         'coon.comp.container' : (isModern ? '../modern/src/container' : '../classic/src/container'),
         'coon.comp.list'      : '../src/list',
+        'coon.comp.Img' : (isModern ? '../modern/' : '../classic/') + 'src/Img.js',
 
         /**
          * Requirements
@@ -89,7 +90,7 @@ let groups = [];
 if (!isModern) {
     groups.push({
         group : 'classic',
-        items : [{
+        items : ['classic/src/ImgTest.js', {
             group : 'component',
             items : [
                 'classic/src/component/IframeTest.js',
@@ -138,7 +139,7 @@ if (!isModern) {
 if (isModern) {
     groups.push({
         group : 'modern',
-        items : [{
+        items : ['modern/src/ImgTest.js', {
             group : 'container',
             items : [
                 'src/container/ViewportTest.js'
