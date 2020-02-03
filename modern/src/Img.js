@@ -38,7 +38,7 @@ Ext.define('coon.comp.Img', {
     applyGlyph: function(glyph, oldGlyph) {
         if (glyph) {
             if (!glyph.isGlyph) {
-                glyph = new Ext.Glyph(glyph);
+                glyph = Ext.create("Ext.Glyph", glyph);
             }
 
             if (glyph.isEqual(oldGlyph)) {
@@ -50,8 +50,9 @@ Ext.define('coon.comp.Img', {
     },
 
 
-    updateGlyph: function(glyph, oldGlyph) {
-        var el = this.el;
+    updateGlyph: function(glyph) {
+        const me = this,
+              el = me.el;
 
         if (el) {
             el.dom.innerHTML = glyph.character;
