@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2019 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2019-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -86,19 +86,19 @@ Ext.define('coon.comp.component.MessageMask', {
          * Glyph cls for Question mark
          * @type {String} [QUESTION=fa fa-question-circle]
          */
-        QUESTION : 'fa fa-question-circle',
+        QUESTION : 'far fa-question-circle',
 
         /**
          * Glyph cls for Question mark
          * @type {String} [QUESTION=fa fa-question-circle]
          */
-        FAILURE : 'fa fa-frown-o',
+        FAILURE : 'far fa-frown',
 
         /**
          * Glyph cls for Exclamation mark
          * @type {String} [ERROR=fa fa-exclamation-circle]
          */
-        ERROR : 'fa fa-exclamation-circle'
+        ERROR : 'far fa-exclamation-circle'
 
     },
 
