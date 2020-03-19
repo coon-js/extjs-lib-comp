@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2019 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -23,6 +23,7 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+
 /**
  * An implementation of {@link coon.core.app.Aplication} to be working with
  * Viewports of the type {@link coon.comp.container.Viewport}.
@@ -34,131 +35,10 @@ Ext.define('coon.comp.app.Application', {
     extend: 'coon.core.app.Application',
 
     requires: [
-        'coon.core.data.schema.BaseSchema',
         'coon.core.app.PackageController',
         'coon.comp.container.Viewport'
     ],
 
-    /**
-     * @cfg {Object/String} [applicationSchemaConfig={type:'cn_core-baseschema', id : 'cn_core-baseschema', namespace : 'coon.core.data'}] (required)
-     * The fqn of the class representing the schema to be used for {@link #applicationViewModel},
-     * or the object configuration for creating the schema.
-     * The representing classes should have been loaded before this class
-     * gets instantiated, to prevent synchronous requests to this class.
-     */
-    applicationSchemaConfig : {
-        type      : 'cn_core-baseschema',
-        id        : 'cn_core-baseschema',
-        namespace : 'coon.core.data'
-    },
-
-    /**
-     * @cfg {String} [applicationViewModelClassName=Ext.app.ViewModel] (required)
-     * The fqn of the class representing the viewModel which will be used with
-     * the {@link #applicationView}.
-     * The representing classes should have been loaded before this class
-     * gets instantiated, to prevent synchronous requests to this class.
-     */
-    applicationViewModelClassName : 'Ext.app.ViewModel',
-
-    /**
-     * @type {Ext.app.ViewModel} applicationViewModel
-     * The ViewModel of the {@link applicationView}.
-     * see {@link #getApplicationViewModel}
-     */
-    applicationViewModel : null,
-
-    /**
-     * @type {Ext.data.Session} applicationSession
-     * The application's session which is owned by {@link #applicationViewModel}
-     * It's schema will default to {@link coon.core.data.schema.BaseSchema}
-     */
-    applicationSession : null,
-
-    /**
-     * @inheritdocs
-     *
-     * @throws Exception if any of the required class configs are not available,
-     * or if either {@link #applicationViewModelClassName} or
-     * {@link #mainView} were not loaded already.
-     */
-    constructor : function(config) {
-
-        var me = this;
-
-        config = config || {};
-
-        me.applicationSchemaConfig = config.applicationSchemaConfig ||
-                                     me.applicationSchemaConfig;
-
-        me.applicationViewModelClassName = config.applicationViewModelClassName ||
-                                           me.applicationViewModelClassName;
-
-        if (!me.applicationViewModelClassName || !me.applicationSchemaConfig) {
-            Ext.raise({
-                sourceClass                   : 'coon.comp.app.Application',
-                applicationViewModelClassName : me.applicationViewModelClassName,
-                applicationSchemaConfig       : me.applicationSchemaConfig,
-                msg                           : "coon.comp.app.Application requires both applicationSchemaConfig and applicationViewModelClassName to be defined."
-            });
-        }
-
-        if (!Ext.ClassManager.get(me.applicationViewModelClassName) ||
-            ((Ext.isString(me.applicationSchemaConfig) && !Ext.ClassManager.get(me.applicationSchemaConfig)) ||
-             (Ext.isObject(me.applicationSchemaConfig) && !Ext.ClassManager.getNameByAlias('schema.' + me.applicationSchemaConfig.type))
-            )) {
-            Ext.raise({
-                sourceClass               : 'coon.comp.app.Application',
-                applicationViewModelClass : Ext.ClassManager.get(me.applicationViewModelClassName),
-                applicationSchemaConfig   : Ext.isString(me.applicationSchemaConfig)
-                                            ? Ext.ClassManager.get(me.applicationSchemaConfig)
-                                            : Ext.ClassManager.getNameByAlias('schema.' + me.applicationSchemaConfig.type),
-                msg                       : "coon.comp.app.Application requires both applicationSchemaConfig and applicationViewModelClass to be loaded."
-            });
-        }
-
-        delete config.applicationSchemaConfig;
-        delete config.applicationViewModelClassName;
-
-        me.callParent([config]);
-    },
-
-    /**
-     * @inheritdoc
-     * Overridden to make sure the viewmodel of the view gets created and set to
-     * the return value of {@link #getApplicationViewModel}
-     * @param value
-     *
-     * @return {coon.comp.container.Viewport}
-     *
-     * @throws if {@link #mainView} was already set and instantiated, or if
-     * the mainView ist no instance of {@link coon.comp.container.Viewport}
-     */
-    applyMainView: function(value) {
-
-        if (this.getMainView()) {
-            Ext.raise({
-                sourceClass : 'coon.comp.app.Application',
-                mainView    : this.getMainView(),
-                msg         : "coon.comp.app.Application's mainView was already set."
-            });
-        }
-
-        var view = this.getView(value),
-            view = view.create({
-            viewModel : this.getApplicationViewModel()
-        });
-
-        if (!(view instanceof coon.comp.container.Viewport)) {
-            Ext.raise({
-                sourceClass : 'coon.comp.app.Application',
-                mainView    : this.getMainView(),
-                msg         : "coon.comp.app.Application's mainView must be an instance of coon.comp.container.Viewport."
-            });
-        }
-
-        return view;
-    },
 
     /**
      * Iterates over this applications controllers and checks if any controller
@@ -172,11 +52,9 @@ Ext.define('coon.comp.app.Application', {
 
         var me          = this,
             ctrl        = null,
-            items       = [],
             controllers = me.controllers.getRange(),
             mainView    = me.getMainView(),
-            info        = {},
-            signaled    = false;
+            info        = {};
 
         for (var i = 0, len = controllers.length; i < len; i++) {
 
@@ -191,79 +69,6 @@ Ext.define('coon.comp.app.Application', {
             }
         }
 
-    },
-
-    /**
-     * Returns the session which is used by {@link #applicationViewModel}.
-     * This session can be used to adopt data models which need to be globally
-     * available during the runtime of the application.
-     * See {@link #applicationSession}. The schema of this session will be set
-     * to an instance of {@link #applicationSchemaClassName}
-     *
-     * @returns {Ext.data.Session}
-     *
-     * @throws if {@link #applicationSchemaClassName} does not represent
-     * an instance of {@link Ext.data.schema.Schema}
-     */
-    getApplicationSession : function() {
-
-        var me = this;
-
-        if (!me.applicationSession) {
-
-            var schema = Ext.isString(me.applicationSchemaConfig)
-                        ? Ext.create(me.applicationSchemaConfig)
-                        : Ext.Factory.schema(me.applicationSchemaConfig);
-
-            if (!(schema instanceof Ext.data.schema.Schema)) {
-                Ext.raise({
-                    sourceClass : 'coon.comp.app.Application',
-                    schema      : Ext.getClass(schema),
-                    msg         : "coon.comp.app.Application requires schema to be an instance of Ext.data.schema.Schema."
-                });
-            }
-
-            me.applicationSession = Ext.create('Ext.data.Session', {
-                schema : schema
-            });
-        }
-
-        return me.applicationSession;
-    },
-
-    /**
-     * Returns the {@link #applicationViewModel} used by {@link #mainView}.
-     * The desired class can be specified in {@link #applicationViewModelClassName}.
-     * The view model is available before the {@link #mainView} is rendered, so
-     * that associated controllers can already access it.
-     *
-     * @return {Ext.app.ViewModel}
-     *
-     * @throws if {@link #applicationViewModel} is not an instance of {@link Ext.app.ViewModel}
-     */
-    getApplicationViewModel : function() {
-
-        var me = this;
-
-        if (!me.applicationViewModel) {
-
-            me.applicationViewModel = Ext.create(
-                me.applicationViewModelClassName, {
-                    session : this.getApplicationSession()
-                }
-            );
-
-            if (!(me.applicationViewModel instanceof Ext.app.ViewModel)) {
-                Ext.raise({
-                    sourceClass          : 'coon.comp.app.Application',
-                    applicationViewModel : Ext.getClass(me.applicationViewModel),
-                    msg                  : "coon.comp.app.Application requires applicationViewModel to be an instance of Ext.app.ViewModel."
-                });
-            }
-
-        }
-
-        return this.applicationViewModel;
     },
 
 
@@ -290,6 +95,25 @@ Ext.define('coon.comp.app.Application', {
     activateViewForHash : function(hash) {
         var me = this;
         return me.getMainView().activateViewForHash(hash, me.getDefaultToken());
+    },
+
+
+    /**
+     * @inheritdoc
+     * @throws if view is not instance of coon.comp.container.Viewport
+     */
+    applyMainView : function(view) {
+
+        const me      = this,
+              appView = me.callParent(arguments);
+
+        if (appView !== undefined && !(appView instanceof coon.comp.container.Viewport)) {
+            Ext.raise({
+                msg : "coon.comp.app.Application's mainView must be an instance of coon.comp.container.Viewport."
+            });
+        }
+
+        return appView;
     }
 
 });

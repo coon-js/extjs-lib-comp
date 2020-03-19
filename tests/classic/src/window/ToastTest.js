@@ -35,7 +35,7 @@ describe('coon.comp.window.ToastTest', function(t) {
         t.expect(toast.alias).toContain('widget.cn_comp-toast');
         t.expect(toast.cls).toContain('cn_comp-toast foo');
         t.expect(toast.context).toBe("foo");
-        t.expect(toast.bodyPadding).toBe("14 14 0 68");
+        t.expect(toast.bodyPadding).toBe("14 28 14 68");
         t.expect(toast.align).toBe("tr");
         t.expect(toast.autoClose).toBe(true);
     });

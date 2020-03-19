@@ -1,4 +1,3 @@
-<!--
 /**
  * coon.js
  * lib-cn_comp
@@ -23,21 +22,54 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
--->
 
-<!DOCTYPE html>
- <html>
-  <head>
+/**
+ * This class provides the modal Ext.Window support.
+ * It's configured to be modal, not resizable, not closable via userinput and
+ * maximized to block/hide the underlying application.
+ * The window's autoShow property will be set to true for the classic toolkit.
+ * The modern toolkit is unaware of this property and instead call the show()
+ * method in it's constructor.
+ */
+Ext.define('coon.comp.window.LockingWindow', {
 
-    <!-- Siesta CSS e.g. siesta-all.css-->
-    <link rel="stylesheet" type="text/css" href="[PATH_TO_SIESTA_ALL.CSS]">
+    extend : 'Ext.window.Window',
 
-    <!-- Siesta application e.g. siesta-all.js -->
-    <script type="text/javascript" src="[PATH_TO_SIESTA_ALL.JS]"></script>
+    alias : 'widget.cn_comp-lockingwindow',
 
-    <!-- The test harness -->
-    <script type="text/javascript" src="tests.config.js"></script>
-    <script type="text/javascript" src="index.js"></script>
-  </head>
-  <body></body>
- </html>
+    cls : 'cn_comp-lockingwindow',
+
+    autoShow   : true,
+
+    titleAlign : 'center',
+
+    maximized  : true,
+    modal      : true,
+    closable   : false,
+    resizable  : false,
+
+    /**
+     * @inheritdoc
+     *
+     * @param config
+     */
+    constructor : function(config) {
+
+        const me = this;
+
+        config = config || {};
+
+        delete config.maximized;
+        delete config.modal;
+        delete config.closable;
+        delete config.resizable;
+
+        me.callParent(arguments);
+
+        if (Ext.isModern && me.autoShow === true) {
+            me.show();
+        }
+
+    }
+
+});

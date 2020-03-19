@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2019 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -97,7 +97,6 @@ describe('coon.comp.list.TreeTest', function(t) {
         t.expect(tree.isVisible()).toBe(true);
         t.expect(tree.isHidden()).toBe(false);
         t.expect(tree.getWidth()).toBe(tree.defaultWidth);
-        tree.destroy();
     });
 
 

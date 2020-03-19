@@ -1,8 +1,7 @@
-<!--
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * lib-cn_user
+ * Copyright (C) 2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_user
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -23,21 +22,41 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
--->
 
-<!DOCTYPE html>
- <html>
-  <head>
+/**
+ * Implementation of Ext.Img, providing glyph support with Ext.Img
+ * in modern toolkit
+ */
+Ext.define('coon.comp.Img', {
 
-    <!-- Siesta CSS e.g. siesta-all.css-->
-    <link rel="stylesheet" type="text/css" href="[PATH_TO_SIESTA_ALL.CSS]">
+    extend : 'Ext.Img',
 
-    <!-- Siesta application e.g. siesta-all.js -->
-    <script type="text/javascript" src="[PATH_TO_SIESTA_ALL.JS]"></script>
+    config : {
+        glyph : undefined
+    },
 
-    <!-- The test harness -->
-    <script type="text/javascript" src="tests.config.js"></script>
-    <script type="text/javascript" src="index.js"></script>
-  </head>
-  <body></body>
- </html>
+    applyGlyph: function(glyph, oldGlyph) {
+        if (glyph) {
+            if (!glyph.isGlyph) {
+                glyph = Ext.create("Ext.Glyph", glyph);
+            }
+
+            if (glyph.isEqual(oldGlyph)) {
+                glyph = undefined;
+            }
+        }
+
+        return glyph;
+    },
+
+
+    updateGlyph: function(glyph) {
+        const me = this,
+              el = me.el;
+
+        if (el) {
+            el.dom.innerHTML = glyph.character;
+            el.setStyle(glyph.getStyle());
+        }
+    }
+});

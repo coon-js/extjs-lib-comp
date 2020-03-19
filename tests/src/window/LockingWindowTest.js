@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2019 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -23,24 +23,39 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/**
- * ViewPortMock. This instance's addPostLaunchInfo collects the data in a
- * queryable property.
- */
-Ext.define('coon.classic.test.container.mock.ViewportMock', {
+describe('coon.comp.window.LockingWindowTest', function(t) {
 
-    extend : 'coon.comp.container.Viewport',
+    t.it("Sanitize tests for LockingWindow specifics", function(t) {
 
-    postLaunchInfo : null,
+        var w = Ext.create('coon.comp.window.LockingWindow', {
+            modal     : false,
+            maximized : false,
+            closable  : true,
+            resizable : true
+        });
 
-    addPostLaunchInfo : function(info) {
+        // truthies
+        t.expect(w.isVisible()).toBeTruthy();
 
-        this.postLaunchInfo = this.postLaunchInfo || [];
+        if (Ext.isModern) {
+            t.expect(w.getModal()).toBeTruthy();
+            t.expect(w.getMaximized()).toBeTruthy();
+        } else {
+            t.expect(w.modal).toBeTruthy();
+            t.expect(w.maximized).toBeTruthy();
+        }
 
-        this.postLaunchInfo.push(info);
+        // falsies
+        if (Ext.isModern) {
+            t.expect(w.getClosable()).toBeFalsy();
+            t.expect(w.getResizable()).toBeFalsy();
+        } else {
+            t.expect(w.closable).toBeFalsy();
+            t.expect(w.resizable).toBeFalsy();
+        }
 
-    }
 
+    });
 
 
 });

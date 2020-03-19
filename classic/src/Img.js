@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2019 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * lib-cn_user
+ * Copyright (C) 2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_user
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -23,28 +23,11 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe('coon.comp.window.LockingWindowTest', function(t) {
+/**
+ * Implementation of Ext.Img for feature parity with modern toolkit support of coon.comp.Img
+ */
+Ext.define('coon.comp.Img', {
 
-    t.it("Sanitize tests for LockingWindow specifics", function(t) {
-
-        var w =Ext.create('coon.comp.window.LockingWindow', {
-            modal     : false,
-            maximized : false,
-            closable  : true,
-            resizable : true
-        });
-
-        // truthies
-        t.expect(w.isVisible()).toBeTruthy();
-        t.expect(w.modal).toBeTruthy();
-        t.expect(w.maximized).toBeTruthy();
-
-        // falsies
-        t.expect(w.closable).toBeFalsy();
-        t.expect(w.resizable).toBeFalsy();
-
-
-    });
-
+    extend : 'Ext.Img'
 
 });

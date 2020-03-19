@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2019 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -38,6 +38,7 @@ describe('coon.comp.container.MessageMaskTest', function(t) {
 
 
     t.beforeEach(function() {
+
         panel = Ext.create('Ext.Panel', {
             renderTo : document.body,
             width    : 600,
@@ -55,6 +56,7 @@ describe('coon.comp.container.MessageMaskTest', function(t) {
             mask.destroy();
             mask = null;
         }
+        
     });
 
 

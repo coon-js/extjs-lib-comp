@@ -1,4 +1,3 @@
-<!--
 /**
  * coon.js
  * lib-cn_comp
@@ -23,21 +22,25 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
--->
 
-<!DOCTYPE html>
- <html>
-  <head>
+/**
+ * ViewPortMock. This instance's addPostLaunchInfo collects the data in a
+ * queryable property.
+ */
+Ext.define('coon.universal.test.container.mock.ViewportMock', {
 
-    <!-- Siesta CSS e.g. siesta-all.css-->
-    <link rel="stylesheet" type="text/css" href="[PATH_TO_SIESTA_ALL.CSS]">
+    extend : 'coon.comp.container.Viewport',
 
-    <!-- Siesta application e.g. siesta-all.js -->
-    <script type="text/javascript" src="[PATH_TO_SIESTA_ALL.JS]"></script>
+    postLaunchInfo : null,
 
-    <!-- The test harness -->
-    <script type="text/javascript" src="tests.config.js"></script>
-    <script type="text/javascript" src="index.js"></script>
-  </head>
-  <body></body>
- </html>
+    addPostLaunchInfo : function(info) {
+
+        this.postLaunchInfo = this.postLaunchInfo || [];
+
+        this.postLaunchInfo.push(info);
+
+    }
+
+
+
+});

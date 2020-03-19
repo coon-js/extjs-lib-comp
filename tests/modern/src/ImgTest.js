@@ -1,4 +1,3 @@
-<!--
 /**
  * coon.js
  * lib-cn_comp
@@ -23,21 +22,32 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
--->
 
-<!DOCTYPE html>
- <html>
-  <head>
+describe('coon.comp.ImgTest', function(t) {
 
-    <!-- Siesta CSS e.g. siesta-all.css-->
-    <link rel="stylesheet" type="text/css" href="[PATH_TO_SIESTA_ALL.CSS]">
 
-    <!-- Siesta application e.g. siesta-all.js -->
-    <script type="text/javascript" src="[PATH_TO_SIESTA_ALL.JS]"></script>
 
-    <!-- The test harness -->
-    <script type="text/javascript" src="tests.config.js"></script>
-    <script type="text/javascript" src="index.js"></script>
-  </head>
-  <body></body>
- </html>
+// +----------------------------------------------------------------------------
+// |                    =~. Tests .~=
+// +----------------------------------------------------------------------------
+
+    t.it('test class and configuration', function(t) {
+
+        let img = Ext.create('coon.comp.Img', {
+            renderTo : document.body
+        });
+
+
+        t.isInstanceOf(img, 'Ext.Img');
+
+
+        img.setGlyph("xf007@FontAwesome");
+
+        t.isInstanceOf(img.getGlyph(), "Ext.Glyph");
+
+        t.expect(img.getGlyph().character).toBe(img.el.dom.innerHTML);
+
+    });
+
+
+});
