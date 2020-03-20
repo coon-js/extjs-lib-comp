@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -23,15 +23,15 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe('coon.comp.app.ApplicationTest', function(t) {
+describe("coon.comp.app.ApplicationTest", function (t) {
 
     let app;
 
-    t.beforeEach(function() {
+    t.beforeEach(function () {
         Ext.isModern && Ext.viewport.Viewport.setup();
     });
 
-    t.afterEach(function() {
+    t.afterEach(function () {
 
         if (app) {
             if (app.getMainView()) {
@@ -50,129 +50,125 @@ describe('coon.comp.app.ApplicationTest', function(t) {
 
     });
 
-// +----------------------------------------------------------------------------
-// |                    =~. Unit Tests .~=
-// +----------------------------------------------------------------------------
-
+    // +----------------------------------------------------------------------------
+    // |                    =~. Unit Tests .~=
+    // +----------------------------------------------------------------------------
     
     
-t.requireOk(
-        'coon.universal.test.container.mock.ViewportMock',
-        'coon.universal.test.app.mock.ViewModelMock',
-        'coon.universal.test.app.mock.PackageControllerMock',
-        'coon.universal.test.app.mock.PackageControllerMock1',
-        'coon.universal.test.app.mock.PackageControllerMock2',
-        'coon.universal.test.app.mock.PackageControllerMock3',
-        'coon.universal.test.app.mock.PackageControllerMockFalse', function() {
+    t.requireOk(
+        "coon.universal.test.container.mock.ViewportMock",
+        "coon.universal.test.app.mock.ViewModelMock",
+        "coon.universal.test.app.mock.PackageControllerMock",
+        "coon.universal.test.app.mock.PackageControllerMock1",
+        "coon.universal.test.app.mock.PackageControllerMock2",
+        "coon.universal.test.app.mock.PackageControllerMock3",
+        "coon.universal.test.app.mock.PackageControllerMockFalse", function () {
 
 
+            t.it("Should create mainView if configured properly", function (t) {
 
-    t.it('Should create mainView if configured properly', function(t) {
+                app = Ext.create("coon.comp.app.Application", {
+                    name                          : "test",
+                    mainView                      : "coon.comp.container.Viewport"
+                });
 
-        app = Ext.create('coon.comp.app.Application', {
-            name                          : 'test',
-            mainView                      : 'coon.comp.container.Viewport'
-        });
-
-        t.expect(app.getMainView() instanceof coon.comp.container.Viewport).toBeTruthy();
-    });
-
-
-
-    t.it('Should NOT call ViewportMock\'s postLaunchHook', function(t) {
-
-        app = Ext.create('coon.comp.app.Application', {
-            name                          : 'test',
-            mainView                      : 'coon.universal.test.container.mock.ViewportMock'
-        });
-
-        t.expect(app.getMainView().postLaunchInfo).toBeNull();
-    });
-
-
-    t.it('Should call ViewportMock\'s postLaunchHook', function(t) {
-
-
-        app = Ext.create('coon.comp.app.Application', {
-            controllers : [
-                'coon.universal.test.app.mock.PackageControllerMock'
-            ],
-            name                          : 'test',
-            mainView                      : 'coon.universal.test.container.mock.ViewportMock'
-        });
-
-        t.expect(app.getMainView().postLaunchInfo.length).toBe(1);
-        t.expect(app.getMainView().postLaunchInfo[0]).toBe(true);
-    });
-
-
-    t.it('Should call ViewportMock\'s postLaunchHook 2 times', function(t) {
-
-
-        app = Ext.create('coon.comp.app.Application', {
-            controllers : [
-                'coon.universal.test.app.mock.PackageControllerMock',
-                'coon.universal.test.app.mock.PackageControllerMock1'
-            ],
-            name                          : 'test',
-            mainView                      : 'coon.universal.test.container.mock.ViewportMock'
-        });
-
-        t.expect(app.getMainView().postLaunchInfo.length).toBe(2);
-        t.expect(app.getMainView().postLaunchInfo[1]).toEqual({});
-    });
-
-
-    t.it('4 controllers, 1 returns undefined, should call ViewportMock\'s postLaunchHook 3 times', function(t) {
-
-        app = Ext.create('coon.comp.app.Application', {
-            controllers : [
-                'coon.universal.test.app.mock.PackageControllerMock',
-                'coon.universal.test.app.mock.PackageControllerMock1',
-                'coon.universal.test.app.mock.PackageControllerMock2',
-                'coon.universal.test.app.mock.PackageControllerMock3'
-            ],
-            name                          : 'test',
-            mainView                      : 'coon.universal.test.container.mock.ViewportMock'
-        });
-
-        t.expect(app.getMainView().postLaunchInfo.length).toBe(3);
-        t.expect(app.getMainView().postLaunchInfo[2]).toBeNull();
-    });
-
-
-    t.it('activateViewForHash()', function(t) {
-
-        app = Ext.create('coon.comp.app.Application', {
-                name     : 'test',
-                mainView : 'coon.comp.container.Viewport'
-            }),
-            called = false;
-
-        app.getMainView().activateViewForHash = function() {
-            called = true;
-        }
-
-        t.expect(called).toBe(false);
-        t.expect(app.activateViewForHash());
-        t.expect(called).toBe(true);
-    });
-
-
-    t.it('Should throw an error if setup is complete, but mainView is no instance of coon.comp.container.Viewport', function(t) {
-        var exc = undefined;
-
-        try {
-            app = Ext.create('coon.comp.app.Application', {
-                name                          : 'test',
-                mainView                      : 'Ext.Panel'
+                t.expect(app.getMainView() instanceof coon.comp.container.Viewport).toBeTruthy();
             });
-        } catch(e) {exc = e;}
-
-        t.expect(exc).toBeDefined();
-        t.expect(exc.msg).toBeDefined();
-    });
 
 
+            t.it("Should NOT call ViewportMock's postLaunchHook", function (t) {
 
-})});
+                app = Ext.create("coon.comp.app.Application", {
+                    name                          : "test",
+                    mainView                      : "coon.universal.test.container.mock.ViewportMock"
+                });
+
+                t.expect(app.getMainView().postLaunchInfo).toBeNull();
+            });
+
+
+            t.it("Should call ViewportMock's postLaunchHook", function (t) {
+
+
+                app = Ext.create("coon.comp.app.Application", {
+                    controllers : [
+                        "coon.universal.test.app.mock.PackageControllerMock"
+                    ],
+                    name                          : "test",
+                    mainView                      : "coon.universal.test.container.mock.ViewportMock"
+                });
+
+                t.expect(app.getMainView().postLaunchInfo.length).toBe(1);
+                t.expect(app.getMainView().postLaunchInfo[0]).toBe(true);
+            });
+
+
+            t.it("Should call ViewportMock's postLaunchHook 2 times", function (t) {
+
+
+                app = Ext.create("coon.comp.app.Application", {
+                    controllers : [
+                        "coon.universal.test.app.mock.PackageControllerMock",
+                        "coon.universal.test.app.mock.PackageControllerMock1"
+                    ],
+                    name                          : "test",
+                    mainView                      : "coon.universal.test.container.mock.ViewportMock"
+                });
+
+                t.expect(app.getMainView().postLaunchInfo.length).toBe(2);
+                t.expect(app.getMainView().postLaunchInfo[1]).toEqual({});
+            });
+
+
+            t.it("4 controllers, 1 returns undefined, should call ViewportMock's postLaunchHook 3 times", function (t) {
+
+                app = Ext.create("coon.comp.app.Application", {
+                    controllers : [
+                        "coon.universal.test.app.mock.PackageControllerMock",
+                        "coon.universal.test.app.mock.PackageControllerMock1",
+                        "coon.universal.test.app.mock.PackageControllerMock2",
+                        "coon.universal.test.app.mock.PackageControllerMock3"
+                    ],
+                    name                          : "test",
+                    mainView                      : "coon.universal.test.container.mock.ViewportMock"
+                });
+
+                t.expect(app.getMainView().postLaunchInfo.length).toBe(3);
+                t.expect(app.getMainView().postLaunchInfo[2]).toBeNull();
+            });
+
+
+            t.it("activateViewForHash()", function (t) {
+
+                app = Ext.create("coon.comp.app.Application", {
+                    name     : "test",
+                    mainView : "coon.comp.container.Viewport"
+                });
+                let called = false;
+
+                app.getMainView().activateViewForHash = function () {
+                    called = true;
+                };
+
+                t.expect(called).toBe(false);
+                t.expect(app.activateViewForHash());
+                t.expect(called).toBe(true);
+            });
+
+
+            t.it("Should throw an error if setup is complete, but mainView is no instance of coon.comp.container.Viewport", function (t) {
+                var exc = undefined;
+
+                try {
+                    app = Ext.create("coon.comp.app.Application", {
+                        name                          : "test",
+                        mainView                      : "Ext.Panel"
+                    });
+                } catch(e) {exc = e;}
+
+                t.expect(exc).toBeDefined();
+                t.expect(exc.msg).toBeDefined();
+            });
+
+
+        });});

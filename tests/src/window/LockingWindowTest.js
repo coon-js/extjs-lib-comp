@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -23,11 +23,11 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe('coon.comp.window.LockingWindowTest', function(t) {
+describe("coon.comp.window.LockingWindowTest", function (t) {
 
-    t.it("Sanitize tests for LockingWindow specifics", function(t) {
+    t.it("Sanitize tests for LockingWindow specifics", function (t) {
 
-        var w = Ext.create('coon.comp.window.LockingWindow', {
+        var w = Ext.create("coon.comp.window.LockingWindow", {
             modal     : false,
             maximized : false,
             closable  : true,

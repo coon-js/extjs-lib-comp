@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -31,17 +31,17 @@
  * The modern toolkit is unaware of this property and instead call the show()
  * method in it's constructor.
  */
-Ext.define('coon.comp.window.LockingWindow', {
+Ext.define("coon.comp.window.LockingWindow", {
 
-    extend : 'Ext.window.Window',
+    extend : "Ext.window.Window",
 
-    alias : 'widget.cn_comp-lockingwindow',
+    alias : "widget.cn_comp-lockingwindow",
 
-    cls : 'cn_comp-lockingwindow',
+    cls : "cn_comp-lockingwindow",
 
     autoShow   : true,
 
-    titleAlign : 'center',
+    titleAlign : "center",
 
     maximized  : true,
     modal      : true,
@@ -53,7 +53,7 @@ Ext.define('coon.comp.window.LockingWindow', {
      *
      * @param config
      */
-    constructor : function(config) {
+    constructor : function (config) {
 
         const me = this;
 

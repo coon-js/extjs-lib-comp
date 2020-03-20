@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -30,9 +30,9 @@
  * For the modern toolkit, this instance extends from Ext.Panel,
  * whereas for the classic toolkit Ext.container.Viewport is being used.
  */
-Ext.define('coon.comp.container.Viewport', {
+Ext.define("coon.comp.container.Viewport", {
 
-    extend : 'Ext.Panel',
+    extend : "Ext.Panel",
 
     /**
      * Method gets called by {@link coon.comp.app.Application#postLaunchHookProcess}

@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2019 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -55,9 +55,9 @@
  *      });
  *
  */
-Ext.define('coon.comp.form.field.FileButton', {
+Ext.define("coon.comp.form.field.FileButton", {
 
-    extend : 'Ext.form.field.FileButton',
+    extend : "Ext.form.field.FileButton",
 
     requires : [
         /**
@@ -65,10 +65,10 @@ Ext.define('coon.comp.form.field.FileButton', {
          * @bug this is needed so the css styles for the FileButton get loaded.
          * Otherwise, the FileButton is not properly rendered in production mode.
          */
-        'Ext.form.field.File'
+        "Ext.form.field.File"
     ],
 
-    alias : 'widget.cn_comp-formfieldfilebutton',
+    alias : "widget.cn_comp-formfieldfilebutton",
 
     /**
      * @event change
@@ -84,11 +84,11 @@ Ext.define('coon.comp.form.field.FileButton', {
      * Inherits parent's template and adds "multiple" attribute
      */
     afterTpl: [
-        '<input id="{id}-fileInputEl" data-ref="fileInputEl" class="{childElCls} {inputCls}" ',
-        'type="file" size="1" name="{inputName}" multiple="true" unselectable="on" ',
-        '<tpl if="accept != null">accept="{accept}"</tpl>',
-        '<tpl if="tabIndex != null">tabindex="{tabIndex}"</tpl>',
-        '>'
+        "<input id=\"{id}-fileInputEl\" data-ref=\"fileInputEl\" class=\"{childElCls} {inputCls}\" ",
+        "type=\"file\" size=\"1\" name=\"{inputName}\" multiple=\"true\" unselectable=\"on\" ",
+        "<tpl if=\"accept != null\">accept=\"{accept}\"</tpl>",
+        "<tpl if=\"tabIndex != null\">tabindex=\"{tabIndex}\"</tpl>",
+        ">"
     ],
 
     /**
@@ -97,11 +97,11 @@ Ext.define('coon.comp.form.field.FileButton', {
      * Overriden to make sure the fileList of this button is passed as a fourth
      * argument to any listening observer.
      */
-    fireChange: function(evt) {
+    fireChange: function (evt) {
         var me      = this,
             fileDom = me.fileInputEl.dom;
 
-        me.fireEvent('change', me, evt, fileDom.value, fileDom.files);
+        me.fireEvent("change", me, evt, fileDom.value, fileDom.files);
     }
 
 });

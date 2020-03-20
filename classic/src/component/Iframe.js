@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2019 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -42,17 +42,17 @@
  *     iframe.setSrcDoc("Hello World");
  *
  */
-Ext.define('coon.comp.component.Iframe', {
+Ext.define("coon.comp.component.Iframe", {
 
-    extend : 'Ext.Component',
+    extend : "Ext.Component",
 
-    alias : 'widget.cn_comp-iframe',
+    alias : "widget.cn_comp-iframe",
 
     renderTpl: [
-        '<iframe sandbox="{sandbox}" scrolling="{scrolling}" id="{id}-cn_iframeEl" data-ref="cn_iframeEl" name="{name}" width="100%" height="100%" frameborder="0"></iframe>'
+        "<iframe sandbox=\"{sandbox}\" scrolling=\"{scrolling}\" id=\"{id}-cn_iframeEl\" data-ref=\"cn_iframeEl\" name=\"{name}\" width=\"100%\" height=\"100%\" frameborder=\"0\"></iframe>"
     ],
 
-    childEls: ['cn_iframeEl'],
+    childEls: ["cn_iframeEl"],
 
     /**
      * Fired when the iframe loaded it's url/srcdoc.
@@ -90,7 +90,7 @@ Ext.define('coon.comp.component.Iframe', {
 
         me.callParent();
 
-        me.name = me.name || me.id + '-frame';
+        me.name = me.name || me.id + "-frame";
     },
 
 
@@ -99,13 +99,13 @@ Ext.define('coon.comp.component.Iframe', {
      *
      * @see #onLoad
      */
-    initEvents : function() {
+    initEvents : function () {
 
         const me = this;
 
         me.callParent(arguments);
 
-        me.cn_iframeEl.on('load', me.onLoad, me);
+        me.cn_iframeEl.on("load", me.onLoad, me);
     },
 
 
@@ -115,11 +115,11 @@ Ext.define('coon.comp.component.Iframe', {
      *
      * @private
      */
-    onLoad : function() {
+    onLoad : function () {
 
         const me = this;
 
-        me.fireEvent('load', me);
+        me.fireEvent("load", me);
 
     },
 
@@ -127,7 +127,7 @@ Ext.define('coon.comp.component.Iframe', {
     /**
      * @inheritdoc
      */
-    initRenderData: function() {
+    initRenderData: function () {
         const me = this;
 
         return Ext.apply(me.callParent(arguments), {
@@ -144,7 +144,7 @@ Ext.define('coon.comp.component.Iframe', {
      * @return {HTMLElement}
      */
 
-    getBody : function() {
+    getBody : function () {
 
         const me = this;
 
@@ -158,7 +158,7 @@ Ext.define('coon.comp.component.Iframe', {
      * Fires the
      * @param {String} value
      */
-    setSrcDoc : function(value) {
+    setSrcDoc : function (value) {
         const me = this;
 
         if (!value) {
@@ -176,7 +176,7 @@ Ext.define('coon.comp.component.Iframe', {
      *
      * @returns {string}
      */
-    getSrcDoc : function() {
+    getSrcDoc : function () {
 
         const me = this;
 

@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2019 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -26,10 +26,10 @@
 /**
  * @private
  */
-Ext.define('coon.universal.test.app.mock.PackageControllerMock1', {
-    extend : 'coon.universal.test.app.mock.PackageControllerMock',
+Ext.define("coon.universal.test.app.mock.PackageControllerMock1", {
+    extend : "coon.universal.test.app.mock.PackageControllerMock",
 
-    postLaunchHook : function() {
+    postLaunchHook : function () {
 
         return {};
 

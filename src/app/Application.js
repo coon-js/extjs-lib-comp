@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -30,13 +30,13 @@
  *
  * @inheritdoc
  */
-Ext.define('coon.comp.app.Application', {
+Ext.define("coon.comp.app.Application", {
 
-    extend: 'coon.core.app.Application',
+    extend: "coon.core.app.Application",
 
     requires: [
-        'coon.core.app.PackageController',
-        'coon.comp.container.Viewport'
+        "coon.core.app.PackageController",
+        "coon.comp.container.Viewport"
     ],
 
 
@@ -48,7 +48,7 @@ Ext.define('coon.comp.app.Application', {
      * {@link coon.comp.container.Viewport#addPostLaunchInfo} method.
      *
      */
-    postLaunchHookProcess : function() {
+    postLaunchHookProcess : function () {
 
         var me          = this,
             ctrl        = null,
@@ -92,7 +92,7 @@ Ext.define('coon.comp.app.Application', {
      *
      * @see {@link coon.comp.container.Viewport#activateViewForHash}
      */
-    activateViewForHash : function(hash) {
+    activateViewForHash : function (hash) {
         var me = this;
         return me.getMainView().activateViewForHash(hash, me.getDefaultToken());
     },
@@ -102,10 +102,10 @@ Ext.define('coon.comp.app.Application', {
      * @inheritdoc
      * @throws if view is not instance of coon.comp.container.Viewport
      */
-    applyMainView : function(view) {
+    applyMainView : function (view) {
 
         const me      = this,
-              appView = me.callParent(arguments);
+            appView = me.callParent(arguments);
 
         if (appView !== undefined && !(appView instanceof coon.comp.container.Viewport)) {
             Ext.raise({

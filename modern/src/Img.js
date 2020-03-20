@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_user
- * Copyright (C) 2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_user
+ * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_user
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,15 +27,15 @@
  * Implementation of Ext.Img, providing glyph support with Ext.Img
  * in modern toolkit
  */
-Ext.define('coon.comp.Img', {
+Ext.define("coon.comp.Img", {
 
-    extend : 'Ext.Img',
+    extend : "Ext.Img",
 
     config : {
         glyph : undefined
     },
 
-    applyGlyph: function(glyph, oldGlyph) {
+    applyGlyph: function (glyph, oldGlyph) {
         if (glyph) {
             if (!glyph.isGlyph) {
                 glyph = Ext.create("Ext.Glyph", glyph);
@@ -50,9 +50,9 @@ Ext.define('coon.comp.Img', {
     },
 
 
-    updateGlyph: function(glyph) {
+    updateGlyph: function (glyph) {
         const me = this,
-              el = me.el;
+            el = me.el;
 
         if (el) {
             el.dom.innerHTML = glyph.character;

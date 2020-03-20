@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2019 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -26,21 +26,21 @@
 /**
  * Ext.ux.ajax.SimManager hook for fixture data.
  */
-Ext.define('coon.comp.fixtures.sim.ItemSim', {
+Ext.define("coon.comp.fixtures.sim.ItemSim", {
 
     requires : [
-        'coon.comp.fixtures.sim.Init',
-        'coon.comp.fixtures.sim.ItemTable'
+        "coon.comp.fixtures.sim.Init",
+        "coon.comp.fixtures.sim.ItemTable"
     ]
 
-}, function() {
+}, function () {
 
     Ext.ux.ajax.SimManager.register({
-        type : 'json',
+        type : "json",
 
         url  : /cn_comp\/fixtures\/Livegrid(\/\d+)?/,
 
-        doPut : function(ctx) {
+        doPut : function (ctx) {
 
             var me        = this,
                 ret       = {},
@@ -48,7 +48,7 @@ Ext.define('coon.comp.fixtures.sim.ItemSim', {
                 values    = {};
 
             for (var i in ctx.xhr.options.jsonData) {
-                if (!ctx.xhr.options.jsonData.hasOwnProperty(i)) {
+                if (!Object.prototype.hasOwnProperty.call(ctx.xhr.options.jsonData, i)) {
                     continue;
                 }
                 values[i] = ctx.xhr.options.jsonData[i];
@@ -66,7 +66,7 @@ Ext.define('coon.comp.fixtures.sim.ItemSim', {
         },
 
 
-        data: function(ctx) {
+        data: function (ctx) {
 
             var idPart    = ctx.url.match(this.url)[1],
                 filters   = ctx.params.filter,
@@ -79,12 +79,12 @@ Ext.define('coon.comp.fixtures.sim.ItemSim', {
                 id = parseInt(idPart.substring(1), 10);
                 return {data : Ext.Array.findBy(
                     items,
-                    function(item) {
-                        return item.id === '' + id;
+                    function (item) {
+                        return item.id === "" + id;
                     }
                 )};
             } else if (filters) {
-                Ext.raise('no filter supported');
+                Ext.raise("no filter supported");
             } else {
 
                 if (isEmpty) {
@@ -94,7 +94,6 @@ Ext.define('coon.comp.fixtures.sim.ItemSim', {
             }
         }
     });
-
 
 
 });

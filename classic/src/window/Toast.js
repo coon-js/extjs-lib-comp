@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2019 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -29,16 +29,16 @@
  * @example
  *    coon.Toast.warn("This is a warning");
  */
-Ext.define('coon.comp.window.Toast', {
+Ext.define("coon.comp.window.Toast", {
 
 
-    extend : 'Ext.window.Toast',
+    extend : "Ext.window.Toast",
 
 
-    alias : 'widget.cn_comp-toast',
+    alias : "widget.cn_comp-toast",
 
 
-    cls : 'cn_comp-toast',
+    cls : "cn_comp-toast",
 
     /**
      * The context for which this toast was created. Will be added as css-class name
@@ -55,7 +55,7 @@ Ext.define('coon.comp.window.Toast', {
     /**
      * @type {String} align="tr"
      */
-    align : 'tr',
+    align : "tr",
 
     /**
      * @type {Boolean} autoClose=true
@@ -66,12 +66,12 @@ Ext.define('coon.comp.window.Toast', {
     /**
      * @inheritdoc
      */
-    constructor : function(cfg) {
+    constructor : function (cfg) {
 
         const me = this;
 
         if (cfg.context) {
-            cfg.cls = this.cls + ' ' + cfg.context;
+            cfg.cls = this.cls + " " + cfg.context;
         }
 
 
@@ -79,11 +79,11 @@ Ext.define('coon.comp.window.Toast', {
     }
 
 
-}, function(Toast) {
+}, function (Toast) {
 
-    coon.Toast = function() {
+    coon.Toast = function () {
 
-        const show = function(message, context) {
+        const show = function (message, context) {
             let toast, cfg = {
                 context : context,
                 html    : message
@@ -104,9 +104,9 @@ Ext.define('coon.comp.window.Toast', {
              *
              * @return {coon.comp.window.Toast}
              */
-            fail : function(message) {
+            fail : function (message) {
 
-                return show(message, 'error');
+                return show(message, "error");
 
             },
 
@@ -117,9 +117,9 @@ Ext.define('coon.comp.window.Toast', {
              *
              * @return {coon.comp.window.Toast}
              */
-            warn : function(message) {
+            warn : function (message) {
 
-                return show(message, 'warning');
+                return show(message, "warning");
             },
 
 
@@ -130,12 +130,12 @@ Ext.define('coon.comp.window.Toast', {
              *
              * @return {coon.comp.window.Toast}
              */
-            info : function(message) {
+            info : function (message) {
 
-                return show(message, 'info');
+                return show(message, "info");
             }
 
-        }
+        };
 
     }();
 

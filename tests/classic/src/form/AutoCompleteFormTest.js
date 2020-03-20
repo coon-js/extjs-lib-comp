@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2019 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -23,48 +23,48 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe('coon.comp.form.AutCompleteFormTest', function(t) {
+describe("coon.comp.form.AutCompleteFormTest", function (t) {
 
 
-// +----------------------------------------------------------------------------
-// |                    =~. Unit Tests .~=
-// +----------------------------------------------------------------------------
+    // +----------------------------------------------------------------------------
+    // |                    =~. Unit Tests .~=
+    // +----------------------------------------------------------------------------
 
-    t.requireOk('coon.comp.form.AutoCompleteForm', function() {
+    t.requireOk("coon.comp.form.AutoCompleteForm", function () {
 
         var form,
             formConfig,
             currId;
 
-        t.beforeEach(function(t){
+        t.beforeEach(function (t){
 
             currId = Ext.id();
 
             formConfig = {
                 id    : currId,
-                xtype : 'cn_comp-autocompleteform',
+                xtype : "cn_comp-autocompleteform",
                 width : 400,
                 height : 200,
                 renderTo : document.body,
                 items : [{
-                    xtype : 'textfield',
-                    value : 'a',
-                    name  : 'focusMeToo'
+                    xtype : "textfield",
+                    value : "a",
+                    name  : "focusMeToo"
                 }, {
-                    xtype : 'textfield',
+                    xtype : "textfield",
                     name  : "focusMe"
                 }, {
-                    xtype     : 'textfield',
-                    inputType : 'password'
+                    xtype     : "textfield",
+                    inputType : "password"
                 }, {
-                    xtype        : 'textfield',
-                    inputType    : 'password',
+                    xtype        : "textfield",
+                    inputType    : "password",
                     autoComplete : false
                 }]
             };
         });
 
-        t.afterEach(function(t) {
+        t.afterEach(function (t) {
 
             if (form) {
                 form.destroy();
@@ -73,8 +73,8 @@ describe('coon.comp.form.AutCompleteFormTest', function(t) {
 
             if (document.getElementById(currId)) {
                 document.getElementById(currId)
-                        .parentNode
-                        .removeChild(document.getElementById(currId));
+                    .parentNode
+                    .removeChild(document.getElementById(currId));
             }
 
             formConfig = null;
@@ -83,30 +83,30 @@ describe('coon.comp.form.AutCompleteFormTest', function(t) {
 
         // -------------------------------------------------------------------------
 
-        t.it('Should build the form with autocomplete attributes (autoCompleteTrigger=false)', function(t) {
-            formConfig.formName = 'testform';
+        t.it("Should build the form with autocomplete attributes (autoCompleteTrigger=false)", function (t) {
+            formConfig.formName = "testform";
             form = Ext.widget(formConfig);
 
             t.expect(form.autoCompleteTrigger).toBe(false);
             t.expect(form.submitHelperButton).toBeNull();
-            t.expect(form.el.dom.tagName.toLowerCase()).toBe('form');
-            t.expect(form.el.dom.method.toLowerCase()).toBe('post');
+            t.expect(form.el.dom.tagName.toLowerCase()).toBe("form");
+            t.expect(form.el.dom.method.toLowerCase()).toBe("post");
             t.expect(form.el.dom.name).toBe("testform");
 
         });
 
-        t.it('Should have added autocomplete attribute to some fields (autoCompleteTrigger=false)', function(t) {
+        t.it("Should have added autocomplete attribute to some fields (autoCompleteTrigger=false)", function (t) {
             form = Ext.widget(formConfig);
 
             var c = 0,
                 i = 0;
 
-            Ext.each(form.query('textfield'), function (field) {
+            Ext.each(form.query("textfield"), function (field) {
                 if (field.autoComplete === false) {
-                    t.expect(field.inputEl.dom.autocomplete).toBe('off');
+                    t.expect(field.inputEl.dom.autocomplete).toBe("off");
                     i++;
                 } else {
-                    t.expect(field.inputEl.dom.autocomplete).toBe('on');
+                    t.expect(field.inputEl.dom.autocomplete).toBe("on");
                     c++;
                 }
 
@@ -118,11 +118,11 @@ describe('coon.comp.form.AutCompleteFormTest', function(t) {
         });
 
 
-        t.it('Second textfield should have the focus (autoCompleteTrigger=false)', function(t) {
+        t.it("Second textfield should have the focus (autoCompleteTrigger=false)", function (t) {
             form = Ext.widget(formConfig);
 
-            var el  = form.down('textfield[name=focusMe]'),
-                el2 = form.down('textfield[name=focusMeToo]');
+            var el  = form.down("textfield[name=focusMe]"),
+                el2 = form.down("textfield[name=focusMeToo]");
 
             t.expect(document.activeElement).not.toBe(el2.inputEl.dom);
             t.expect(document.activeElement).not.toBe(el.inputEl.dom);
@@ -137,11 +137,11 @@ describe('coon.comp.form.AutCompleteFormTest', function(t) {
 
         });
 
-        t.it("Should be okay with missing actionUrl (autoCompleteTrigger {})", function(t) {
+        t.it("Should be okay with missing actionUrl (autoCompleteTrigger {})", function (t) {
 
             form = Ext.widget(Ext.apply({
                 autoCompleteTrigger : {
-                    reference : 'somebutton'
+                    reference : "somebutton"
                 },
                 buttons : [{
                     text      : "Login",
@@ -151,21 +151,21 @@ describe('coon.comp.form.AutCompleteFormTest', function(t) {
 
             t.expect(form.defaultFakeActionUrl).not.toBeNull();
             t.expect(form.defaultFakeActionUrl).toBeDefined();
-            t.expect(form.defaultFakeActionUrl).toBe('./resources/html/blank.html');
+            t.expect(form.defaultFakeActionUrl).toBe("./resources/html/blank.html");
 
             t.expect(form.autoCompleteTrigger.actionUrl)
-             .toBe('./resources/html/blank.html');
+                .toBe("./resources/html/blank.html");
 
         });
 
-        t.it('Should be okay with autoCompleteTrigger', function(t) {
+        t.it("Should be okay with autoCompleteTrigger", function (t) {
 
             var wasClicked = false;
 
             var form = Ext.widget(Ext.apply({
                 autoCompleteTrigger : {
-                    actionUrl : './foo.bar',
-                    reference : 'somebuttonNew'
+                    actionUrl : "./foo.bar",
+                    reference : "somebuttonNew"
                 },
                 buttons : [{
                     text      : "Login",
@@ -177,11 +177,11 @@ describe('coon.comp.form.AutCompleteFormTest', function(t) {
             t.expect(form.submitHelperButton).toBeDefined();
 
             if (Ext.isChrome) {
-                form.submitHelperButton.addEventListener('click', function(){
+                form.submitHelperButton.addEventListener("click", function (){
                     wasClicked = true;
                 });
             } else {
-                Ext.get(form.submitHelperButton).on('click', function(){
+                Ext.get(form.submitHelperButton).on("click", function (){
                     wasClicked = true;
                 });
             }
@@ -189,19 +189,17 @@ describe('coon.comp.form.AutCompleteFormTest', function(t) {
             t.expect(wasClicked).toBe(false);
 
 
-            t.click(form.down('button[reference=somebuttonNew]'), function() {
+            t.click(form.down("button[reference=somebuttonNew]"), function () {
                 t.expect(wasClicked).toBe(true);
             });
 
 
-
         });
 
 
-
-        t.it('Should throw error for missing reference (autoCompleteTrigger {})', function(t) {
+        t.it("Should throw error for missing reference (autoCompleteTrigger {})", function (t) {
             formConfig.autoCompleteTrigger = {
-                actionUrl : 'foo.bar'
+                actionUrl : "foo.bar"
             };
             var exc = undefined;
             try {
@@ -214,10 +212,10 @@ describe('coon.comp.form.AutCompleteFormTest', function(t) {
 
         });
 
-        t.it('Should trigger error with missing reference target (autoCompleteTrigger {})', function(t) {
+        t.it("Should trigger error with missing reference target (autoCompleteTrigger {})", function (t) {
             formConfig.autoCompleteTrigger = {
-                actionUrl : 'foo.bar',
-                reference : 'somebutton'
+                actionUrl : "foo.bar",
+                reference : "somebutton"
             };
             var exc = undefined;
 
@@ -231,7 +229,7 @@ describe('coon.comp.form.AutCompleteFormTest', function(t) {
             t.expect(exc.msg).toBeDefined();
         });
 
-        t.it('Should throw error for wrong value for autoCompleteTrigger (autoCompleteTrigger {})', function(t) {
+        t.it("Should throw error for wrong value for autoCompleteTrigger (autoCompleteTrigger {})", function (t) {
             formConfig.autoCompleteTrigger = true;
             var exc = undefined;
             try {
@@ -246,8 +244,6 @@ describe('coon.comp.form.AutCompleteFormTest', function(t) {
 
 
     }); // EO requireOK
-
-
 
 
 });

@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2019 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -23,19 +23,19 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe('coon.comp.container.LoadMaskTest', function(t) {
+describe("coon.comp.container.LoadMaskTest", function (t) {
 
     var panel;
 
-    t.beforeEach(function() {
-        panel = Ext.create('Ext.Panel', {
+    t.beforeEach(function () {
+        panel = Ext.create("Ext.Panel", {
             renderTo : document.body,
             width    : 600,
             height   : 400
         });
     });
 
-    t.afterEach(function() {
+    t.afterEach(function () {
         if (panel) {
             panel.destroy();
             panel = null;
@@ -43,69 +43,68 @@ describe('coon.comp.container.LoadMaskTest', function(t) {
     });
 
 
+    // +----------------------------------------------------------------------------
+    // |                    =~. Tests .~=
+    // +----------------------------------------------------------------------------
 
-// +----------------------------------------------------------------------------
-// |                    =~. Tests .~=
-// +----------------------------------------------------------------------------
+    t.it("test class and configuration", function (t) {
+        var w = Ext.create("coon.comp.component.LoadMask", {
+            target : panel
+        });
 
-    t.it('test class and configuration', function(t) {
-        var w = Ext.create('coon.comp.component.LoadMask', {
-                target : panel
-            });
+        t.isInstanceOf(w, "Ext.LoadMask");
 
-        t.isInstanceOf(w, 'Ext.LoadMask');
-
-        t.expect(w.cls).toContain('cn_comp-loadmask');
+        t.expect(w.cls).toContain("cn_comp-loadmask");
 
         t.expect(w.childEls.msgActionEl).toBeDefined();
         t.expect(w.childEls.bar).toBeDefined();
 
         t.expect(w.msgWidth).toBe(200);
-        t.expect(w.glyphCls).toBe('');
+        t.expect(w.glyphCls).toBe("");
     });
 
 
-    t.it('initRenderData()', function(t) {
-        var w = Ext.create('coon.comp.component.LoadMask', {
+    t.it("initRenderData()", function (t) {
+        var w = Ext.create("coon.comp.component.LoadMask", {
                 target    : panel,
-                glyphCls  : 'fa fa-envelope',
+                glyphCls  : "fa fa-envelope",
                 msgWidth  : 300,
-                msgAction : 'foo'
+                msgAction : "foo"
             }),
             result = w.initRenderData();
 
-        t.expect(result.glyphCls).toBe('fa fa-envelope');
+        t.expect(result.glyphCls).toBe("fa fa-envelope");
         t.expect(result.msgWidth).toBe(300);
-        t.expect(result.msgAction).toBe('foo');
+        t.expect(result.msgAction).toBe("foo");
 
     });
 
 
-    t.it('updateActionMsg()', function(t) {
-        var w = Ext.create('coon.comp.component.LoadMask', {
+    t.it("updateActionMsg()", function (t) {
+        var w = Ext.create("coon.comp.component.LoadMask", {
                 target    : panel,
-                msgAction : 'foo'
+                msgAction : "foo"
             }),
             node, m;
 
-        node = Ext.dom.Query.selectNode('div[data-ref=msgActionEl]', w.el.dom);
-        t.expect(node.innerHTML).toBe('foo');
+        node = Ext.dom.Query.selectNode("div[data-ref=msgActionEl]", w.el.dom);
+        t.expect(node.innerHTML).toBe("foo");
 
-        m = w.updateActionMsg('bar');
-        t.expect(node.innerHTML).toBe('bar');
+        m = w.updateActionMsg("bar");
+        t.expect(node.innerHTML).toBe("bar");
         t.expect(m).toBe(w);
     });
 
 
-    t.it('updateProgress()', function(t) {
-        var w = Ext.create('coon.comp.component.LoadMask', {
+    t.it("updateProgress()", function (t) {
+        var w = Ext.create("coon.comp.component.LoadMask", {
                 target    : panel
             }),
             node, m;
 
-        t.isCalled('clearTimer', w);
+        t.isCalled("clearTimer", w);
 
-        node = Ext.dom.Query.selectNode('div[data-ref=bar]', w.el.dom);
+        node = Ext.dom.Query.selectNode("div[data-ref=bar]", w.el.dom);
         t.expect(node.style.width).toBe("0%");
 
         m = w.updateProgress(0.5);
@@ -115,75 +114,75 @@ describe('coon.comp.container.LoadMaskTest', function(t) {
     });
 
 
-    t.it('loopProgress()', function(t) {
-        var w = Ext.create('coon.comp.component.LoadMask', {
+    t.it("loopProgress()", function (t) {
+        var w = Ext.create("coon.comp.component.LoadMask", {
                 target    : panel
             }),
             m, node;
 
-        node = Ext.dom.Query.selectNode('div[data-ref=bar]', w.el.dom);
-        t.expect(node.style.transitionDuration).not.toBe('0.1s');
+        node = Ext.dom.Query.selectNode("div[data-ref=bar]", w.el.dom);
+        t.expect(node.style.transitionDuration).not.toBe("0.1s");
 
         t.expect(w.waitTimer).toBeFalsy();
 
-        t.isCalledOnce('setTransitionDuration', w);
-        t.isCalled('updateProgress', w);
-        t.isntCalled('clearTimer', w);
-        t.isCalled('calculatePercFromTask', w);
+        t.isCalledOnce("setTransitionDuration", w);
+        t.isCalled("updateProgress", w);
+        t.isntCalled("clearTimer", w);
+        t.isCalled("calculatePercFromTask", w);
         m = w.loopProgress({increment: 50, interval : 100});
 
-        t.expect(node.style.transitionDuration).toBe('0.1s');
+        t.expect(node.style.transitionDuration).toBe("0.1s");
 
         t.expect(m).toBe(w);
 
         t.isObject(w.waitTimer);
 
-        t.waitForMs(500, function() {
+        t.waitForMs(500, function () {
             // set timeout so tests can pass
         });
 
     });
 
 
-    t.it('clearTimer()', function(t) {
-        var w = Ext.create('coon.comp.component.LoadMask', {
-                target : panel
-            });
+    t.it("clearTimer()", function (t) {
+        var w = Ext.create("coon.comp.component.LoadMask", {
+            target : panel
+        });
 
         t.expect(w.waitTimer).toBeFalsy();
 
-        t.isntCalled('resetProgress', w);
+        t.isntCalled("resetProgress", w);
         w.loopProgress({increment: 50, interval : 1000});
         t.expect(w.waitTimer).toBeTruthy();
 
-        t.waitForMs(200, function() {
+        t.waitForMs(200, function () {
             w.clearTimer();
             t.expect(w.waitTimer).toBeFalsy();
         });
     });
 
 
-    t.it('stop task with Ext.TaskManager.stop()', function(t) {
-        var w = Ext.create('coon.comp.component.LoadMask', {
-                target : panel
-            });
+    t.it("stop task with Ext.TaskManager.stop()", function (t) {
+        var w = Ext.create("coon.comp.component.LoadMask", {
+            target : panel
+        });
 
         t.expect(w.waitTimer).toBeFalsy();
 
-        t.isCalledOnce('resetProgress', w);
+        t.isCalledOnce("resetProgress", w);
         w.loopProgress({increment: 50, interval : 1000});
         t.expect(w.waitTimer).toBeTruthy();
 
         Ext.TaskManager.stop(w.waitTimer);
 
-        t.waitForMs(200, function() {
+        t.waitForMs(200, function () {
             t.expect(w.waitTimer).toBeFalsy();
         });
     });
 
 
-    t.it('resetBar()', function(t) {
-        var w = Ext.create('coon.comp.component.LoadMask', {
+    t.it("resetBar()", function (t) {
+        var w = Ext.create("coon.comp.component.LoadMask", {
                 target : panel
             }),
             node, m;
@@ -194,9 +193,9 @@ describe('coon.comp.container.LoadMaskTest', function(t) {
         t.expect(m).toBe(w);
         t.isObject(w.waitTimer);
 
-        t.waitForMs(150, function() {
+        t.waitForMs(150, function () {
 
-            node = Ext.dom.Query.selectNode('div[data-ref=bar]', w.el.dom);
+            node = Ext.dom.Query.selectNode("div[data-ref=bar]", w.el.dom);
             t.expect(node.style.width).not.toBe("0%");
 
             w.resetBar();
@@ -209,27 +208,27 @@ describe('coon.comp.container.LoadMaskTest', function(t) {
     });
 
 
-    t.it('hide()', function(t) {
-        var w = Ext.create('coon.comp.component.LoadMask', {
-                target    : panel,
-                msgAction : 'foo'
-            });
+    t.it("hide()", function (t) {
+        var w = Ext.create("coon.comp.component.LoadMask", {
+            target    : panel,
+            msgAction : "foo"
+        });
 
-        t.isCalledOnce('hide', w.superclass);
-        t.isCalledOnce('resetBar', w);
+        t.isCalledOnce("hide", w.superclass);
+        t.isCalledOnce("resetBar", w);
 
         w.hide();
     });
 
 
-    t.it('resetProgress()', function(t) {
-        var w = Ext.create('coon.comp.component.LoadMask', {
+    t.it("resetProgress()", function (t) {
+        var w = Ext.create("coon.comp.component.LoadMask", {
                 target : panel
             }),
             m;
 
-        t.isntCalled('hide', w);
-        t.isCalledOnce('resetBar', w);
+        t.isntCalled("hide", w);
+        t.isCalledOnce("resetBar", w);
 
         m = w.resetProgress();
 
@@ -237,14 +236,14 @@ describe('coon.comp.container.LoadMaskTest', function(t) {
     });
 
 
-    t.it('resetProgress(true)', function(t) {
-        var w = Ext.create('coon.comp.component.LoadMask', {
+    t.it("resetProgress(true)", function (t) {
+        var w = Ext.create("coon.comp.component.LoadMask", {
                 target : panel
             }),
             m;
 
-        t.isCalledOnce('hide', w);
-        t.isCalledNTimes('resetBar', w, 2, "resetBar called 2 times (from hide())");
+        t.isCalledOnce("hide", w);
+        t.isCalledNTimes("resetBar", w, 2, "resetBar called 2 times (from hide())");
 
         m = w.resetProgress(true);
 
@@ -252,8 +251,8 @@ describe('coon.comp.container.LoadMaskTest', function(t) {
     });
 
 
-    t.it('calculatePercFromTask()', function(t) {
-        var w = Ext.create('coon.comp.component.LoadMask', {
+    t.it("calculatePercFromTask()", function (t) {
+        var w = Ext.create("coon.comp.component.LoadMask", {
             target : panel
         });
 
@@ -273,80 +272,79 @@ describe('coon.comp.container.LoadMaskTest', function(t) {
     });
 
 
-    t.it('doDestroy()', function(t) {
-        var w = Ext.create('coon.comp.component.LoadMask', {
-                target : panel
-            });
+    t.it("doDestroy()", function (t) {
+        var w = Ext.create("coon.comp.component.LoadMask", {
+            target : panel
+        });
 
-        t.isCalled('clearTimer', w);
-        t.isCalled('doDestroy', w.superclass);
+        t.isCalled("clearTimer", w);
+        t.isCalled("doDestroy", w.superclass);
 
         w.doDestroy();
     });
 
 
-    t.it('setTransitionDuration()', function(t) {
-        var w = Ext.create('coon.comp.component.LoadMask', {
+    t.it("setTransitionDuration()", function (t) {
+        var w = Ext.create("coon.comp.component.LoadMask", {
                 target : panel
             }),
             node;
 
-        node = Ext.dom.Query.selectNode('div[data-ref=bar]', w.el.dom);
+        node = Ext.dom.Query.selectNode("div[data-ref=bar]", w.el.dom);
         w.setTransitionDuration(12);
-        t.expect(node.style.transitionDuration).toBe('12s');
+        t.expect(node.style.transitionDuration).toBe("12s");
         w.setTransitionDuration(0.5);
-        t.expect(node.style.transitionDuration).toBe('0.5s');
+        t.expect(node.style.transitionDuration).toBe("0.5s");
 
     });
 
 
-    t.it('Should start with specified progress', function(t) {
-        var w = Ext.create('coon.comp.component.LoadMask', {
+    t.it("Should start with specified progress", function (t) {
+        var w = Ext.create("coon.comp.component.LoadMask", {
                 target    : panel,
                 progress  : 0.3
             }),
-            node, m;
+            node;
 
-        node = Ext.dom.Query.selectNode('div[data-ref=bar]', w.el.dom);
+        node = Ext.dom.Query.selectNode("div[data-ref=bar]", w.el.dom);
         t.expect(node.style.width).toBe("30%");
     });
 
 
-    t.it('Manual call to updateProcess() should stop loop timer', function(t) {
-        var w = Ext.create('coon.comp.component.LoadMask', {
-                target    : panel
-            }),
-            m, node;
+    t.it("Manual call to updateProcess() should stop loop timer", function (t) {
+        var w = Ext.create("coon.comp.component.LoadMask", {
+            target    : panel
+        });
 
         w.loopProgress({increment: 50, interval : 100});
 
-        t.isCalled('clearTimer', w);
+        t.isCalled("clearTimer", w);
 
-        t.waitForMs(200, function() {
+        t.waitForMs(200, function () {
             w.updateProgress(1);
         });
 
     });
 
 
-    t.it('updateMsg()', function(t) {
-        var w = Ext.create('coon.comp.component.LoadMask', {
+    t.it("updateMsg()", function (t) {
+        var w = Ext.create("coon.comp.component.LoadMask", {
                 target : panel,
-                msg    : 'foo'
+                msg    : "foo"
             }),
             node, m;
 
-        node = Ext.dom.Query.selectNode('div[data-ref=msgTextEl]', w.el.dom);
-        t.expect(node.innerHTML).toBe('foo');
+        node = Ext.dom.Query.selectNode("div[data-ref=msgTextEl]", w.el.dom);
+        t.expect(node.innerHTML).toBe("foo");
 
-        m = w.updateMsg('bar');
-        t.expect(node.innerHTML).toBe('bar');
+        m = w.updateMsg("bar");
+        t.expect(node.innerHTML).toBe("bar");
         t.expect(m).toBe(w);
     });
 
 
-    t.it('make sure load mask is destroyed', function(t) {
-        var w = Ext.create('coon.comp.component.LoadMask', {
+    t.it("make sure load mask is destroyed", function (t) {
+        var w = Ext.create("coon.comp.component.LoadMask", {
             target : panel
         });
 

@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,20 +27,19 @@
  * ViewPortMock. This instance's addPostLaunchInfo collects the data in a
  * queryable property.
  */
-Ext.define('coon.universal.test.container.mock.ViewportMock', {
+Ext.define("coon.universal.test.container.mock.ViewportMock", {
 
-    extend : 'coon.comp.container.Viewport',
+    extend : "coon.comp.container.Viewport",
 
     postLaunchInfo : null,
 
-    addPostLaunchInfo : function(info) {
+    addPostLaunchInfo : function (info) {
 
         this.postLaunchInfo = this.postLaunchInfo || [];
 
         this.postLaunchInfo.push(info);
 
     }
-
 
 
 });

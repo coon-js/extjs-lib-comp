@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -23,46 +23,46 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe('coon.comp.container.ViewportTest', function(t) {
+describe("coon.comp.container.ViewportTest", function (t) {
 
 
-// +----------------------------------------------------------------------------
-// |                    =~. Unit Tests .~=
-// +----------------------------------------------------------------------------
+    // +----------------------------------------------------------------------------
+    // |                    =~. Unit Tests .~=
+    // +----------------------------------------------------------------------------
 
-    t.it('should be instance of Ext.container.Viewport', function(t) {
-        const w = Ext.create('coon.comp.container.Viewport', {
+    t.it("should be instance of Ext.container.Viewport", function (t) {
+        const w = Ext.create("coon.comp.container.Viewport", {
         });
 
         switch (Ext.isModern) {
-            case true:
-                t.expect(w instanceof Ext.Panel).toBeTruthy();
-                break;
-            case undefined:
-                t.expect(w instanceof Ext.container.Viewport).toBeTruthy();
-                break;
-            default:
-                throw("Unexpected value for \"Ext.isModern\": " + Ext.isModern);
+        case true:
+            t.expect(w instanceof Ext.Panel).toBeTruthy();
+            break;
+        case undefined:
+            t.expect(w instanceof Ext.container.Viewport).toBeTruthy();
+            break;
+        default:
+            throw("Unexpected value for \"Ext.isModern\": " + Ext.isModern);
         }
 
     });
 
-    t.it('postLaunchHook should be Ext.emptyFn', function(t) {
-        var w = Ext.create('coon.comp.container.Viewport', {
+    t.it("postLaunchHook should be Ext.emptyFn", function (t) {
+        var w = Ext.create("coon.comp.container.Viewport", {
         });
 
         t.expect(w.addPostLaunchInfo).toBe(Ext.emptyFn);
     });
 
-    t.it('activateViewForHash()', function(t) {
-        var w = Ext.create('coon.comp.container.Viewport', {
+    t.it("activateViewForHash()", function (t) {
+        var w = Ext.create("coon.comp.container.Viewport", {
         });
 
         t.expect(w.activateViewForHash).toBe(Ext.emptyFn);
     });
 
-    t.it('cleanup()', function(t) {
-        var w = Ext.create('coon.comp.container.Viewport', {
+    t.it("cleanup()", function (t) {
+        var w = Ext.create("coon.comp.container.Viewport", {
         });
 
         t.expect(w.cleanup).toBe(Ext.emptyFn);

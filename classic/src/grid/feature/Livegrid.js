@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2019 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -34,17 +34,17 @@
  * the prefetching mechanism of the BufferedStore.
  *
  */
-Ext.define('coon.comp.grid.feature.Livegrid', {
+Ext.define("coon.comp.grid.feature.Livegrid", {
 
-    extend : 'Ext.grid.feature.Feature',
+    extend : "Ext.grid.feature.Feature",
 
-    alias : 'feature.cn_comp-gridfeature-livegrid',
+    alias : "feature.cn_comp-gridfeature-livegrid",
 
     requires : [
-        'coon.core.data.pageMap.PageMapFeeder',
-        'coon.core.data.pageMap.RecordPosition',
-        'coon.core.data.pageMap.IndexRange',
-        'coon.core.data.pageMap.PageMapUtil'
+        "coon.core.data.pageMap.PageMapFeeder",
+        "coon.core.data.pageMap.RecordPosition",
+        "coon.core.data.pageMap.IndexRange",
+        "coon.core.data.pageMap.PageMapUtil"
     ],
 
 
@@ -69,26 +69,26 @@ Ext.define('coon.comp.grid.feature.Livegrid', {
     /**
      * @inheritdoc
      */
-    init : function(grid) {
+    init : function (grid) {
 
         var me = this;
 
         if (grid.multiColumnSort) {
             Ext.raise({
-                msg             : 'Livegrid does not work with ' +
-                                  'grid\'s "multiColumnSort"-functionality enabled',
+                msg             : "Livegrid does not work with " +
+                                  "grid's \"multiColumnSort\"-functionality enabled",
                 multiColumnSort : grid.multiColumnSort
             });
         }
 
         me.configure(grid.getStore());
-        grid.on('reconfigure', me.onGridReconfigure, me);
+        grid.on("reconfigure", me.onGridReconfigure, me);
 
         me.callParent(arguments);
 
         me.swapSaveFocusState();
 
-        me.mon(me.grid.view.getScrollable(), 'scroll', me.onScroll, me);
+        me.mon(me.grid.view.getScrollable(), "scroll", me.onScroll, me);
 
         me.vetoedPages = [];
     },
@@ -102,7 +102,7 @@ Ext.define('coon.comp.grid.feature.Livegrid', {
      *
      * @return {Boolean}
      */
-    isConfigured : function() {
+    isConfigured : function () {
         return !!this.pageMapFeeder;
     },
 
@@ -117,7 +117,7 @@ Ext.define('coon.comp.grid.feature.Livegrid', {
      *
      * @see coon.core.data.pageMap.PageMapUtil#getRecordById
      */
-    getRecordById : function(id) {
+    getRecordById : function (id) {
 
         const me = this;
 
@@ -135,7 +135,7 @@ Ext.define('coon.comp.grid.feature.Livegrid', {
      * @returns {Boolean} Returns the result of  #refreshView, which returns
      * true in case the view was updated, otherwise false
      */
-    add : function(record) {
+    add : function (record) {
 
         const me = this;
 
@@ -166,20 +166,20 @@ Ext.define('coon.comp.grid.feature.Livegrid', {
      *
      * @private
      */
-    onScroll : function(scroller, x, scrollTop) {
+    onScroll : function (scroller, x, scrollTop) {
 
         const me          = this,
-              vetoedPages = me.vetoedPages,
-              len         = vetoedPages.length;
+            vetoedPages = me.vetoedPages,
+            len         = vetoedPages.length;
 
         if (!len) {
             return;
         }
 
         const rowHeight      = me.grid.view.bufferedRenderer.rowHeight,
-              pageMap        = me.getPageMap(),
-              pageSize       = pageMap.getPageSize(),
-              recordIndex    = Math.round(scrollTop / rowHeight);
+            pageMap        = me.getPageMap(),
+            pageSize       = pageMap.getPageSize(),
+            recordIndex    = Math.round(scrollTop / rowHeight);
 
         let idx, start, end;
 
@@ -212,9 +212,9 @@ Ext.define('coon.comp.grid.feature.Livegrid', {
      *
      * @private
      */
-    onPageRemoveVeto : function(pageMapFeeder, pageNumber) {
+    onPageRemoveVeto : function (pageMapFeeder, pageNumber) {
         const me          = this,
-              vetoedPages = me.vetoedPages;
+            vetoedPages = me.vetoedPages;
 
         if (vetoedPages.indexOf(pageNumber) === -1) {
             me.vetoedPages.push(pageNumber);
@@ -233,10 +233,10 @@ Ext.define('coon.comp.grid.feature.Livegrid', {
      * @returns {Boolean} Returns the result of  #refreshView, which returns
      * true in case the view was updated, otherwise false
      */
-    remove : function(record) {
+    remove : function (record) {
 
         const me       = this,
-              selModel = me.grid.getSelectionModel();
+            selModel = me.grid.getSelectionModel();
 
         let op  = me.pageMapFeeder.remove(record),
             pos = [], result;
@@ -272,17 +272,17 @@ Ext.define('coon.comp.grid.feature.Livegrid', {
      * @return {Boolean} false if no update in the view was triggered, otherwise
      * true
      */
-    onStoreUpdate : function(store, record, operation) {
+    onStoreUpdate : function (store, record, operation) {
 
         const me       = this,
-              sorters  = me.grid.store.getSorters(),
-              selModel = me.grid.getSelectionModel(),
-              property = sorters && sorters.getAt(0)
-                         ? sorters.getAt(0).getProperty()
-                         : null,
-              prev = record.previousValues;
+            sorters  = me.grid.store.getSorters(),
+            selModel = me.grid.getSelectionModel(),
+            property = sorters && sorters.getAt(0)
+                ? sorters.getAt(0).getProperty()
+                : null,
+            prev = record.previousValues;
 
-        if (!property || !prev || !prev.hasOwnProperty(property)) {
+        if (!property || !prev || !Object.prototype.hasOwnProperty.call(prev, property)) {
             return false;
         }
 
@@ -316,7 +316,7 @@ Ext.define('coon.comp.grid.feature.Livegrid', {
      *
      * @private
      */
-    refreshView : function(positions, ensureVisible = true) {
+    refreshView : function (positions, ensureVisible = true) {
 
         const me        = this,
             grid        = me.grid,
@@ -367,13 +367,13 @@ Ext.define('coon.comp.grid.feature.Livegrid', {
      *
      * @private
      */
-    getCurrentViewRange : function() {
+    getCurrentViewRange : function () {
 
         const me          = this,
-              grid        = me.grid,
-              view        = grid.getView(),
-              rows        = view.all,
-              PageMapUtil = coon.core.data.pageMap.PageMapUtil;
+            grid        = me.grid,
+            view        = grid.getView(),
+            rows        = view.all,
+            PageMapUtil = coon.core.data.pageMap.PageMapUtil;
 
         if (rows.endIndex === -1) {
             return null;
@@ -393,9 +393,7 @@ Ext.define('coon.comp.grid.feature.Livegrid', {
      *
      * @private
      */
-    getPageMap : function() {
-        const me = this;
-
+    getPageMap : function () {
         return this.grid.getStore().getData();
     },
 
@@ -415,12 +413,12 @@ Ext.define('coon.comp.grid.feature.Livegrid', {
      * @param {Number} start
      * @param {Number} end
      */
-    onCacheMiss : function(store, start, end) {
+    onCacheMiss : function (store, start, end) {
 
         const me            = this,
-              pageMap       = me.getPageMap(),
-              PageMapUtil   = coon.core.data.pageMap.PageMapUtil,
-              pageMapFeeder = me.pageMapFeeder;
+            pageMap       = me.getPageMap(),
+            PageMapUtil   = coon.core.data.pageMap.PageMapUtil,
+            pageMapFeeder = me.pageMapFeeder;
 
         let startPos = PageMapUtil.storeIndexToPosition(start, pageMap),
             endPos   = PageMapUtil.storeIndexToPosition(end, pageMap),
@@ -448,7 +446,7 @@ Ext.define('coon.comp.grid.feature.Livegrid', {
      *
      * @see #cleanFeedsAndVetoed
      */
-    onPageAdd : function(pageMap, pageNumber) {
+    onPageAdd : function (pageMap, pageNumber) {
         this.cleanFeedsAndVetoed(pageNumber);
     },
 
@@ -466,10 +464,9 @@ Ext.define('coon.comp.grid.feature.Livegrid', {
      *
      * @see #cleanFeedsAndVetoed
      */
-    onPageRemove : function(pageMap, pageNumber) {
+    onPageRemove : function (pageMap, pageNumber) {
         this.cleanFeedsAndVetoed(pageNumber);
     },
-
 
 
     /**
@@ -484,12 +481,12 @@ Ext.define('coon.comp.grid.feature.Livegrid', {
      *
      * @see #getCurrentViewRange
      */
-    onBeforePrefetch : function(store, operation) {
+    onBeforePrefetch : function (store, operation) {
 
         const me             = this,
-              page           = operation.getPage(),
-              pageMapFeeder  = me.pageMapFeeder,
-              RecordPosition = coon.core.data.pageMap.RecordPosition;
+            page           = operation.getPage(),
+            pageMapFeeder  = me.pageMapFeeder,
+            RecordPosition = coon.core.data.pageMap.RecordPosition;
 
         if (pageMapFeeder.getFeedAt(page) &&
             !me.getCurrentViewRange().contains(RecordPosition.create(page, 0))) {
@@ -511,7 +508,7 @@ Ext.define('coon.comp.grid.feature.Livegrid', {
      *
      * @private
      */
-    onGridReconfigure : function(grid, store, columns, oldStore, oldColumns) {
+    onGridReconfigure : function (grid, store, columns, oldStore, oldColumns) {
 
         var me = this;
 
@@ -535,7 +532,7 @@ Ext.define('coon.comp.grid.feature.Livegrid', {
      *
      * @throws if store is not an empty store or a BufferedStore
      */
-    configure : function(store) {
+    configure : function (store) {
 
         const me = this;
 
@@ -545,7 +542,7 @@ Ext.define('coon.comp.grid.feature.Livegrid', {
 
         if (!store || !(store instanceof Ext.data.BufferedStore)) {
             Ext.raise({
-                msg   : '\'store\' must be an instance of Ext.data.BufferedStore',
+                msg   : "'store' must be an instance of Ext.data.BufferedStore",
                 store : store
             });
         }
@@ -556,33 +553,33 @@ Ext.define('coon.comp.grid.feature.Livegrid', {
         // for duplicates and doesn't add one and the same event twice.
         // however, we want to be on the save side, our tests consider this
         // edge case
-        me.mun(store, 'update',  me.onStoreUpdate, me);
-        me.mon(store, 'update',  me.onStoreUpdate, me);
+        me.mun(store, "update",  me.onStoreUpdate, me);
+        me.mon(store, "update",  me.onStoreUpdate, me);
 
-        me.mun(store, 'beforeprefetch',  me.onBeforePrefetch, me);
-        me.mon(store, 'beforeprefetch',  me.onBeforePrefetch, me);
+        me.mun(store, "beforeprefetch",  me.onBeforePrefetch, me);
+        me.mon(store, "beforeprefetch",  me.onBeforePrefetch, me);
 
-        me.mun(store, 'pageadd',  me.onPageAdd, me);
-        me.mon(store, 'pageadd',  me.onPageAdd, me);
+        me.mun(store, "pageadd",  me.onPageAdd, me);
+        me.mon(store, "pageadd",  me.onPageAdd, me);
 
-        me.mun(store, 'pageremove',  me.onPageRemove, me);
-        me.mon(store, 'pageremove',  me.onPageRemove, me);
+        me.mun(store, "pageremove",  me.onPageRemove, me);
+        me.mon(store, "pageremove",  me.onPageRemove, me);
 
-        me.mun(store, 'cachemiss',  me.onCacheMiss, me);
-        me.mon(store, 'cachemiss',  me.onCacheMiss, me);
+        me.mun(store, "cachemiss",  me.onCacheMiss, me);
+        me.mon(store, "cachemiss",  me.onCacheMiss, me);
 
 
         if (me.pageMapFeeder) {
-            me.mun(me.pageMapFeeder, 'cn_core-pagemapfeeder-pageremoveveto',  me.onPageRemoveVeto, me);
+            me.mun(me.pageMapFeeder, "cn_core-pagemapfeeder-pageremoveveto",  me.onPageRemoveVeto, me);
             me.pageMapFeeder.destroy();
             me.pageMapFeeder = null;
         }
 
-        me.pageMapFeeder = Ext.create('coon.core.data.pageMap.PageMapFeeder', {
+        me.pageMapFeeder = Ext.create("coon.core.data.pageMap.PageMapFeeder", {
             pageMap : pageMap
         });
 
-        me.mon(me.pageMapFeeder, 'cn_core-pagemapfeeder-pageremoveveto',  me.onPageRemoveVeto, me);
+        me.mon(me.pageMapFeeder, "cn_core-pagemapfeeder-pageremoveveto",  me.onPageRemoveVeto, me);
 
         return true;
     },
@@ -599,9 +596,9 @@ Ext.define('coon.comp.grid.feature.Livegrid', {
      *
      * @private
      */
-    swapSaveFocusState : function() {
+    swapSaveFocusState : function () {
         const me   = this,
-              view = me.view;
+            view = me.view;
 
         view.saveFocusState = coon.comp.grid.feature.Livegrid.prototype.saveFocusState;
 
@@ -619,16 +616,16 @@ Ext.define('coon.comp.grid.feature.Livegrid', {
      *
      * @see swapSaveFocusState
      */
-    saveFocusState : function() {
+    saveFocusState : function () {
 
         const me = this;
 
         let tmp = me.all.getCount,
             res = Ext.view.Table.prototype.saveFocusState.apply(me, arguments);
 
-        let func = function() {
+        let func = function () {
 
-            me.all.getCount = function() {
+            me.all.getCount = function () {
                 return me.dataSource.getTotalCount();
             };
             res.apply(me);
@@ -648,11 +645,11 @@ Ext.define('coon.comp.grid.feature.Livegrid', {
      *
      * @private
      */
-    cleanFeedsAndVetoed : function(pageNumber) {
+    cleanFeedsAndVetoed : function (pageNumber) {
 
         const me            = this,
-              pageMapFeeder = me.pageMapFeeder,
-              vetoedPages   = me.vetoedPages;
+            pageMapFeeder = me.pageMapFeeder,
+            vetoedPages   = me.vetoedPages;
 
         pageMapFeeder.removeFeedAt(pageNumber);
 
@@ -660,8 +657,7 @@ Ext.define('coon.comp.grid.feature.Livegrid', {
         if (idx !== -1) {
             vetoedPages.splice(idx, 1);
         }
-    },
-
+    }
 
 
 });

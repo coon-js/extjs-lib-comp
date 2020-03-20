@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2019 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -23,26 +23,26 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe('coon.comp.component.IframeTest', function(t) {
+describe("coon.comp.component.IframeTest", function (t) {
 
     let iframe;
 
-    const createIframe = function(cfg) {
-        let iframe = Ext.create('coon.comp.component.Iframe', Ext.apply({
+    const createIframe = function (cfg) {
+        let iframe = Ext.create("coon.comp.component.Iframe", Ext.apply({
             renderTo : document.body,
             height : 400,
             width : 600
         }, cfg || {}));
 
         return iframe;
-    }
+    };
 
 
-    t.beforeEach(function() {
+    t.beforeEach(function () {
 
     });
 
-    t.afterEach(function() {
+    t.afterEach(function () {
         if (iframe) {
             iframe.destroy();
             iframe = null;
@@ -50,40 +50,39 @@ describe('coon.comp.component.IframeTest', function(t) {
     });
 
 
+    // +----------------------------------------------------------------------------
+    // |                    =~. Tests .~=
+    // +----------------------------------------------------------------------------
 
-// +----------------------------------------------------------------------------
-// |                    =~. Tests .~=
-// +----------------------------------------------------------------------------
-
-    t.it('test class and configuration', function(t) {
+    t.it("test class and configuration", function (t) {
 
         iframe = createIframe();
 
 
-        t.isInstanceOf(iframe, 'Ext.Component');
+        t.isInstanceOf(iframe, "Ext.Component");
 
         t.expect(iframe.alias).toContain("widget.cn_comp-iframe");
 
         t.expect(iframe.name).toBeTruthy();
 
-        t.expect(iframe.el.dom.firstChild.getAttribute('sandbox')).toBe("allow-same-origin");
+        t.expect(iframe.el.dom.firstChild.getAttribute("sandbox")).toBe("allow-same-origin");
 
     });
 
 
-    t.it('src / name', function(t) {
+    t.it("src / name", function (t) {
 
         iframe = createIframe({
-            name : 'conjoonIframe'
+            name : "conjoonIframe"
         });
 
 
-        t.expect(iframe.name).toBe('conjoonIframe');
+        t.expect(iframe.name).toBe("conjoonIframe");
 
     });
 
 
-    t.it('setSrcDoc() / getSrcDoc()', function(t) {
+    t.it("setSrcDoc() / getSrcDoc()", function (t) {
 
         iframe = createIframe();
 
@@ -101,21 +100,20 @@ describe('coon.comp.component.IframeTest', function(t) {
     });
 
 
-
-    t.it('sandbox / scrolling', function(t) {
+    t.it("sandbox / scrolling", function (t) {
 
         iframe = createIframe({
             sandbox : "",
             scrolling : "no"
         });
 
-        t.expect(iframe.el.dom.firstChild.getAttribute('sandbox')).toBe("");
-        t.expect(iframe.el.dom.firstChild.getAttribute('scrolling')).toBe("no");
+        t.expect(iframe.el.dom.firstChild.getAttribute("sandbox")).toBe("");
+        t.expect(iframe.el.dom.firstChild.getAttribute("scrolling")).toBe("no");
 
     });
 
 
-    t.it('getBody()', function(t) {
+    t.it("getBody()", function (t) {
 
         iframe = createIframe({
         });
@@ -126,26 +124,26 @@ describe('coon.comp.component.IframeTest', function(t) {
     });
 
 
-    t.it('load event', function(t) {
+    t.it("load event", function (t) {
 
         iframe = createIframe({
         });
 
         let CALLED = 0;
 
-        iframe.on('load', function() {
+        iframe.on("load", function () {
             CALLED++;
         });
 
         t.expect(CALLED).toBe(0);
         iframe.setSrcDoc("foo");
 
-        t.waitForMs(250, function() {
+        t.waitForMs(250, function () {
 
             t.expect(CALLED).toBe(1);
             iframe.setSrcDoc("bar");
 
-            t.waitForMs(250, function() {
+            t.waitForMs(250, function () {
 
                 t.expect(CALLED).toBe(2);
             });
@@ -154,15 +152,15 @@ describe('coon.comp.component.IframeTest', function(t) {
     });
 
 
-    t.it("beforesrcdoc event", function(t) {
+    t.it("beforesrcdoc event", function (t) {
 
         iframe = createIframe({
         });
 
         let CALLED = {};
 
-        iframe.on('beforesrcdoc', function(iframe, value) {
-            CALLED[value] = iframe;;
+        iframe.on("beforesrcdoc", function (iframe, value) {
+            CALLED[value] = iframe;
         });
 
         iframe.setSrcDoc("foo");

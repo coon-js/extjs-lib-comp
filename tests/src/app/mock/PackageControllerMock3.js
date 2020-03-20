@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2019 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,11 +27,11 @@
  * PackageControllerMock. This instance's postLaunchHook returns null.
  * This value should be passed to the mainView's addPostlaunchInfo method.
  */
-Ext.define('coon.universal.test.app.mock.PackageControllerMock3', {
+Ext.define("coon.universal.test.app.mock.PackageControllerMock3", {
 
-    extend : 'coon.core.app.PackageController',
+    extend : "coon.core.app.PackageController",
 
-    postLaunchHook : function() {
+    postLaunchHook : function () {
         return null;
     }
 

@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -26,11 +26,11 @@
 /**
  * An {@link Ext.list.Tree} which provides functionality for showing/hiding it.
  */
-Ext.define('coon.comp.list.Tree', {
+Ext.define("coon.comp.list.Tree", {
 
-    extend :  'Ext.list.Tree',
+    extend :  "Ext.list.Tree",
 
-    alias : 'widget.cn_comp-listtree',
+    alias : "widget.cn_comp-listtree",
 
     /**
      * @protected
@@ -45,7 +45,7 @@ Ext.define('coon.comp.list.Tree', {
     /**
      * @inheritdoc
      */
-    constructor : function(config) {
+    constructor : function (config) {
 
         var me = this,
             width;
@@ -74,7 +74,7 @@ Ext.define('coon.comp.list.Tree', {
      *
      * @param {Boolean} hide true to hide it, otherwise false
      */
-    setHidden : function(hide) {
+    setHidden : function (hide) {
 
         var me = this;
 
@@ -94,7 +94,7 @@ Ext.define('coon.comp.list.Tree', {
      *
      * @return {Boolean} true if this Tree List is visible, otherwise false.
      */
-    isHidden : function() {
+    isHidden : function () {
         return this.getWidth() === 0;
     },
 
@@ -103,7 +103,7 @@ Ext.define('coon.comp.list.Tree', {
      *
      * @return {Boolean} true if this Tree List is visible, otherwise false.
      */
-    isVisible : function() {
+    isVisible : function () {
         return !this.isHidden();
     }
 

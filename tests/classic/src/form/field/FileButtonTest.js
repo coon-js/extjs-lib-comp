@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2019 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -23,33 +23,33 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe('coon.comp.form.field.FileButtonTest', function(t) {
+describe("coon.comp.form.field.FileButtonTest", function (t) {
 
 
-// +----------------------------------------------------------------------------
-// |                    =~. Unit Tests .~=
-// +----------------------------------------------------------------------------
+    // +----------------------------------------------------------------------------
+    // |                    =~. Unit Tests .~=
+    // +----------------------------------------------------------------------------
 
-    t.it('Sanitize FileButton class', function(t) {
+    t.it("Sanitize FileButton class", function (t) {
 
-        var button = Ext.create('coon.comp.form.field.FileButton');
+        var button = Ext.create("coon.comp.form.field.FileButton");
 
         t.expect(button instanceof Ext.form.field.FileButton).toBe(true);
-        t.expect(button.alias).toContain('widget.cn_comp-formfieldfilebutton');
-        t.expect(button.afterTpl.join(" ")).toContain('multiple="true"');
+        t.expect(button.alias).toContain("widget.cn_comp-formfieldfilebutton");
+        t.expect(button.afterTpl.join(" ")).toContain("multiple=\"true\"");
 
         button.destroy();
         button = null;
     });
 
-    t.it('Make sure fireChange() passes fourth argument', function(t) {
+    t.it("Make sure fireChange() passes fourth argument", function (t) {
 
-        var button = Ext.create('coon.comp.form.field.FileButton', {
+        var button = Ext.create("coon.comp.form.field.FileButton", {
                 renderTo : document.body
             }),
             checkA, checkB, checkC, checkD;
 
-        button.on('change', function(a, b, c, d) {
+        button.on("change", function (a, b, c, d) {
             checkA = a;
             checkB = b;
             checkC = c;

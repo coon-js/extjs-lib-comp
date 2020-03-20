@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2019 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -68,18 +68,18 @@
  * animations from Ext itself. The loopProgress method will alter the
  * transitionDuration of the bar-element according to the selected interval.
  */
-Ext.define('coon.comp.component.LoadMask', {
+Ext.define("coon.comp.component.LoadMask", {
 
-    extend: 'Ext.LoadMask',
+    extend: "Ext.LoadMask",
 
-    cls :  Ext.baseCSSPrefix + 'mask' + ' cn_comp-loadmask',
+    cls :  Ext.baseCSSPrefix + "mask" + " cn_comp-loadmask",
 
     childEls: [
-        'msgWrapEl',
-        'msgEl',
-        'msgTextEl',
-        'msgActionEl',
-        'bar'
+        "msgWrapEl",
+        "msgEl",
+        "msgTextEl",
+        "msgActionEl",
+        "bar"
     ],
 
     /**
@@ -99,7 +99,7 @@ Ext.define('coon.comp.component.LoadMask', {
      * The glyphCls to use for showing in the badge of the message element.
      * @type {String} glyphCls
      */
-    glyphCls : '',
+    glyphCls : "",
 
     /**
      * Number between 0 and 1 to start the progress bar with.
@@ -108,28 +108,28 @@ Ext.define('coon.comp.component.LoadMask', {
     progress : 0,
 
     renderTpl: [
-        '<div id="{id}-msgWrapEl" data-ref="msgWrapEl" class="{[values.$comp.msgWrapCls]}" role="presentation">',
-        '<div class="badge {glyphCls}"></div><div style="width:{msgWidth}px">',
-        '<div id="{id}-msgEl" data-ref="msgEl" class="{[values.$comp.msgCls]} ',
-        Ext.baseCSSPrefix, 'mask-msg-inner {childElCls}" role="presentation">',
-        '<div id="{id}-msgTextEl" data-ref="msgTextEl" class="',
-        Ext.baseCSSPrefix, 'mask-msg-text',
-        '{childElCls}" role="presentation">{msg}</div>',
-        '</div>',
-        '<div class="progress"><div id="{id}-bar" data-ref="bar"></div></div>',
-        '<div id="{id}-msgActionEl" data-ref="msgActionEl">{msgAction}</div>',
-        '</div></div>'
+        "<div id=\"{id}-msgWrapEl\" data-ref=\"msgWrapEl\" class=\"{[values.$comp.msgWrapCls]}\" role=\"presentation\">",
+        "<div class=\"badge {glyphCls}\"></div><div style=\"width:{msgWidth}px\">",
+        "<div id=\"{id}-msgEl\" data-ref=\"msgEl\" class=\"{[values.$comp.msgCls]} ",
+        Ext.baseCSSPrefix, "mask-msg-inner {childElCls}\" role=\"presentation\">",
+        "<div id=\"{id}-msgTextEl\" data-ref=\"msgTextEl\" class=\"",
+        Ext.baseCSSPrefix, "mask-msg-text",
+        "{childElCls}\" role=\"presentation\">{msg}</div>",
+        "</div>",
+        "<div class=\"progress\"><div id=\"{id}-bar\" data-ref=\"bar\"></div></div>",
+        "<div id=\"{id}-msgActionEl\" data-ref=\"msgActionEl\">{msgAction}</div>",
+        "</div></div>"
     ],
 
 
     /**
      * @inheritdoc
      */
-    initRenderData: function() {
+    initRenderData: function () {
         var me     = this,
             result = me.callParent(arguments);
 
-        result.msgAction = me.msgAction || '';
+        result.msgAction = me.msgAction || "";
         result.msgWidth  = me.msgWidth  || 200;
         result.glyphCls  = me.glyphCls;
 
@@ -143,7 +143,7 @@ Ext.define('coon.comp.component.LoadMask', {
      *
      *  @inheritdoc
      */
-    afterRender : function() {
+    afterRender : function () {
         var me = this;
 
         me.callParent(arguments);
@@ -151,7 +151,7 @@ Ext.define('coon.comp.component.LoadMask', {
         me.updateProgress(me.progress);
 
         if (me.target && me.target.isComponent) {
-            me.target.on('destroy', me.destroy, me);
+            me.target.on("destroy", me.destroy, me);
         }
     },
 
@@ -163,7 +163,7 @@ Ext.define('coon.comp.component.LoadMask', {
      *
      * @return {coon.comp.component.LoadMask}
      */
-    updateActionMsg : function(value) {
+    updateActionMsg : function (value) {
         var me = this;
 
         me.msgActionEl.setHtml(value);
@@ -179,7 +179,7 @@ Ext.define('coon.comp.component.LoadMask', {
      *
      * @return {coon.comp.component.LoadMask}
      */
-    updateMsg : function(value) {
+    updateMsg : function (value) {
         var me = this;
 
         me.msgTextEl.setHtml(value);
@@ -198,15 +198,16 @@ Ext.define('coon.comp.component.LoadMask', {
      *
      * @return {coon.comp.component.LoadMask}
      */
-    updateProgress: function(value, isInternal) {
-        var me    = this,
-            value = value || 0;
+    updateProgress: function (value, isInternal) {
+        const me = this;
+
+        value = value || 0;
 
         if (isInternal !== true) {
             me.clearTimer();
         }
 
-        me.bar.setStyle('width', (value * 100) + '%');
+        me.bar.setStyle("width", (value * 100) + "%");
 
         return me;
     },
@@ -229,7 +230,7 @@ Ext.define('coon.comp.component.LoadMask', {
 
      * @returns {coon.comp.component.LoadMask}
      */
-    loopProgress : function(config) {
+    loopProgress : function (config) {
 
         var me = this,
             interval, increment;
@@ -243,14 +244,14 @@ Ext.define('coon.comp.component.LoadMask', {
             me.setTransitionDuration(interval/1000);
 
             me.waitTimer = Ext.TaskManager.start({
-                run: function(i) {
+                run: function (i) {
                     me.updateProgress(
                         me.calculatePercFromTask(increment, i), true
                     );
                 },
                 interval : interval,
                 duration : config.duration,
-                onStop   : function(){
+                onStop   : function (){
                     me.resetProgress();
                 }
             });
@@ -263,7 +264,7 @@ Ext.define('coon.comp.component.LoadMask', {
     /**
      * @private
      */
-    resetBar : function() {
+    resetBar : function () {
         var me = this;
 
         me.updateProgress(0);
@@ -274,7 +275,7 @@ Ext.define('coon.comp.component.LoadMask', {
     /**
      * @private
      */
-    clearTimer : function() {
+    clearTimer : function () {
         var me = this;
 
         if (me.waitTimer) {
@@ -289,7 +290,7 @@ Ext.define('coon.comp.component.LoadMask', {
     /**
      * @inheritdoc
      */
-    hide : function() {
+    hide : function () {
         var me = this;
 
         me.resetBar();
@@ -305,7 +306,7 @@ Ext.define('coon.comp.component.LoadMask', {
      *
      * @return {Ext.ProgressBar} this
      */
-    resetProgress : function(hide) {
+    resetProgress : function (hide) {
         var me = this;
 
         me.resetBar();
@@ -330,7 +331,7 @@ Ext.define('coon.comp.component.LoadMask', {
      *
      * @private
      */
-    calculatePercFromTask : function(increment, iteration) {
+    calculatePercFromTask : function (increment, iteration) {
 
         var seg     = ((iteration - 1) % (increment + 1)),
             segPerc = (100 / increment);
@@ -342,10 +343,9 @@ Ext.define('coon.comp.component.LoadMask', {
     /**
      * @inheritdoc
      */
-    doDestroy : function() {
+    doDestroy : function () {
 
-        var me = this,
-            bar = me.bar;
+        const me = this;
 
         me.clearTimer();
         me.callParent();
@@ -359,10 +359,10 @@ Ext.define('coon.comp.component.LoadMask', {
      *
      * @private
      */
-    setTransitionDuration : function(value) {
+    setTransitionDuration : function (value) {
         var me = this;
 
-        me.bar.setStyle('transitionDuration', value + 's');
+        me.bar.setStyle("transitionDuration", value + "s");
     }
 
 });

@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_comp
- * Copyright (C) 2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -95,13 +95,13 @@
  *   }
  *
  */
-Ext.define('coon.comp.grid.feature.RowFlyMenu', {
+Ext.define("coon.comp.grid.feature.RowFlyMenu", {
 
-    extend : 'Ext.grid.feature.Feature',
+    extend : "Ext.grid.feature.Feature",
 
-    alias : 'feature.cn_comp-gridfeature-rowflymenu',
+    alias : "feature.cn_comp-gridfeature-rowflymenu",
 
-    cls : 'cn_comp-rowflymenu',
+    cls : "cn_comp-rowflymenu",
 
     /**
      * Gets firec when an item of this menu was clicked that was configured
@@ -151,7 +151,7 @@ Ext.define('coon.comp.grid.feature.RowFlyMenu', {
      * with the specificatiosn of the alignTo()-method.
      * @cfg {String/Array} alignTo
      */
-    alignTo : 'tr-tr',
+    alignTo : "tr-tr",
 
 
     /**
@@ -165,17 +165,17 @@ Ext.define('coon.comp.grid.feature.RowFlyMenu', {
     /**
      * @inheritdoc
      */
-    init : function(grid) {
+    init : function (grid) {
 
         const me = this;
 
         me.menu = me.buildMenu(me.items);
 
         me.mon(me.menu, {
-            'tap'       : me.onMenuClick,
-            'mouseover' : me.onMenuMouseOver,
-            'mouseout'  : me.onMenuMouseOut,
-             scope      : me
+            "tap"       : me.onMenuClick,
+            "mouseover" : me.onMenuMouseOver,
+            "mouseout"  : me.onMenuMouseOut,
+            scope      : me
         });
 
         delete me.items;
@@ -192,10 +192,10 @@ Ext.define('coon.comp.grid.feature.RowFlyMenu', {
      * @param {Ext.Event}evt
      * @param {HtmlElement} target
      */
-    onMenuMouseOver : function(evt, target) {
-        if (target.className.indexOf('cn-item') !== -1) {
-            this.grid.on('beforeselect', this.preventSelection);
-            Ext.fly(target).addCls('cn-over')
+    onMenuMouseOver : function (evt, target) {
+        if (target.className.indexOf("cn-item") !== -1) {
+            this.grid.on("beforeselect", this.preventSelection);
+            Ext.fly(target).addCls("cn-over");
         }
     },
 
@@ -206,10 +206,10 @@ Ext.define('coon.comp.grid.feature.RowFlyMenu', {
      * @param {Ext.Event}evt
      * @param {HtmlElement} target
      */
-    onMenuMouseOut : function(evt, target) {
-        if (target.className.indexOf('cn-item') !== -1) {
-            this.grid.un('beforeselect', this.preventSelection);
-            Ext.fly(target).removeCls('cn-over')
+    onMenuMouseOut : function (evt, target) {
+        if (target.className.indexOf("cn-item") !== -1) {
+            this.grid.un("beforeselect", this.preventSelection);
+            Ext.fly(target).removeCls("cn-over");
         }
     },
 
@@ -222,11 +222,11 @@ Ext.define('coon.comp.grid.feature.RowFlyMenu', {
      * @param {Ext.Event} evt
      * @param {HtmlElement} target
      */
-    onMenuClick : function(evt, target) {
+    onMenuClick : function (evt, target) {
 
         const me         = this,
-              idToAction = me.idToActionMap,
-              action     = idToAction[target.id];
+            idToAction = me.idToActionMap,
+            action     = idToAction[target.id];
 
         evt.stopEvent();
 
@@ -234,7 +234,7 @@ Ext.define('coon.comp.grid.feature.RowFlyMenu', {
             return;
         }
 
-        me.fireEvent('itemclick', me, target, action, me.currentRecord);
+        me.fireEvent("itemclick", me, target, action, me.currentRecord);
     },
 
 
@@ -254,7 +254,7 @@ Ext.define('coon.comp.grid.feature.RowFlyMenu', {
      *
      * @private
      */
-    onItemMouseEnter : function(view, record, item, index, e, eOpts) {
+    onItemMouseEnter : function (view, record, item, index, e, eOpts) {
 
         const me = this;
 
@@ -266,7 +266,7 @@ Ext.define('coon.comp.grid.feature.RowFlyMenu', {
 
         me.currentRecord = record;
 
-        if (me.fireEvent('beforemenushow', me, item, record) === false) {
+        if (me.fireEvent("beforemenushow", me, item, record) === false) {
             me.currentRecord = null;
             return;
         }
@@ -293,7 +293,7 @@ Ext.define('coon.comp.grid.feature.RowFlyMenu', {
      *
      * @see detachMenuAndUnset
      */
-    onItemMouseLeave : function(view, record, item, index, e, eOpts) {
+    onItemMouseLeave : function (view, record, item, index, e, eOpts) {
 
         const me = this;
 
@@ -314,14 +314,14 @@ Ext.define('coon.comp.grid.feature.RowFlyMenu', {
      *
      * @private
      */
-    installListeners : function(grid) {
+    installListeners : function (grid) {
 
         const me = this;
 
-        grid.view.on('beforerefresh', me.onBeforeGridViewRefresh, me);
-        grid.on('itemmouseenter', me.onItemMouseEnter, me);
-        grid.on('itemmouseleave', me.onItemMouseLeave, me);
-        grid.on('beforeitemkeydown', me.onBeforeItemKeyDown, me);
+        grid.view.on("beforerefresh", me.onBeforeGridViewRefresh, me);
+        grid.on("itemmouseenter", me.onItemMouseEnter, me);
+        grid.on("itemmouseleave", me.onItemMouseLeave, me);
+        grid.on("beforeitemkeydown", me.onBeforeItemKeyDown, me);
 
     },
 
@@ -340,19 +340,19 @@ Ext.define('coon.comp.grid.feature.RowFlyMenu', {
      *
      * @private
      */
-    buildMenu : function(items) {
+    buildMenu : function (items) {
 
         const me = this;
 
         let childs = me.processItems(items), el;
 
         let re = Ext.Element.create({
-            tag       : 'div',
+            tag       : "div",
             cls       : me.cls,
             children : childs
         }, true);
 
-        el = Ext.create('Ext.Element', re);
+        el = Ext.create("Ext.Element", re);
         el.skipGarbageCollection = true;
 
         return el;
@@ -368,7 +368,7 @@ Ext.define('coon.comp.grid.feature.RowFlyMenu', {
      *
      * @private
      */
-    processItems : function(items) {
+    processItems : function (items) {
 
         const me = this;
 
@@ -380,9 +380,9 @@ Ext.define('coon.comp.grid.feature.RowFlyMenu', {
 
             item = Ext.apply({}, items[i]);
 
-            item.tag = item.tag ? item.tag : 'div';
+            item.tag = item.tag ? item.tag : "div";
 
-            item.cls = item.cls ? 'cn-item ' + item.cls : 'cn-item';
+            item.cls = item.cls ? "cn-item " + item.cls : "cn-item";
 
             item.id = item.id ? item.id : Ext.id();
 
@@ -391,7 +391,7 @@ Ext.define('coon.comp.grid.feature.RowFlyMenu', {
                 delete item.action;
             }
 
-            childs.push(item)
+            childs.push(item);
         }
 
         return childs;
@@ -401,7 +401,7 @@ Ext.define('coon.comp.grid.feature.RowFlyMenu', {
     /**
      * @inheritdoc
      */
-    disable : function() {
+    disable : function () {
 
         const me = this;
 
@@ -419,7 +419,7 @@ Ext.define('coon.comp.grid.feature.RowFlyMenu', {
      *
      * @see detachMenuAndUnset
      */
-    onBeforeGridViewRefresh : function() {
+    onBeforeGridViewRefresh : function () {
 
         const me = this;
 
@@ -432,15 +432,15 @@ Ext.define('coon.comp.grid.feature.RowFlyMenu', {
      * #currentRecord for this menu to null.
      *
      */
-    detachMenuAndUnset : function() {
+    detachMenuAndUnset : function () {
 
         const me    = this,
-              menu  = me.menu;
+            menu  = me.menu;
 
         if (menu.dom.parentNode) {
             Ext.fly(menu.dom.parentNode).removeChild(menu);
         }
-        me.grid.un('beforeselect', me.preventSelection);
+        me.grid.un("beforeselect", me.preventSelection);
         me.currentRecord = null;
     },
 
@@ -450,7 +450,7 @@ Ext.define('coon.comp.grid.feature.RowFlyMenu', {
      *
      * @inheritdoc
      */
-    destroy : function() {
+    destroy : function () {
 
         const me = this;
 
@@ -471,7 +471,7 @@ Ext.define('coon.comp.grid.feature.RowFlyMenu', {
      *
      * @private
      */
-    preventSelection : function() {
+    preventSelection : function () {
         return false;
     },
 
@@ -482,7 +482,7 @@ Ext.define('coon.comp.grid.feature.RowFlyMenu', {
      *
      * @private
      */
-    onBeforeItemKeyDown : function() {
+    onBeforeItemKeyDown : function () {
         this.detachMenuAndUnset();
     }
 

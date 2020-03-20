@@ -58,9 +58,9 @@
  *
  *
  */
-Ext.define('coon.comp.component.MessageMask', {
+Ext.define("coon.comp.component.MessageMask", {
 
-    extend: 'Ext.LoadMask',
+    extend: "Ext.LoadMask",
 
     statics : {
 
@@ -86,52 +86,52 @@ Ext.define('coon.comp.component.MessageMask', {
          * Glyph cls for Question mark
          * @type {String} [QUESTION=fa fa-question-circle]
          */
-        QUESTION : 'far fa-question-circle',
+        QUESTION : "far fa-question-circle",
 
         /**
          * Glyph cls for Question mark
          * @type {String} [QUESTION=fa fa-question-circle]
          */
-        FAILURE : 'far fa-frown',
+        FAILURE : "far fa-frown",
 
         /**
          * Glyph cls for Exclamation mark
          * @type {String} [ERROR=fa fa-exclamation-circle]
          */
-        ERROR : 'far fa-exclamation-circle'
+        ERROR : "far fa-exclamation-circle"
 
     },
 
     childEls: [
-        'yesButton',
-        'noButton',
-        'okButton',
-        'cancelButton',
-        'textfield'
+        "yesButton",
+        "noButton",
+        "okButton",
+        "cancelButton",
+        "textfield"
     ],
 
     renderTpl: [
-        '<div id="{id}-msgWrapEl" data-ref="msgWrapEl" class="{[values.$comp.msgWrapCls]}" role="presentation">',
+        "<div id=\"{id}-msgWrapEl\" data-ref=\"msgWrapEl\" class=\"{[values.$comp.msgWrapCls]}\" role=\"presentation\">",
 
-        '<div id="{id}-msgEl" data-ref="msgEl" class="{[values.$comp.msgCls]} ',
-        Ext.baseCSSPrefix, 'mask-msg-inner {childElCls}" role="presentation">',
-        '<div class="badge {glyphCls}"></div>',
-        '<div id="{id}-msgTextEl" data-ref="msgTextEl" class="',
-        Ext.baseCSSPrefix, 'mask-msg-text',
-        '{childElCls}" role="presentation">{msg}</div>',
-        '<div class="message">{message}</div>',
-        '<div class="textInput"><input type="text" id="{id}-textfield" data-ref="textfield" class="x-form-text-default" placeholder="{emptyText}"/></div>',
-        '<div class="actionBox">',
-        '<div class="left"><span data-ref="yesButton" id="{id}-yesButton" class="button" role="button">{yes}</span></div>',
-        '<div class="right"><span data-ref="noButton" id="{id}-noButton" class="button" role="button">{no}</span></div>',
-        '<div class="left"><span data-ref="okButton" id="{id}-okButton" class="button" role="button">{ok}</span></div>',
-        '<div class="right"><span data-ref="cancelButton" id="{id}-cancelButton" class="button" role="button">{cancel}</span></div>',
-        '</div>',
-        '</div>',
-        '</div>'
+        "<div id=\"{id}-msgEl\" data-ref=\"msgEl\" class=\"{[values.$comp.msgCls]} ",
+        Ext.baseCSSPrefix, "mask-msg-inner {childElCls}\" role=\"presentation\">",
+        "<div class=\"badge {glyphCls}\"></div>",
+        "<div id=\"{id}-msgTextEl\" data-ref=\"msgTextEl\" class=\"",
+        Ext.baseCSSPrefix, "mask-msg-text",
+        "{childElCls}\" role=\"presentation\">{msg}</div>",
+        "<div class=\"message\">{message}</div>",
+        "<div class=\"textInput\"><input type=\"text\" id=\"{id}-textfield\" data-ref=\"textfield\" class=\"x-form-text-default\" placeholder=\"{emptyText}\"/></div>",
+        "<div class=\"actionBox\">",
+        "<div class=\"left\"><span data-ref=\"yesButton\" id=\"{id}-yesButton\" class=\"button\" role=\"button\">{yes}</span></div>",
+        "<div class=\"right\"><span data-ref=\"noButton\" id=\"{id}-noButton\" class=\"button\" role=\"button\">{no}</span></div>",
+        "<div class=\"left\"><span data-ref=\"okButton\" id=\"{id}-okButton\" class=\"button\" role=\"button\">{ok}</span></div>",
+        "<div class=\"right\"><span data-ref=\"cancelButton\" id=\"{id}-cancelButton\" class=\"button\" role=\"button\">{cancel}</span></div>",
+        "</div>",
+        "</div>",
+        "</div>"
     ],
 
-    cls :  Ext.baseCSSPrefix + 'mask' + ' cn_comp-messagemask',
+    cls :  Ext.baseCSSPrefix + "mask" + " cn_comp-messagemask",
 
     /**
      * true to style the mask as a dialog, otherwise false.
@@ -154,10 +154,10 @@ Ext.define('coon.comp.component.MessageMask', {
      * @cfg {Object} buttonText
      */
     buttonText: {
-        yes    : 'Yes',
-        no     : 'No',
-        ok     : 'Ok',
-        cancel : 'Cancel'
+        yes    : "Yes",
+        no     : "No",
+        ok     : "Ok",
+        cancel : "Cancel"
     },
 
     /**
@@ -167,7 +167,7 @@ Ext.define('coon.comp.component.MessageMask', {
      * @cfg {Array} buttonIds
      */
     buttonIds : [
-        'yesButton', 'noButton', 'okButton', 'cancelButton'
+        "yesButton", "noButton", "okButton", "cancelButton"
     ],
 
     /**
@@ -194,7 +194,7 @@ Ext.define('coon.comp.component.MessageMask', {
     /**
      * @inheridoc
      */
-    constructor : function(config) {
+    constructor : function (config) {
 
         var me = this;
 
@@ -207,7 +207,7 @@ Ext.define('coon.comp.component.MessageMask', {
         }
 
         if (me.dialogStyle !== false) {
-            me.cls += ' dialog';
+            me.cls += " dialog";
         }
 
         delete config.title;
@@ -219,7 +219,7 @@ Ext.define('coon.comp.component.MessageMask', {
     /**
      * @inheritdoc
      */
-    initRenderData: function() {
+    initRenderData: function () {
         var me     = this,
             result = me.callParent(arguments);
 
@@ -230,8 +230,8 @@ Ext.define('coon.comp.component.MessageMask', {
         result.cancel = me.buttonText.cancel;
 
         result.emptyText = Ext.isObject(me.input) && me.input.emptyText
-                           ? me.input.emptyText
-                           : '';
+            ? me.input.emptyText
+            : "";
 
         // texts
         result.message = me.message;
@@ -249,41 +249,41 @@ Ext.define('coon.comp.component.MessageMask', {
      *
      * @ee onClick
      */
-    afterRender: function() {
+    afterRender: function () {
         var me = this;
 
         me.callParent(arguments);
 
-        me.el.on('click', me.onClick, me);
+        me.el.on("click", me.onClick, me);
 
         switch (me.buttons) {
-            case me.statics().YESNO:
-                me.okButton.dom.parentNode.style.display     = "none";
-                me.cancelButton.dom.parentNode.style.display = "none";
-                break;
+        case me.statics().YESNO:
+            me.okButton.dom.parentNode.style.display     = "none";
+            me.cancelButton.dom.parentNode.style.display = "none";
+            break;
 
-            case me.statics().OK:
-                me.yesButton.dom.parentNode.style.display    = "none";
-                me.noButton.dom.parentNode.style.display     = "none";
-                me.cancelButton.dom.parentNode.style.display = "none";
-                break;
+        case me.statics().OK:
+            me.yesButton.dom.parentNode.style.display    = "none";
+            me.noButton.dom.parentNode.style.display     = "none";
+            me.cancelButton.dom.parentNode.style.display = "none";
+            break;
 
-            case me.statics().OKCANCEL:
-                me.yesButton.dom.parentNode.style.display = "none";
-                me.noButton.dom.parentNode.style.display  = "none";
-                break;
+        case me.statics().OKCANCEL:
+            me.yesButton.dom.parentNode.style.display = "none";
+            me.noButton.dom.parentNode.style.display  = "none";
+            break;
 
-            default:
-                me.yesButton.dom.parentNode.style.display    = "none";
-                me.noButton.dom.parentNode.style.display     = "none";
-                me.cancelButton.dom.parentNode.style.display = "none";
-                me.okButton.dom.parentNode.style.display     = "none";
-                break;
+        default:
+            me.yesButton.dom.parentNode.style.display    = "none";
+            me.noButton.dom.parentNode.style.display     = "none";
+            me.cancelButton.dom.parentNode.style.display = "none";
+            me.okButton.dom.parentNode.style.display     = "none";
+            break;
         }
 
         if (me.input) {
             me.textfield.focus(100);
-            me.mon(me.textfield, 'keydown', me.handleTextFieldKeyDown, me);
+            me.mon(me.textfield, "keydown", me.handleTextFieldKeyDown, me);
         } else {
             me.textfield.dom.parentNode.style.display = "none";
         }
@@ -303,7 +303,7 @@ Ext.define('coon.comp.component.MessageMask', {
      * @see close
      * @private
      */
-    handleButtonClick : function(type, inputValue) {
+    handleButtonClick : function (type, inputValue) {
         var me = this;
 
         if (me.callback) {
@@ -323,7 +323,7 @@ Ext.define('coon.comp.component.MessageMask', {
      *
      * @private
      */
-    getButtonIdForIndex : function(index) {
+    getButtonIdForIndex : function (index) {
         var me    = this,
             value = me.buttonIds[index];
 
@@ -349,9 +349,9 @@ Ext.define('coon.comp.component.MessageMask', {
      *
      * @see handleButtonClick
      */
-    onClick : function(evt, el) {
+    onClick : function (evt, el) {
         var me          = this,
-            id          = el.id.split('-').pop(),
+            id          = el.id.split("-").pop(),
             /**
              * Entries here must map the order of ids in buttonIds
              * @type {string[]}
@@ -360,7 +360,7 @@ Ext.define('coon.comp.component.MessageMask', {
             elId        = originalIds.indexOf(id),
             args;
 
-        if (el.tagName.toLowerCase() == 'span' && elId !== -1) {
+        if (el.tagName.toLowerCase() === "span" && elId !== -1) {
             args = [me.getButtonIdForIndex(elId)];
 
             if (me.input) {
@@ -377,7 +377,7 @@ Ext.define('coon.comp.component.MessageMask', {
      *
      * @see destroy
      */
-    close : function() {
+    close : function () {
         var me = this;
         me.destroy();
     },
@@ -417,12 +417,12 @@ Ext.define('coon.comp.component.MessageMask', {
          *
          * @see handleButtonClick
          */
-        handleTextFieldKeyDown : function(evt, source) {
+        handleTextFieldKeyDown : function (evt, source) {
 
             var me = this;
 
             if (evt.keyCode === Ext.event.Event.ENTER) {
-                me.handleButtonClick('okButton', source.value);
+                me.handleButtonClick("okButton", source.value);
             }
 
         }
