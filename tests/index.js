@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * extjs-lib-comp
+ * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -23,159 +23,24 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import testConfig from "./tests.config.js";
+import groups from "./groups.config.js";
+import {configureWithExtJsLinkPaths} from "../node_modules/@coon-js/siesta-lib-helper/dist/siesta-lib-helper.runtime.esm.js";
 
-const harness = new Siesta.Harness.Browser.ExtJS();
+let toolkitGroups,
+    toolkit = (new URLSearchParams( document.location.search.substring(1))).get("toolkit") ?? "classic";
 
-let isModern = window.location.href.indexOf("toolkit=modern") !== -1;
+const
+    browser = new Siesta.Harness.Browser.ExtJS(),
+    paths = await configureWithExtJsLinkPaths(testConfig, "../.extjs-link.conf.json", toolkit === "modern");
 
-harness.configure({
-    title          : "lib-cn_comp - " + (isModern ? "modern" : "classic"),
-    disableCaching : true,
-    loaderPath     : {
+toolkitGroups = groups.filter(entry => ["universal", toolkit].indexOf(entry.group) !== -1);
+toolkit       = toolkitGroups.length ? toolkit : "universal";
 
-        /**
-         * ux
-         */
-        "Ext.ux" : "../../../../ext/packages/ux/src/",
+browser.configure(Object.assign({
+    title: `${testConfig.name} [${toolkit}]`,
+    isEcmaModule: true,
+    disableCaching: true
+}, paths));
 
-        /**
-         * fixtures
-         */
-        "coon.comp.fixtures" : "./fixtures",
-
-        /**
-         * Classic Toolkit
-         */
-        "coon.comp.component" : "../classic/src/component",
-        "coon.comp.window"    : "../classic/src/window",
-        "coon.comp.form"      : (isModern ? "../modern/src/form" : "../classic/src/form"),
-        "coon.comp.grid"      : "../classic/src/grid",
-
-        /**
-         * Universal
-         */
-        "coon.comp.window.LockingWindow" : "../src/window/LockingWindow.js",
-        "coon.comp.app" : "../src/app",
-        "coon.comp.container" : (isModern ? "../modern/src/container" : "../classic/src/container"),
-        "coon.comp.list"      : "../src/list",
-        "coon.comp.Img" : (isModern ? "../modern/" : "../classic/") + "src/Img.js",
-
-        /**
-         * Requirements
-         */
-        "coon.core" : "../../lib-cn_core/src",
-
-        "Ext.Package" : "../../../remote/package-loader/src/Package.js",
-        "Ext.package" : "../../../remote/package-loader/src/package",
-
-        /**
-         * Mocks
-         */
-        "coon.classic.test"    : "./classic/src",
-        "coon.universal.test"  : "./src"
-    },
-    preload        : [
-        "./classic/resources/test.css",
-        coon.tests.config.paths.extjs[isModern ? "modern" : "classic" ].css.url,
-        coon.tests.config.paths.extjs[isModern ? "modern" : "classic" ].js.url
-    ]
-});
-
-
-let groups = [];
-
-// +--------------------------------
-// | Classic Tests
-// +--------------------------------
-if (!isModern) {
-    groups.push({
-        group : "classic",
-        items : ["classic/src/ImgTest.js", {
-            group : "component",
-            items : [
-                "classic/src/component/IframeTest.js",
-                "classic/src/component/LoadMaskTest.js",
-                "classic/src/component/MessageMaskTest.js"
-            ]
-        }, {
-            group : "container",
-            items : [
-                "src/container/ViewportTest.js"
-            ]
-        }, {
-            group : "form",
-            items : [
-                "classic/src/form/AutoCompleteFormTest.js",
-                {
-                    group : "field",
-                    items : [
-                        "classic/src/form/field/FileButtonTest.js"
-                    ]
-                }]
-        }, {
-            group : "grid",
-            items : [{
-                group : "feature",
-                items : [
-                    "classic/src/grid/feature/RowBodySwitchTest.js",
-                    "classic/src/grid/feature/RowFlyMenuTest.js",
-                    "classic/src/grid/feature/LivegridTest.js"
-                ]
-            }]
-        }, {
-            group : "window",
-            items : [
-                "classic/src/window/ToastTest.js"
-            ]
-        }]
-    });
-
-}
-
-
-// +--------------------------------
-// | Modern Tests
-// +--------------------------------
-if (isModern) {
-    groups.push({
-        group : "modern",
-        items : ["modern/src/ImgTest.js", {
-            group : "container",
-            items : [
-                "src/container/ViewportTest.js"
-            ]
-        }, {
-            group : "form",
-            items : [
-                "modern/src/form/AutoCompleteFormTest.js"
-            ]
-        }]
-    });
-
-}
-
-
-// +--------------------------------
-// | Universal Tests
-// +--------------------------------
-groups.push({
-    group : "universal",
-    items : [{
-        group : "app",
-        items : [
-            "src/app/ApplicationTest.js"
-        ]
-    }, {
-        group : "list",
-        items : [
-            "src/list/TreeTest.js"
-        ]
-    }, {
-        group : "window",
-        items : [
-            "src/window/LockingWindowTest.js"
-        ]
-    }]
-});
-
-harness.start.apply(harness, groups);
+browser.start(toolkitGroups.length ? toolkitGroups : groups);

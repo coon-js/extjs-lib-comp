@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * extjs-lib-comp
+ * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -32,7 +32,7 @@
  */
 Ext.define("coon.comp.container.Viewport", {
 
-    extend : "Ext.container.Viewport",
+    extend: "Ext.container.Viewport",
 
     /**
      * Method gets called by {@link coon.comp.app.Application#postLaunchHookProcess}
@@ -42,7 +42,7 @@ Ext.define("coon.comp.container.Viewport", {
      * @param {Object} information An object providing information as computed
      * by the postLaunch-process.
      */
-    addPostLaunchInfo : Ext.emptyFn,
+    addPostLaunchInfo: Ext.emptyFn,
 
 
     /**
@@ -56,13 +56,13 @@ Ext.define("coon.comp.container.Viewport", {
      *
      * @return {Ext.Component} The view associated with the hash, if any.
      */
-    activateViewForHash : Ext.emptyFn,
+    activateViewForHash: Ext.emptyFn,
 
 
     /**
      * Helper method to remove any remaining views from the viewport to make sure
      * input is not blocked by leftovers.
      */
-    cleanup : Ext.emptyFn
+    cleanup: Ext.emptyFn
 
 });

@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * extjs-lib-comp
+ * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -72,7 +72,7 @@ Ext.define("coon.comp.component.LoadMask", {
 
     extend: "Ext.LoadMask",
 
-    cls :  Ext.baseCSSPrefix + "mask" + " cn_comp-loadmask",
+    cls: Ext.baseCSSPrefix + "mask" + " cn_comp-loadmask",
 
     childEls: [
         "msgWrapEl",
@@ -86,26 +86,26 @@ Ext.define("coon.comp.component.LoadMask", {
      * Default width for the msg element excluding the badge.
      * @type {Number} [msgWidth=200]
      */
-    msgWidth : 200,
+    msgWidth: 200,
 
     /**
      * The timer object created for this loadMask when loopProgress was called.
      * @type {Object}
      * @private
      */
-    waitTimer : null,
+    waitTimer: null,
 
     /**
      * The glyphCls to use for showing in the badge of the message element.
      * @type {String} glyphCls
      */
-    glyphCls : "",
+    glyphCls: "",
 
     /**
      * Number between 0 and 1 to start the progress bar with.
      * @type {Float} progress
      */
-    progress : 0,
+    progress: 0,
 
     renderTpl: [
         "<div id=\"{id}-msgWrapEl\" data-ref=\"msgWrapEl\" class=\"{[values.$comp.msgWrapCls]}\" role=\"presentation\">",
@@ -143,7 +143,7 @@ Ext.define("coon.comp.component.LoadMask", {
      *
      *  @inheritdoc
      */
-    afterRender : function () {
+    afterRender: function () {
         var me = this;
 
         me.callParent(arguments);
@@ -163,7 +163,7 @@ Ext.define("coon.comp.component.LoadMask", {
      *
      * @return {coon.comp.component.LoadMask}
      */
-    updateActionMsg : function (value) {
+    updateActionMsg: function (value) {
         var me = this;
 
         me.msgActionEl.setHtml(value);
@@ -179,7 +179,7 @@ Ext.define("coon.comp.component.LoadMask", {
      *
      * @return {coon.comp.component.LoadMask}
      */
-    updateMsg : function (value) {
+    updateMsg: function (value) {
         var me = this;
 
         me.msgTextEl.setHtml(value);
@@ -230,7 +230,7 @@ Ext.define("coon.comp.component.LoadMask", {
 
      * @returns {coon.comp.component.LoadMask}
      */
-    loopProgress : function (config) {
+    loopProgress: function (config) {
 
         var me = this,
             interval, increment;
@@ -249,9 +249,9 @@ Ext.define("coon.comp.component.LoadMask", {
                         me.calculatePercFromTask(increment, i), true
                     );
                 },
-                interval : interval,
-                duration : config.duration,
-                onStop   : function (){
+                interval: interval,
+                duration: config.duration,
+                onStop: function (){
                     me.resetProgress();
                 }
             });
@@ -264,7 +264,7 @@ Ext.define("coon.comp.component.LoadMask", {
     /**
      * @private
      */
-    resetBar : function () {
+    resetBar: function () {
         var me = this;
 
         me.updateProgress(0);
@@ -275,7 +275,7 @@ Ext.define("coon.comp.component.LoadMask", {
     /**
      * @private
      */
-    clearTimer : function () {
+    clearTimer: function () {
         var me = this;
 
         if (me.waitTimer) {
@@ -290,7 +290,7 @@ Ext.define("coon.comp.component.LoadMask", {
     /**
      * @inheritdoc
      */
-    hide : function () {
+    hide: function () {
         var me = this;
 
         me.resetBar();
@@ -306,7 +306,7 @@ Ext.define("coon.comp.component.LoadMask", {
      *
      * @return {Ext.ProgressBar} this
      */
-    resetProgress : function (hide) {
+    resetProgress: function (hide) {
         var me = this;
 
         me.resetBar();
@@ -331,7 +331,7 @@ Ext.define("coon.comp.component.LoadMask", {
      *
      * @private
      */
-    calculatePercFromTask : function (increment, iteration) {
+    calculatePercFromTask: function (increment, iteration) {
 
         var seg     = ((iteration - 1) % (increment + 1)),
             segPerc = (100 / increment);
@@ -343,7 +343,7 @@ Ext.define("coon.comp.component.LoadMask", {
     /**
      * @inheritdoc
      */
-    doDestroy : function () {
+    doDestroy: function () {
 
         const me = this;
 
@@ -359,7 +359,7 @@ Ext.define("coon.comp.component.LoadMask", {
      *
      * @private
      */
-    setTransitionDuration : function (value) {
+    setTransitionDuration: function (value) {
         var me = this;
 
         me.bar.setStyle("transitionDuration", value + "s");

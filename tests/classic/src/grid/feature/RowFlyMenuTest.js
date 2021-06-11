@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * extjs-lib-comp
+ * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -29,41 +29,41 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
 
         return Ext.create("Ext.grid.Panel", {
 
-            renderTo : document.body,
+            renderTo: document.body,
 
-            width  : 800,
-            height : 600,
+            width: 800,
+            height: 600,
 
-            features : [{
-                disabled           : !!disabled,
-                ftype              : "cn_comp-gridfeature-rowflymenu",
-                id                 : "rowflymenu",
-                items : [{cls : "foo", title : "foobar", html : "foobar", id : "rowflytestid"}, {html : "bar"}]
+            features: [{
+                disabled: !!disabled,
+                ftype: "cn_comp-gridfeature-rowflymenu",
+                id: "rowflymenu",
+                items: [{cls: "foo", title: "foobar", html: "foobar", id: "rowflytestid"}, {html: "bar"}]
             }],
 
-            store : {
-                fields : ["isRead", "subject", "to"],
-                data   : [{
-                    isRead : false, subject : "Subject 1", to : "to 1"
+            store: {
+                fields: ["isRead", "subject", "to"],
+                data: [{
+                    isRead: false, subject: "Subject 1", to: "to 1"
                 }, {
-                    isRead : true, subject : "Subject 2", to : "to 2"
+                    isRead: true, subject: "Subject 2", to: "to 2"
                 }, {
-                    isRead : false, subject : "Subject 3", to : "to 3"
+                    isRead: false, subject: "Subject 3", to: "to 3"
                 }]
             },
 
-            columns : [{
-                text      : "Read",
-                dataIndex : "isRead",
-                flex      : 1
+            columns: [{
+                text: "Read",
+                dataIndex: "isRead",
+                flex: 1
             }, {
-                text      : "Subject",
-                dataIndex : "subject",
-                flex      : 1
+                text: "Subject",
+                dataIndex: "subject",
+                flex: 1
             }, {
-                text      : "To",
-                dataIndex : "to",
-                hidden    : true
+                text: "To",
+                dataIndex: "to",
+                hidden: true
             }]
 
         });
@@ -91,7 +91,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
 
             let at = ["tr-tr", [10, 10]];
             feature = Ext.create("coon.comp.grid.feature.RowFlyMenu", {
-                alignTo : at
+                alignTo: at
             });
 
             t.expect(feature.alignTo).toEqual(at);
@@ -104,26 +104,26 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
 
             let grid    = getGrid(false),
                 feature = grid.view.getFeature("rowflymenu"),
-                items   = [{cls : "foo", title : "foobar", id : "meh", action : "fooaction"}, {id : "3e", html : "bar", action : "baraction"}, {tag : "span"}];
+                items   = [{cls: "foo", title: "foobar", id: "meh", action: "fooaction"}, {id: "3e", html: "bar", action: "baraction"}, {tag: "span"}];
 
             let pis = feature.processItems(items);
 
             t.expect(pis[2].id).toBeTruthy();
 
             t.expect(pis).toEqual([{
-                tag   : "div",
-                cls   : "cn-item foo",
-                title : "foobar",
-                id    : "meh"
+                tag: "div",
+                cls: "cn-item foo",
+                title: "foobar",
+                id: "meh"
             }, {
-                tag   : "div",
-                cls   : "cn-item",
-                html  : "bar",
-                id    : "3e"
+                tag: "div",
+                cls: "cn-item",
+                html: "bar",
+                id: "3e"
             }, {
-                tag : "span",
-                cls : "cn-item",
-                id  : pis[2].id
+                tag: "span",
+                cls: "cn-item",
+                id: pis[2].id
             }]);
 
             t.expect(feature.idToActionMap["meh"]).toBe("fooaction");
@@ -139,7 +139,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
 
             let grid    = getGrid(false),
                 feature = grid.view.getFeature("rowflymenu"),
-                items   = [{cls : "foo", title : "foobar"}, {html : "bar"}, {tag : "span"}];
+                items   = [{cls: "foo", title: "foobar"}, {html: "bar"}, {tag: "span"}];
 
             t.isCalledNTimes("processItems", feature, 1);
 
@@ -165,7 +165,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
                 LEAVE++;
             };
 
-            let tGrid = Ext.create({xtype : "grid"});
+            let tGrid = Ext.create({xtype: "grid"});
 
             feature.installListeners(tGrid);
 
@@ -186,14 +186,14 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
                 feature   = grid.view.getFeature("rowflymenu"),
                 menu      = feature.menu,
                 targetRow = grid.view.getRow(0),
-                rec       = {id : 1};
+                rec       = {id: 1};
 
-            feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent : Ext.emptyFn});
+            feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent: Ext.emptyFn});
 
             t.expect(feature.currentRecord).toBe(rec);
             t.expect(menu.dom.parentNode).toBe(targetRow);
 
-            feature.onItemMouseLeave(null, rec, targetRow, 0, {stopEvent : Ext.emptyFn});
+            feature.onItemMouseLeave(null, rec, targetRow, 0, {stopEvent: Ext.emptyFn});
             t.expect(feature.currentRecord).toBe(null);
             t.expect(menu.dom.parentNode).toBe(null);
 
@@ -210,11 +210,11 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
 
             feature.disable();
 
-            feature.onItemMouseEnter(null, {id : 1}, targetRow, 0, {stopEvent : Ext.emptyFn});
+            feature.onItemMouseEnter(null, {id: 1}, targetRow, 0, {stopEvent: Ext.emptyFn});
             t.expect(feature.currentRecord).toBe(null);
             t.expect(menu.dom.parentNode).toBe(null);
 
-            feature.onItemMouseLeave(null, {id : 1}, targetRow, 0, {stopEvent : Ext.emptyFn});
+            feature.onItemMouseLeave(null, {id: 1}, targetRow, 0, {stopEvent: Ext.emptyFn});
             t.expect(feature.currentRecord).toBe(null);
             t.expect(menu.dom.parentNode).toBe(null);
 
@@ -228,16 +228,16 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
                 feature   = grid.view.getFeature("rowflymenu"),
                 menu      = feature.menu,
                 targetRow = grid.view.getRow(0),
-                rec       = {id : 1};
+                rec       = {id: 1};
 
-            feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent : Ext.emptyFn});
+            feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent: Ext.emptyFn});
             t.expect(feature.currentRecord).toBe(rec);
             feature.disable();
 
             t.expect(feature.currentRecord).toBe(null);
             t.expect(menu.dom.parentNode).toBe(null);
 
-            feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent : Ext.emptyFn});
+            feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent: Ext.emptyFn});
 
             t.expect(menu.dom.parentNode).toBe(null);
             t.expect(feature.currentRecord).toBe(null);
@@ -249,7 +249,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
         t.it("onMenuClick() - installed", function (t) {
 
             let feature = Ext.create("coon.comp.grid.feature.RowFlyMenu", {
-                items : []
+                items: []
             });
 
             let CLICKED = 0;
@@ -258,7 +258,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
                 CLICKED++;
             };
 
-            feature.init(Ext.create({xtype : "grid"}));
+            feature.init(Ext.create({xtype: "grid"}));
 
             t.expect(CLICKED).toBe(0);
 
@@ -273,33 +273,33 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
         t.it("onMenuClick()", function (t) {
 
             let feature = Ext.create("coon.comp.grid.feature.RowFlyMenu", {
-                items : []
+                items: []
             });
 
             let CLICKED = {},
-                evt     = {stopEvent : Ext.emptyFn};
+                evt     = {stopEvent: Ext.emptyFn};
 
             feature.idToActionMap = {
-                "a" : "foo",
-                "b" : "bar"
+                "a": "foo",
+                "b": "bar"
             };
 
             feature.on("itemclick", function (feature, item, action, record) {
                 CLICKED[action] = record;
             });
 
-            let rec1 = {id : 1}, rec2 = {id : 2}, rec3 = {id : 3};
+            let rec1 = {id: 1}, rec2 = {id: 2}, rec3 = {id: 3};
             feature.currentRecord = rec1;
-            feature.onMenuClick(evt, {id : "a"});
+            feature.onMenuClick(evt, {id: "a"});
             feature.currentRecord = rec2;
-            feature.onMenuClick(evt, {id : "b"});
+            feature.onMenuClick(evt, {id: "b"});
             feature.currentRecord = rec3;
-            feature.onMenuClick(evt, {id : "c"});
+            feature.onMenuClick(evt, {id: "c"});
 
 
             t.expect(CLICKED).toEqual({
-                foo : rec1,
-                bar : rec2
+                foo: rec1,
+                bar: rec2
             });
 
             feature.destroy();
@@ -343,7 +343,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
                 feature   = grid.view.getFeature("rowflymenu"),
                 menu      = feature.menu,
                 targetRow = grid.view.getRow(0),
-                rec       = {id : 1};
+                rec       = {id: 1};
 
             let CALLED = 0;
 
@@ -352,7 +352,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
             });
 
             t.expect(CALLED).toBe(0);
-            feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent : Ext.emptyFn});
+            feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent: Ext.emptyFn});
             t.expect(menu.dom.parentNode).toBe(targetRow);
             t.expect(CALLED).toBe(1);
 
@@ -367,19 +367,19 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
                 feature   = grid.view.getFeature("rowflymenu"),
                 menu      = feature.menu,
                 targetRow = grid.view.getRow(0),
-                rec       = {id : 1};
+                rec       = {id: 1};
 
-            feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent : Ext.emptyFn});
+            feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent: Ext.emptyFn});
             t.expect(menu.dom.parentNode).toBe(targetRow);
 
-            feature.onItemMouseLeave(null, rec, targetRow, 0, {stopEvent : Ext.emptyFn});
+            feature.onItemMouseLeave(null, rec, targetRow, 0, {stopEvent: Ext.emptyFn});
             t.expect(menu.dom.parentNode).toBe(null);
 
             feature.on("beforemenushow", function () {
                 return false;
             });
 
-            feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent : Ext.emptyFn});
+            feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent: Ext.emptyFn});
             t.expect(menu.dom.parentNode).toBe(null);
 
 
@@ -403,9 +403,9 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
                 feature   = grid.view.getFeature("rowflymenu"),
                 menu      = feature.menu,
                 targetRow = grid.view.getRow(0),
-                rec       = {id : 1};
+                rec       = {id: 1};
 
-            feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent : Ext.emptyFn});
+            feature.onItemMouseEnter(null, rec, targetRow, 0, {stopEvent: Ext.emptyFn});
             t.expect(menu.dom.parentNode).toBe(targetRow);
             t.expect(feature.currentRecord).toBe(rec);
             feature.detachMenuAndUnset();

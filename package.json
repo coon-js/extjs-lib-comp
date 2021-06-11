@@ -1,56 +1,93 @@
 {
-    /**
-     * The name of the package.
-     */
-    "name": "lib-cn_comp",
-
-    "sencha": {
-        "namespace": "coon.comp",
-        "type": "code",
-        "creator": "coon.js",
-        "summary": "A collection of enhanced views and related functionality for Sencha ExtJS applications.",
-        "detailedDescription": "This package contains extended and advanced implementations for ExtJS projects which are related to view components. Requires lib-cn_core. Also home of the Livegrid-plugin.",
-        "version": "1.0.0",
-        "compatVersion": "1.0.0",
-        "format": "1",
-        "slicer": null,
-        "output": {
-            "base": "${package.dir}/build/${build.id}",
-            "js": {
-                "version": "ES8"
-            }
-        },
-        "language": {
-            "js": {
-                "input": "ES8",
-                "output": "ES8"
-            }
-        },
-        "compressor": {
-            "type" : "closure",
-            "polyfills": "none"
-        },
-        "local": true,
-        "sass": null,
-        "classpath": [
-            "${package.dir}/src",
-            "${package.dir}/${toolkit.name}/src"
-        ],
-        "overrides": [
-            "${package.dir}/overrides"
-        ],
-        "example": null,
-        "framework": "ext",
-        "requires": [
-            "lib-cn_core"
-        ],
-        "builds": {
-            "classic": {
-                "toolkit": "classic"
-            },
-            "modern": {
-                "toolkit": "modern"
-            }
-        }
+  "name": "@coon-js/extjs-lib-comp",
+  "sencha": {
+    "name": "extjs-lib-comp",
+    "namespace": "coon.comp",
+    "type": "code",
+    "creator": "coon.js",
+    "summary": "NPM package providing Livegrid-plugin and a collection of enhanced views and related functionality for Sencha ExtJS applications.",
+    "detailedDescription": "This package contains extended and advanced implementations for ExtJS projects which are related to view components. Requires @coon-js/extjs-lib-core. Also home of the Livegrid-plugin.",
+    "version": "0.0.1",
+    "compatVersion": "0.0.1",
+    "format": "1",
+    "slicer": null,
+    "output": {
+      "base": "${package.dir}/build/${build.id}",
+      "js": {
+        "version": "ES8"
+      }
+    },
+    "language": {
+      "js": {
+        "input": "ES8",
+        "output": "ES8"
+      }
+    },
+    "compressor": {
+      "type": "closure",
+      "polyfills": "none"
+    },
+    "local": true,
+    "sass": null,
+    "classpath": [
+      "${package.dir}/src",
+      "${package.dir}/${toolkit.name}/src"
+    ],
+    "overrides": [
+      "${package.dir}/overrides"
+    ],
+    "example": null,
+    "framework": "ext",
+    "requires": [
+      "extjs-lib-core"
+    ],
+    "builds": {
+      "classic": {
+        "toolkit": "classic"
+      },
+      "modern": {
+        "toolkit": "modern"
+      }
     }
+  },
+  "version": "0.0.1",
+  "description": "NPM package providing component library for ExtJS projects",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "npx ws --static.index tests.html --open",
+    "postinstall" : "npx extjs-link"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coon-js/extjs-lib-comp.git"
+  },
+  "keywords": [
+    "coon.js",
+    "ExtJS",
+    "Ext",
+    "Sencha",
+    "coonjs",
+    "l8js",
+    "l8.js",
+    "l8",
+    "extjs-lib-core"
+  ],
+  "author": "Thorsten Suckow-Homberg <thorsten@suckow-homberg.de>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/coon-js/extjs-lib-comp/issues"
+  },
+  "homepage": "https://github.com/coon-js/extjs-lib-comp#readme",
+  "devDependencies": {
+    "@coon-js/extjs-lib-core": "file:../extjs-lib-core",
+    "@coon-js/extjs-link": "file:../extjs-link",
+    "@coon-js/extjs-package-loader": "^1.0.0",
+    "@coon-js/siesta-lib-helper": "file:../siesta-lib-helper",
+    "@l8js/l8": "file:../../@l8js/l8",
+    "local-web-server": "^4.2.1",
+    "siesta-lite": "^5.5.2"
+  }
 }

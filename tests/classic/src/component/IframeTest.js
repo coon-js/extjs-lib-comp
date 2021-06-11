@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * extjs-lib-comp
+ * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -29,9 +29,9 @@ describe("coon.comp.component.IframeTest", function (t) {
 
     const createIframe = function (cfg) {
         let iframe = Ext.create("coon.comp.component.Iframe", Ext.apply({
-            renderTo : document.body,
-            height : 400,
-            width : 600
+            renderTo: document.body,
+            height: 400,
+            width: 600
         }, cfg || {}));
 
         return iframe;
@@ -73,7 +73,7 @@ describe("coon.comp.component.IframeTest", function (t) {
     t.it("src / name", function (t) {
 
         iframe = createIframe({
-            name : "conjoonIframe"
+            name: "conjoonIframe"
         });
 
 
@@ -103,8 +103,8 @@ describe("coon.comp.component.IframeTest", function (t) {
     t.it("sandbox / scrolling", function (t) {
 
         iframe = createIframe({
-            sandbox : "",
-            scrolling : "no"
+            sandbox: "",
+            scrolling: "no"
         });
 
         t.expect(iframe.el.dom.firstChild.getAttribute("sandbox")).toBe("");

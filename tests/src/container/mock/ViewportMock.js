@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * extjs-lib-comp
+ * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -29,11 +29,11 @@
  */
 Ext.define("coon.universal.test.container.mock.ViewportMock", {
 
-    extend : "coon.comp.container.Viewport",
+    extend: "coon.comp.container.Viewport",
 
-    postLaunchInfo : null,
+    postLaunchInfo: null,
 
-    addPostLaunchInfo : function (info) {
+    addPostLaunchInfo: function (info) {
 
         this.postLaunchInfo = this.postLaunchInfo || [];
 

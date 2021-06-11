@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * extjs-lib-comp
+ * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -33,7 +33,7 @@ describe("coon.comp.ImgTest", function (t) {
     t.it("test class and configuration", function (t) {
 
         let img = Ext.create("coon.comp.Img", {
-            renderTo : document.body
+            renderTo: document.body
         });
 
 

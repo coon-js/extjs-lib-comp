@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * extjs-lib-comp
+ * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,9 +27,9 @@
  * @private
  */
 Ext.define("coon.universal.test.app.mock.PackageControllerMock1", {
-    extend : "coon.universal.test.app.mock.PackageControllerMock",
+    extend: "coon.universal.test.app.mock.PackageControllerMock",
 
-    postLaunchHook : function () {
+    postLaunchHook: function () {
 
         return {};
 

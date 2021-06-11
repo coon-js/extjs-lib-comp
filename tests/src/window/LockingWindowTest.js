@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * extjs-lib-comp
+ * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -28,10 +28,10 @@ describe("coon.comp.window.LockingWindowTest", function (t) {
     t.it("Sanitize tests for LockingWindow specifics", function (t) {
 
         var w = Ext.create("coon.comp.window.LockingWindow", {
-            modal     : false,
-            maximized : false,
-            closable  : true,
-            resizable : true
+            modal: false,
+            maximized: false,
+            closable: true,
+            resizable: true
         });
 
         // truthies

@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * extjs-lib-comp
+ * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -105,9 +105,9 @@
  */
 Ext.define("coon.comp.grid.feature.RowBodySwitch", {
 
-    extend : "Ext.grid.feature.RowBody",
+    extend: "Ext.grid.feature.RowBody",
 
-    alias : "feature.cn_comp-gridfeature-rowbodyswitch",
+    alias: "feature.cn_comp-gridfeature-rowbodyswitch",
 
     /**
      * @cfg {String} enableCls
@@ -116,7 +116,7 @@ Ext.define("coon.comp.grid.feature.RowBodySwitch", {
      * the feature gets disabled.
      * @see disableCls
      */
-    enableCls : "cn_comp-rowbodyswitch-enable",
+    enableCls: "cn_comp-rowbodyswitch-enable",
 
     /**
      * @cfg {String} enableCls
@@ -125,7 +125,7 @@ Ext.define("coon.comp.grid.feature.RowBodySwitch", {
      * the feature gets enabled.
      * @see enableCls
      */
-    disableCls : "cn_comp-rowbodyswitch-disable",
+    disableCls: "cn_comp-rowbodyswitch-disable",
 
     /**
      * @cfg {Object} previewColumnConfig
@@ -134,7 +134,7 @@ Ext.define("coon.comp.grid.feature.RowBodySwitch", {
      * values are objects with information about their visibility, e.g.
      * {hidden : true/false}.
      */
-    previewColumnConfig : null,
+    previewColumnConfig: null,
 
 
     /**
@@ -149,27 +149,27 @@ Ext.define("coon.comp.grid.feature.RowBodySwitch", {
      *
      * @see BufferedRenderer#getScrollHeight
      */
-    variableRowHeight : true,
+    variableRowHeight: true,
 
 
     /**
      * @private
      */
-    columnConfig : null,
+    columnConfig: null,
 
     /**
      * @inheritdoc
      *
      * @see initFeatureForGrid
      */
-    init : function (grid) {
+    init: function (grid) {
 
         var me = this;
 
         if (grid.rendered) {
             me.initFeatureForGrid(grid);
         } else {
-            grid.on("afterrender", me.initFeatureForGrid, me, {single : true});
+            grid.on("afterrender", me.initFeatureForGrid, me, {single: true});
         }
 
         me.callParent(arguments);
@@ -186,7 +186,7 @@ Ext.define("coon.comp.grid.feature.RowBodySwitch", {
      *
      * @private
      */
-    initFeatureForGrid : function (grid) {
+    initFeatureForGrid: function (grid) {
 
         const me = this;
 
@@ -204,13 +204,13 @@ Ext.define("coon.comp.grid.feature.RowBodySwitch", {
     /**
      * @inheritdoc
      */
-    disable : function () {
+    disable: function () {
 
         var me = this;
 
         if (!me.view.grid.rendered) {
             Ext.raise({
-                msg : "Cannot disable since grid was not rendered yet."
+                msg: "Cannot disable since grid was not rendered yet."
             });
         }
 
@@ -224,13 +224,13 @@ Ext.define("coon.comp.grid.feature.RowBodySwitch", {
     /**
      * @inheritdoc
      */
-    enable : function () {
+    enable: function () {
 
         var me = this;
 
         if (!me.view.grid.rendered) {
             Ext.raise({
-                msg : "Cannot enable since grid was not rendered yet."
+                msg: "Cannot enable since grid was not rendered yet."
             });
         }
 
@@ -249,7 +249,7 @@ Ext.define("coon.comp.grid.feature.RowBodySwitch", {
      *
      * @param {Boolean} disable true to disable this feature
      */
-    disablePreview : function (disable) {
+    disablePreview: function (disable) {
 
         var me      = this,
             view     = me.view,
@@ -282,7 +282,7 @@ Ext.define("coon.comp.grid.feature.RowBodySwitch", {
      *
      * @private
      */
-    saveColumns : function () {
+    saveColumns: function () {
 
         var me           = this,
             view         = me.view,
@@ -295,10 +295,10 @@ Ext.define("coon.comp.grid.feature.RowBodySwitch", {
             col = columns[i];
 
             columnConfig[col.dataIndex] = {
-                hidden : col.rendered
+                hidden: col.rendered
                     ? col.isHidden()
                     : col.hidden === true,
-                width : col.rendered
+                width: col.rendered
                     ? col.getWidth() === 0
                         ? undefined
                         : col.getWidth()
@@ -334,7 +334,7 @@ Ext.define("coon.comp.grid.feature.RowBodySwitch", {
      * @see columnConfig
      * @see saveColumns
      */
-    restoreColumns : function (columnConfig) {
+    restoreColumns: function (columnConfig) {
         var me           = this,
             view         = me.view,
             grid         = view.grid,

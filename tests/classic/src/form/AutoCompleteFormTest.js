@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * extjs-lib-comp
+ * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -41,25 +41,25 @@ describe("coon.comp.form.AutCompleteFormTest", function (t) {
             currId = Ext.id();
 
             formConfig = {
-                id    : currId,
-                xtype : "cn_comp-autocompleteform",
-                width : 400,
-                height : 200,
-                renderTo : document.body,
-                items : [{
-                    xtype : "textfield",
-                    value : "a",
-                    name  : "focusMeToo"
+                id: currId,
+                xtype: "cn_comp-autocompleteform",
+                width: 400,
+                height: 200,
+                renderTo: document.body,
+                items: [{
+                    xtype: "textfield",
+                    value: "a",
+                    name: "focusMeToo"
                 }, {
-                    xtype : "textfield",
-                    name  : "focusMe"
+                    xtype: "textfield",
+                    name: "focusMe"
                 }, {
-                    xtype     : "textfield",
-                    inputType : "password"
+                    xtype: "textfield",
+                    inputType: "password"
                 }, {
-                    xtype        : "textfield",
-                    inputType    : "password",
-                    autoComplete : false
+                    xtype: "textfield",
+                    inputType: "password",
+                    autoComplete: false
                 }]
             };
         });
@@ -140,12 +140,12 @@ describe("coon.comp.form.AutCompleteFormTest", function (t) {
         t.it("Should be okay with missing actionUrl (autoCompleteTrigger {})", function (t) {
 
             form = Ext.widget(Ext.apply({
-                autoCompleteTrigger : {
-                    reference : "somebutton"
+                autoCompleteTrigger: {
+                    reference: "somebutton"
                 },
-                buttons : [{
-                    text      : "Login",
-                    reference : "somebutton"
+                buttons: [{
+                    text: "Login",
+                    reference: "somebutton"
                 }]
             }, formConfig));
 
@@ -163,13 +163,13 @@ describe("coon.comp.form.AutCompleteFormTest", function (t) {
             var wasClicked = false;
 
             var form = Ext.widget(Ext.apply({
-                autoCompleteTrigger : {
-                    actionUrl : "./foo.bar",
-                    reference : "somebuttonNew"
+                autoCompleteTrigger: {
+                    actionUrl: "./foo.bar",
+                    reference: "somebuttonNew"
                 },
-                buttons : [{
-                    text      : "Login",
-                    reference : "somebuttonNew"
+                buttons: [{
+                    text: "Login",
+                    reference: "somebuttonNew"
                 }]
             }, formConfig));
 
@@ -199,7 +199,7 @@ describe("coon.comp.form.AutCompleteFormTest", function (t) {
 
         t.it("Should throw error for missing reference (autoCompleteTrigger {})", function (t) {
             formConfig.autoCompleteTrigger = {
-                actionUrl : "foo.bar"
+                actionUrl: "foo.bar"
             };
             var exc = undefined;
             try {
@@ -214,8 +214,8 @@ describe("coon.comp.form.AutCompleteFormTest", function (t) {
 
         t.it("Should trigger error with missing reference target (autoCompleteTrigger {})", function (t) {
             formConfig.autoCompleteTrigger = {
-                actionUrl : "foo.bar",
-                reference : "somebutton"
+                actionUrl: "foo.bar",
+                reference: "somebutton"
             };
             var exc = undefined;
 

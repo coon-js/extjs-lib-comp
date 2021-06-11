@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * extjs-lib-comp
+ * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -97,11 +97,11 @@
  */
 Ext.define("coon.comp.grid.feature.RowFlyMenu", {
 
-    extend : "Ext.grid.feature.Feature",
+    extend: "Ext.grid.feature.Feature",
 
-    alias : "feature.cn_comp-gridfeature-rowflymenu",
+    alias: "feature.cn_comp-gridfeature-rowflymenu",
 
-    cls : "cn_comp-rowflymenu",
+    cls: "cn_comp-rowflymenu",
 
     /**
      * Gets firec when an item of this menu was clicked that was configured
@@ -127,14 +127,14 @@ Ext.define("coon.comp.grid.feature.RowFlyMenu", {
      * @type {Object}
      * @private
      */
-    idToActionMap : null,
+    idToActionMap: null,
 
     /**
      * The menu that gets created from #items for this Feature.
      * @type {Ext.Element}
      * @private
      */
-    menu : null,
+    menu: null,
 
 
     /**
@@ -142,7 +142,7 @@ Ext.define("coon.comp.grid.feature.RowFlyMenu", {
      * for the RowFlyMenu. See #processItems
      * @cfg {Array} items
      */
-    items : null,
+    items: null,
 
 
     /**
@@ -151,7 +151,7 @@ Ext.define("coon.comp.grid.feature.RowFlyMenu", {
      * with the specificatiosn of the alignTo()-method.
      * @cfg {String/Array} alignTo
      */
-    alignTo : "tr-tr",
+    alignTo: "tr-tr",
 
 
     /**
@@ -160,22 +160,22 @@ Ext.define("coon.comp.grid.feature.RowFlyMenu", {
      * @tape {Ext.data.Model}
      * @private
      */
-    currentRecord : null,
+    currentRecord: null,
 
     /**
      * @inheritdoc
      */
-    init : function (grid) {
+    init: function (grid) {
 
         const me = this;
 
         me.menu = me.buildMenu(me.items);
 
         me.mon(me.menu, {
-            "tap"       : me.onMenuClick,
-            "mouseover" : me.onMenuMouseOver,
-            "mouseout"  : me.onMenuMouseOut,
-            scope      : me
+            "tap": me.onMenuClick,
+            "mouseover": me.onMenuMouseOver,
+            "mouseout": me.onMenuMouseOut,
+            scope: me
         });
 
         delete me.items;
@@ -192,7 +192,7 @@ Ext.define("coon.comp.grid.feature.RowFlyMenu", {
      * @param {Ext.Event}evt
      * @param {HtmlElement} target
      */
-    onMenuMouseOver : function (evt, target) {
+    onMenuMouseOver: function (evt, target) {
         if (target.className.indexOf("cn-item") !== -1) {
             this.grid.on("beforeselect", this.preventSelection);
             Ext.fly(target).addCls("cn-over");
@@ -206,7 +206,7 @@ Ext.define("coon.comp.grid.feature.RowFlyMenu", {
      * @param {Ext.Event}evt
      * @param {HtmlElement} target
      */
-    onMenuMouseOut : function (evt, target) {
+    onMenuMouseOut: function (evt, target) {
         if (target.className.indexOf("cn-item") !== -1) {
             this.grid.un("beforeselect", this.preventSelection);
             Ext.fly(target).removeCls("cn-over");
@@ -222,7 +222,7 @@ Ext.define("coon.comp.grid.feature.RowFlyMenu", {
      * @param {Ext.Event} evt
      * @param {HtmlElement} target
      */
-    onMenuClick : function (evt, target) {
+    onMenuClick: function (evt, target) {
 
         const me         = this,
             idToAction = me.idToActionMap,
@@ -254,7 +254,7 @@ Ext.define("coon.comp.grid.feature.RowFlyMenu", {
      *
      * @private
      */
-    onItemMouseEnter : function (view, record, item, index, e, eOpts) {
+    onItemMouseEnter: function (view, record, item, index, e, eOpts) {
 
         const me = this;
 
@@ -293,7 +293,7 @@ Ext.define("coon.comp.grid.feature.RowFlyMenu", {
      *
      * @see detachMenuAndUnset
      */
-    onItemMouseLeave : function (view, record, item, index, e, eOpts) {
+    onItemMouseLeave: function (view, record, item, index, e, eOpts) {
 
         const me = this;
 
@@ -314,7 +314,7 @@ Ext.define("coon.comp.grid.feature.RowFlyMenu", {
      *
      * @private
      */
-    installListeners : function (grid) {
+    installListeners: function (grid) {
 
         const me = this;
 
@@ -340,16 +340,16 @@ Ext.define("coon.comp.grid.feature.RowFlyMenu", {
      *
      * @private
      */
-    buildMenu : function (items) {
+    buildMenu: function (items) {
 
         const me = this;
 
         let childs = me.processItems(items), el;
 
         let re = Ext.Element.create({
-            tag       : "div",
-            cls       : me.cls,
-            children : childs
+            tag: "div",
+            cls: me.cls,
+            children: childs
         }, true);
 
         el = Ext.create("Ext.Element", re);
@@ -368,7 +368,7 @@ Ext.define("coon.comp.grid.feature.RowFlyMenu", {
      *
      * @private
      */
-    processItems : function (items) {
+    processItems: function (items) {
 
         const me = this;
 
@@ -401,7 +401,7 @@ Ext.define("coon.comp.grid.feature.RowFlyMenu", {
     /**
      * @inheritdoc
      */
-    disable : function () {
+    disable: function () {
 
         const me = this;
 
@@ -419,7 +419,7 @@ Ext.define("coon.comp.grid.feature.RowFlyMenu", {
      *
      * @see detachMenuAndUnset
      */
-    onBeforeGridViewRefresh : function () {
+    onBeforeGridViewRefresh: function () {
 
         const me = this;
 
@@ -432,7 +432,7 @@ Ext.define("coon.comp.grid.feature.RowFlyMenu", {
      * #currentRecord for this menu to null.
      *
      */
-    detachMenuAndUnset : function () {
+    detachMenuAndUnset: function () {
 
         const me    = this,
             menu  = me.menu;
@@ -450,7 +450,7 @@ Ext.define("coon.comp.grid.feature.RowFlyMenu", {
      *
      * @inheritdoc
      */
-    destroy : function () {
+    destroy: function () {
 
         const me = this;
 
@@ -471,7 +471,7 @@ Ext.define("coon.comp.grid.feature.RowFlyMenu", {
      *
      * @private
      */
-    preventSelection : function () {
+    preventSelection: function () {
         return false;
     },
 
@@ -482,7 +482,7 @@ Ext.define("coon.comp.grid.feature.RowFlyMenu", {
      *
      * @private
      */
-    onBeforeItemKeyDown : function () {
+    onBeforeItemKeyDown: function () {
         this.detachMenuAndUnset();
     }
 

@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * extjs-lib-comp
+ * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -94,11 +94,11 @@
  */
 Ext.define("coon.comp.form.AutoCompleteForm", {
 
-    extend : "Ext.form.Panel",
+    extend: "Ext.form.Panel",
 
-    xtype : "cn_comp-autocompleteform",
+    xtype: "cn_comp-autocompleteform",
 
-    referenceHolder : true,
+    referenceHolder: true,
 
     /**
      * Seek out the first enabled, focusable, empty textfield when the form is focused
@@ -109,7 +109,7 @@ Ext.define("coon.comp.form.AutoCompleteForm", {
      * @cfg {String} formName
      * The name for the form used as the name attribute for the <form>-tag
      */
-    formName : undefined,
+    formName: undefined,
 
     /**
      * @type {Boolean/Object} [autoCompleteTrigger=false]
@@ -122,20 +122,20 @@ Ext.define("coon.comp.form.AutoCompleteForm", {
      * triggers the fake submit/autocomplete. This class will automatically
      * create a "click" listener for this button.
      */
-    autoCompleteTrigger : false,
+    autoCompleteTrigger: false,
 
     /**
      * @cfg {String} [defaultFakeActionUrl=./resources/html/blank.html]
      * The default action url to use with the fake iframe if autoCompleteTrigger
      * is configured as an object, but missing the actionUrl property.
      */
-    defaultFakeActionUrl : "./resources/html/blank.html",
+    defaultFakeActionUrl: "./resources/html/blank.html",
 
     /**
      * @type {HtmlElement}
      * @private
      */
-    submitHelperButton : null,
+    submitHelperButton: null,
 
     /**
      * @inheritdoc
@@ -150,8 +150,8 @@ Ext.define("coon.comp.form.AutoCompleteForm", {
 
         // Use standard FORM tag for detection by browser or password tools
         cfgObject = {
-            tag    : "form",
-            method : "post"
+            tag: "form",
+            method: "post"
         };
 
         if (me.formName) {
@@ -163,9 +163,9 @@ Ext.define("coon.comp.form.AutoCompleteForm", {
         me.callParent();
 
         listen = {
-            render : "doAutoComplete",
-            scope  : me,
-            single : true
+            render: "doAutoComplete",
+            scope: me,
+            single: true
         };
 
         Ext.each(me.query("textfield"), function (field) {
@@ -174,12 +174,12 @@ Ext.define("coon.comp.form.AutoCompleteForm", {
 
         if (me.autoCompleteTrigger !== false) {
             me.sanitizeAutoCompleteTrigger(me.autoCompleteTrigger);
-            me.on("afterrender", me.createFakeSubmitHelper, me, {single : true});
+            me.on("afterrender", me.createFakeSubmitHelper, me, {single: true});
         }
     },
 
 
-    privates : {
+    privates: {
 
         /**
          * Additional check for this forms configuration, mainly for the
@@ -194,7 +194,7 @@ Ext.define("coon.comp.form.AutoCompleteForm", {
          * @throws error if autoCompleteTrigger is not false and properly configured
          * with actionUrl and reference
          */
-        sanitizeAutoCompleteTrigger : function (options) {
+        sanitizeAutoCompleteTrigger: function (options) {
 
             var me = this;
 
@@ -206,15 +206,15 @@ Ext.define("coon.comp.form.AutoCompleteForm", {
             if (!options.actionUrl || !options.reference ||
                 !Ext.isString(options.actionUrl) || !Ext.isString(options.reference)) {
                 Ext.raise({
-                    sourceClass : Ext.getClassName(this),
-                    actionUrl   : options.actionUrl,
-                    reference   : options.reference,
-                    msg         : Ext.getClassName(this) + " needs actionUrl and reference to be configured as strings"
+                    sourceClass: Ext.getClassName(this),
+                    actionUrl: options.actionUrl,
+                    reference: options.reference,
+                    msg: Ext.getClassName(this) + " needs actionUrl and reference to be configured as strings"
                 });
             }
 
             return {
-                actionUrl : options.actionUrl
+                actionUrl: options.actionUrl
             };
         },
 
@@ -223,7 +223,7 @@ Ext.define("coon.comp.form.AutoCompleteForm", {
          *
          * @param {Ext.form.field.Text} field
          */
-        doAutoComplete : function (field) {
+        doAutoComplete: function (field) {
             if (field.inputEl && field.autoComplete !== false) {
                 field.inputEl.set({ autocomplete: "on" });
             }
@@ -236,23 +236,23 @@ Ext.define("coon.comp.form.AutoCompleteForm", {
          * @throws error if the reference specified in {@link #autoCompleteTrigger}.reference
          * cannot be found.
          */
-        createFakeSubmitHelper : function () {
+        createFakeSubmitHelper: function () {
 
             var me  = this,
                 btn = me.lookup(me.autoCompleteTrigger.reference);
 
             if (!btn) {
                 Ext.raise({
-                    sourceClass : Ext.getClassName(this),
-                    reference   : me.autoCompleteTrigger.reference,
-                    msg         : Ext.getClassName(this) + "#autoCompleteTrigger (Object) needs reference to be representing an existing component"
+                    sourceClass: Ext.getClassName(this),
+                    reference: me.autoCompleteTrigger.reference,
+                    msg: Ext.getClassName(this) + "#autoCompleteTrigger (Object) needs reference to be representing an existing component"
                 });
                 return;
             }
 
             me.submitHelperButton = Ext.DomHelper.append(
                 me.el.dom,
-                {tag : "input", type : "submit", style : "display:none"}
+                {tag: "input", type: "submit", style: "display:none"}
             );
 
             Ext.fly(me.el.dom).on("submit", me.onDomFormSubmit, me);
@@ -268,7 +268,7 @@ Ext.define("coon.comp.form.AutoCompleteForm", {
          *
          * @returns {boolean} false
          */
-        onDomFormSubmit : function (evt) {
+        onDomFormSubmit: function (evt) {
 
             const me = this;
 
@@ -287,15 +287,15 @@ Ext.define("coon.comp.form.AutoCompleteForm", {
          * @throws error if neither the button referenced via {@link #submitButtonId}
          * or the iframe referenced via {@link #iframeId} can be found.
          */
-        triggerFakeSubmit : function () {
+        triggerFakeSubmit: function () {
 
             var me  = this,
                 btn = me.submitHelperButton;
 
             if (!btn) {
                 Ext.raise({
-                    sourceClass : Ext.getClassName(this),
-                    msg         : Ext.getClassName(this) + " cannot find the fake submit button"
+                    sourceClass: Ext.getClassName(this),
+                    msg: Ext.getClassName(this) + " cannot find the fake submit button"
                 });
             }
 

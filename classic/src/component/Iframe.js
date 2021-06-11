@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * extjs-lib-comp
+ * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -44,9 +44,9 @@
  */
 Ext.define("coon.comp.component.Iframe", {
 
-    extend : "Ext.Component",
+    extend: "Ext.Component",
 
-    alias : "widget.cn_comp-iframe",
+    alias: "widget.cn_comp-iframe",
 
     renderTpl: [
         "<iframe sandbox=\"{sandbox}\" scrolling=\"{scrolling}\" id=\"{id}-cn_iframeEl\" data-ref=\"cn_iframeEl\" name=\"{name}\" width=\"100%\" height=\"100%\" frameborder=\"0\"></iframe>"
@@ -70,17 +70,17 @@ Ext.define("coon.comp.component.Iframe", {
     /**
      * @cfg {String} name
      */
-    name : undefined,
+    name: undefined,
 
     /**
      * @cfg {String} scrolling
      */
-    scrolling : undefined,
+    scrolling: undefined,
 
     /**
      * @cfg {String} sandbox
      */
-    sandbox : "allow-same-origin",
+    sandbox: "allow-same-origin",
 
     /**
      * @inheritdoc
@@ -99,7 +99,7 @@ Ext.define("coon.comp.component.Iframe", {
      *
      * @see #onLoad
      */
-    initEvents : function () {
+    initEvents: function () {
 
         const me = this;
 
@@ -115,7 +115,7 @@ Ext.define("coon.comp.component.Iframe", {
      *
      * @private
      */
-    onLoad : function () {
+    onLoad: function () {
 
         const me = this;
 
@@ -131,9 +131,9 @@ Ext.define("coon.comp.component.Iframe", {
         const me = this;
 
         return Ext.apply(me.callParent(arguments), {
-            name      : me.name,
-            sandbox   : me.sandbox,
-            scrolling : me.scrolling
+            name: me.name,
+            sandbox: me.sandbox,
+            scrolling: me.scrolling
         });
     },
 
@@ -144,7 +144,7 @@ Ext.define("coon.comp.component.Iframe", {
      * @return {HTMLElement}
      */
 
-    getBody : function () {
+    getBody: function () {
 
         const me = this;
 
@@ -158,7 +158,7 @@ Ext.define("coon.comp.component.Iframe", {
      * Fires the
      * @param {String} value
      */
-    setSrcDoc : function (value) {
+    setSrcDoc: function (value) {
         const me = this;
 
         if (!value) {
@@ -176,7 +176,7 @@ Ext.define("coon.comp.component.Iframe", {
      *
      * @returns {string}
      */
-    getSrcDoc : function () {
+    getSrcDoc: function () {
 
         const me = this;
 

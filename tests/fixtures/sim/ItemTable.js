@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * extjs-lib-comp
+ * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -28,18 +28,18 @@
  */
 Ext.define("coon.comp.fixtures.sim.ItemTable", {
 
-    singleton : true,
+    singleton: true,
 
-    items : null,
+    items: null,
 
-    baseItems : null,
+    baseItems: null,
 
 
-    buildRandomNumber : function (min, max) {
+    buildRandomNumber: function (min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     },
 
-    buildRandomDate : function () {
+    buildRandomDate: function () {
         var me = this,
             d  = me.buildRandomNumber(1, 31),
             m  = me.buildRandomNumber(1, 12),
@@ -56,14 +56,14 @@ Ext.define("coon.comp.fixtures.sim.ItemTable", {
         );
     },
 
-    updateItem : function (id, values) {
+    updateItem: function (id, values) {
 
         var me = this;
 
         me.updateAllItemData(id, values);
     },
 
-    updateAllItemData : function (id, values) {
+    updateAllItemData: function (id, values) {
         var me     = this,
             item   = me.getItem(id),
             dataItems = [undefined, item];
@@ -104,7 +104,7 @@ Ext.define("coon.comp.fixtures.sim.ItemTable", {
     },
 
 
-    getItem : function (id) {
+    getItem: function (id) {
         var me    = this,
             items = me.getItems();
 
@@ -118,7 +118,7 @@ Ext.define("coon.comp.fixtures.sim.ItemTable", {
     },
 
 
-    getItems : function () {
+    getItems: function () {
 
         var me        = this,
             baseItems = me.buildBaseItems(),
@@ -132,7 +132,7 @@ Ext.define("coon.comp.fixtures.sim.ItemTable", {
 
             items.push(Ext.apply({
                 // leave first one as unread for tests
-                isRead         : i === 0 ? false : (me.buildRandomNumber(0, 1) ? true : false)
+                isRead: i === 0 ? false : (me.buildRandomNumber(0, 1) ? true : false)
             }, baseItems[i]));
         }
 
@@ -141,7 +141,7 @@ Ext.define("coon.comp.fixtures.sim.ItemTable", {
         return me.items;
     },
 
-    buildBaseItems : function () {
+    buildBaseItems: function () {
         var me = this,
             baseItems, subjects, sender;
 
@@ -172,13 +172,13 @@ Ext.define("coon.comp.fixtures.sim.ItemTable", {
         for (var i = 0; i < 10000; i++) {
 
             baseItems.push({
-                id      : (i + 1) + "",
-                date    : me.buildRandomDate(),
-                subject : " - " + (i) + " - " + subjects[me.buildRandomNumber(0, 5)],
-                from    : i === 0
+                id: (i + 1) + "",
+                date: me.buildRandomDate(),
+                subject: " - " + (i) + " - " + subjects[me.buildRandomNumber(0, 5)],
+                from: i === 0
                     ? "from@domain.tld"
                     : sender[me.buildRandomNumber(0, 5)],
-                testProp : i
+                testProp: i
             });
         }
 

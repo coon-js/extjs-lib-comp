@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * extjs-lib-comp
+ * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -28,10 +28,10 @@ describe("coon.comp.grid.feature.RowBodySwitchTest", function (t) {
     var getGrid = function (disabled, rendered = true, variableRowHeight = true) {
 
         let featCfg = {
-            disabled           : !!disabled,
-            ftype              : "cn_comp-gridfeature-rowbodyswitch",
-            id                 : "rowbodyswitchfeature",
-            getAdditionalData  : function (data, idx, record, orig) {
+            disabled: !!disabled,
+            ftype: "cn_comp-gridfeature-rowbodyswitch",
+            id: "rowbodyswitchfeature",
+            getAdditionalData: function (data, idx, record, orig) {
 
                 var me = this;
 
@@ -40,13 +40,13 @@ describe("coon.comp.grid.feature.RowBodySwitchTest", function (t) {
                 }
 
                 return {
-                    rowBody : "Subject: <div>" + record.get("subject") + "</div>"
+                    rowBody: "Subject: <div>" + record.get("subject") + "</div>"
                 };
             },
-            previewColumnConfig : {
-                "isRead"  : {hidden : true},
-                "subject" : {hidden : true},
-                "to"      : {flex : 1}
+            previewColumnConfig: {
+                "isRead": {hidden: true},
+                "subject": {hidden: true},
+                "to": {flex: 1}
             }
         };
 
@@ -56,36 +56,36 @@ describe("coon.comp.grid.feature.RowBodySwitchTest", function (t) {
 
         return Ext.create("Ext.grid.Panel", {
 
-            renderTo : rendered ? document.body : undefined,
+            renderTo: rendered ? document.body : undefined,
 
-            width  : 510,
-            height : 200,
+            width: 510,
+            height: 200,
 
-            features : [featCfg],
+            features: [featCfg],
 
-            store : {
-                fields : ["isRead", "subject", "to"],
-                data   : [{
-                    isRead : false, subject : "Subject 1", to : "to 1"
+            store: {
+                fields: ["isRead", "subject", "to"],
+                data: [{
+                    isRead: false, subject: "Subject 1", to: "to 1"
                 }, {
-                    isRead : true, subject : "Subject 2", to : "to 2"
+                    isRead: true, subject: "Subject 2", to: "to 2"
                 }, {
-                    isRead : false, subject : "Subject 3", to : "to 3"
+                    isRead: false, subject: "Subject 3", to: "to 3"
                 }]
             },
 
-            columns : [{
-                text      : "Read",
-                dataIndex : "isRead",
-                flex      : 1
+            columns: [{
+                text: "Read",
+                dataIndex: "isRead",
+                flex: 1
             }, {
-                text      : "Subject",
-                dataIndex : "subject",
-                flex      : 1
+                text: "Subject",
+                dataIndex: "subject",
+                flex: 1
             }, {
-                text      : "To",
-                dataIndex : "to",
-                hidden    : true
+                text: "To",
+                dataIndex: "to",
+                hidden: true
             }]
 
         });
@@ -151,13 +151,13 @@ describe("coon.comp.grid.feature.RowBodySwitchTest", function (t) {
             }
 
             t.expect(fc).toEqual({
-                isRead  : {hidden : false},
-                subject : {hidden : false},
-                to      : {hidden : true}
+                isRead: {hidden: false},
+                subject: {hidden: false},
+                to: {hidden: true}
             });
 
             t.expect(feature.disabled).toBeFalsy();
-            t.expect(feature.getAdditionalData(null, null, {get:function (){return "a";}})).toBeDefined();
+            t.expect(feature.getAdditionalData(null, null, {get: function (){return "a";}})).toBeDefined();
 
             t.expect(grid.getHideHeaders()).toBe(true);
 

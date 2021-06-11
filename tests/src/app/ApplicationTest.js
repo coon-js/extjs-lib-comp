@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * extjs-lib-comp
+ * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -25,37 +25,8 @@
 
 describe("coon.comp.app.ApplicationTest", function (t) {
 
-    let app;
-
-    t.beforeEach(function () {
-        Ext.isModern && Ext.viewport.Viewport.setup();
-    });
-
-    t.afterEach(function () {
-
-        if (app) {
-            if (app.getMainView()) {
-                app.getMainView().destroy();
-            }
-
-            app.destroy();
-            app = null;
-
-        }
-
-        if (Ext.isModern && Ext.Viewport) {
-            Ext.Viewport.destroy();
-            Ext.Viewport = null;
-        }
-
-    });
-
-    // +----------------------------------------------------------------------------
-    // |                    =~. Unit Tests .~=
-    // +----------------------------------------------------------------------------
-    
-    
     t.requireOk(
+        "coon.core.app.Application",
         "coon.universal.test.container.mock.ViewportMock",
         "coon.universal.test.app.mock.ViewModelMock",
         "coon.universal.test.app.mock.PackageControllerMock",
@@ -65,11 +36,97 @@ describe("coon.comp.app.ApplicationTest", function (t) {
         "coon.universal.test.app.mock.PackageControllerMockFalse", function () {
 
 
-            t.it("Should create mainView if configured properly", function (t) {
+            let app = null,
+                ORIGINAL_MANIFEST,
+                ONPROFILESREADY;
 
+
+            const buildManifest = function () {
+
+                const manifest = {};
+
+                manifest.name = "ApplicationTest";
+                manifest["coon-js"] = {env: "dev"};
+                manifest.packages = {
+                    "p_foo": {
+                        included: false,
+                        isLoaded: false,
+                        namespace: "foo",
+                        "coon-js": {package: {controller: true}}
+                    },
+                    "p_bar": {
+                        included: true,
+                        isLoaded: false,
+                        namespace: "bar",
+                        "coon-js": {package: {controller: true}}
+                    },
+                    "p_foobar": {
+                        included: false,
+                        isLoaded: false,
+                        namespace: "foobar",
+                        "cs": {package: {controller: true}}
+                    },
+                    "t_snafu": {
+                        included: false,
+                        isLoaded: false,
+                        namespace: "snafu",
+                        "coon-js": {package: {controller: true}}
+                    }
+                };
+                manifest.resources = {path: "./fixtures", shared: "../bar"};
+                return manifest;
+            };
+
+
+            const switchManifest = (reset) => {
+                    if (!reset) {
+                        ORIGINAL_MANIFEST = Ext.manifest;
+                        Ext.manifest = buildManifest();
+                    } else {
+                        Ext.manifest = ORIGINAL_MANIFEST;
+                    }
+                },
+                switchOnProfilesReady = (origin) => {
+                    if (!origin) {
+                        ONPROFILESREADY = coon.core.app.Application.prototype.onProfilesReady;
+                        coon.core.app.Application.prototype.onProfilesReady = Ext.app.Application.prototype.onProfilesReady;
+                        return ONPROFILESREADY;
+                    } else if (ONPROFILESREADY) {
+                        coon.core.app.Application.prototype.onProfilesReady = ONPROFILESREADY;
+                    }
+                };
+
+            t.beforeEach(function () {
+                Ext.isModern && Ext.viewport.Viewport.setup();
+                switchOnProfilesReady();
+            });
+
+            t.afterEach(function () {
+
+                switchOnProfilesReady(true);
+                if (app) {
+                    app.destroy();
+                    app = null;
+                }
+
+                if (Ext.isModern && Ext.Viewport) {
+                    Ext.Viewport.destroy();
+                    Ext.Viewport = null;
+                }
+
+                coon.core.Environment._vendorBase = undefined;
+            });
+
+            // +----------------------------------------------------------------------------
+            // |                    =~. Unit Tests .~=
+            // +----------------------------------------------------------------------------
+
+
+            t.it("Should create mainView if configured properly", function (t) {
+                switchManifest();
                 app = Ext.create("coon.comp.app.Application", {
-                    name                          : "test",
-                    mainView                      : "coon.comp.container.Viewport"
+                    name: "test",
+                    mainView: "coon.comp.container.Viewport"
                 });
 
                 t.expect(app.getMainView() instanceof coon.comp.container.Viewport).toBeTruthy();
@@ -79,8 +136,8 @@ describe("coon.comp.app.ApplicationTest", function (t) {
             t.it("Should NOT call ViewportMock's postLaunchHook", function (t) {
 
                 app = Ext.create("coon.comp.app.Application", {
-                    name                          : "test",
-                    mainView                      : "coon.universal.test.container.mock.ViewportMock"
+                    name: "test",
+                    mainView: "coon.universal.test.container.mock.ViewportMock"
                 });
 
                 t.expect(app.getMainView().postLaunchInfo).toBeNull();
@@ -91,11 +148,11 @@ describe("coon.comp.app.ApplicationTest", function (t) {
 
 
                 app = Ext.create("coon.comp.app.Application", {
-                    controllers : [
+                    controllers: [
                         "coon.universal.test.app.mock.PackageControllerMock"
                     ],
-                    name                          : "test",
-                    mainView                      : "coon.universal.test.container.mock.ViewportMock"
+                    name: "test",
+                    mainView: "coon.universal.test.container.mock.ViewportMock"
                 });
 
                 t.expect(app.getMainView().postLaunchInfo.length).toBe(1);
@@ -107,12 +164,12 @@ describe("coon.comp.app.ApplicationTest", function (t) {
 
 
                 app = Ext.create("coon.comp.app.Application", {
-                    controllers : [
+                    controllers: [
                         "coon.universal.test.app.mock.PackageControllerMock",
                         "coon.universal.test.app.mock.PackageControllerMock1"
                     ],
-                    name                          : "test",
-                    mainView                      : "coon.universal.test.container.mock.ViewportMock"
+                    name: "test",
+                    mainView: "coon.universal.test.container.mock.ViewportMock"
                 });
 
                 t.expect(app.getMainView().postLaunchInfo.length).toBe(2);
@@ -123,14 +180,14 @@ describe("coon.comp.app.ApplicationTest", function (t) {
             t.it("4 controllers, 1 returns undefined, should call ViewportMock's postLaunchHook 3 times", function (t) {
 
                 app = Ext.create("coon.comp.app.Application", {
-                    controllers : [
+                    controllers: [
                         "coon.universal.test.app.mock.PackageControllerMock",
                         "coon.universal.test.app.mock.PackageControllerMock1",
                         "coon.universal.test.app.mock.PackageControllerMock2",
                         "coon.universal.test.app.mock.PackageControllerMock3"
                     ],
-                    name                          : "test",
-                    mainView                      : "coon.universal.test.container.mock.ViewportMock"
+                    name: "test",
+                    mainView: "coon.universal.test.container.mock.ViewportMock"
                 });
 
                 t.expect(app.getMainView().postLaunchInfo.length).toBe(3);
@@ -141,8 +198,8 @@ describe("coon.comp.app.ApplicationTest", function (t) {
             t.it("activateViewForHash()", function (t) {
 
                 app = Ext.create("coon.comp.app.Application", {
-                    name     : "test",
-                    mainView : "coon.comp.container.Viewport"
+                    name: "test",
+                    mainView: "coon.comp.container.Viewport"
                 });
                 let called = false;
 
@@ -157,12 +214,12 @@ describe("coon.comp.app.ApplicationTest", function (t) {
 
 
             t.it("Should throw an error if setup is complete, but mainView is no instance of coon.comp.container.Viewport", function (t) {
-                var exc = undefined;
+                var exc;
 
                 try {
                     app = Ext.create("coon.comp.app.Application", {
-                        name                          : "test",
-                        mainView                      : "Ext.Panel"
+                        name: "test",
+                        mainView: "Ext.Panel"
                     });
                 } catch(e) {exc = e;}
 
@@ -171,4 +228,5 @@ describe("coon.comp.app.ApplicationTest", function (t) {
             });
 
 
-        });});
+    });
+});

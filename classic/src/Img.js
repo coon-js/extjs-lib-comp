@@ -1,7 +1,7 @@
 /**
  * coon.js
  * lib-cn_user
- * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_user
+ * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_user
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -28,6 +28,6 @@
  */
 Ext.define("coon.comp.Img", {
 
-    extend : "Ext.Img"
+    extend: "Ext.Img"
 
 });

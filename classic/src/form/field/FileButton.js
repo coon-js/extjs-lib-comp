@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * extjs-lib-comp
+ * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -57,9 +57,9 @@
  */
 Ext.define("coon.comp.form.field.FileButton", {
 
-    extend : "Ext.form.field.FileButton",
+    extend: "Ext.form.field.FileButton",
 
-    requires : [
+    requires: [
         /**
          * @see https://www.sencha.com/forum/showthread.php?339216-6-2-(GPL)-Styles-for-Ext-form-field-FileButton-not-loaded-generated-in-production&p=1178359#post1178359
          * @bug this is needed so the css styles for the FileButton get loaded.
@@ -68,7 +68,7 @@ Ext.define("coon.comp.form.field.FileButton", {
         "Ext.form.field.File"
     ],
 
-    alias : "widget.cn_comp-formfieldfilebutton",
+    alias: "widget.cn_comp-formfieldfilebutton",
 
     /**
      * @event change

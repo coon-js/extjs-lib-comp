@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * extjs-lib-comp
+ * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -37,8 +37,8 @@ Ext.define("coon.comp.fixtures.sim.Init", {
     constructor: function () {
 
         Ext.ux.ajax.SimManager.init({
-            delay : 1,
-            defaultSimlet : null
+            delay: 1,
+            defaultSimlet: null
         });
 
     }

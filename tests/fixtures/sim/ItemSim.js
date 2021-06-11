@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * extjs-lib-comp
+ * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -28,7 +28,7 @@
  */
 Ext.define("coon.comp.fixtures.sim.ItemSim", {
 
-    requires : [
+    requires: [
         "coon.comp.fixtures.sim.Init",
         "coon.comp.fixtures.sim.ItemTable"
     ]
@@ -36,11 +36,11 @@ Ext.define("coon.comp.fixtures.sim.ItemSim", {
 }, function () {
 
     Ext.ux.ajax.SimManager.register({
-        type : "json",
+        type: "json",
 
-        url  : /cn_comp\/fixtures\/Livegrid(\/\d+)?/,
+        url: /cn_comp\/fixtures\/Livegrid(\/\d+)?/,
 
-        doPut : function (ctx) {
+        doPut: function (ctx) {
 
             var me        = this,
                 ret       = {},
@@ -77,7 +77,7 @@ Ext.define("coon.comp.fixtures.sim.ItemSim", {
 
             if (idPart) {
                 id = parseInt(idPart.substring(1), 10);
-                return {data : Ext.Array.findBy(
+                return {data: Ext.Array.findBy(
                     items,
                     function (item) {
                         return item.id === "" + id;

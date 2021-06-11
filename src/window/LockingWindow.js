@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * extjs-lib-comp
+ * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -33,27 +33,27 @@
  */
 Ext.define("coon.comp.window.LockingWindow", {
 
-    extend : "Ext.window.Window",
+    extend: "Ext.window.Window",
 
-    alias : "widget.cn_comp-lockingwindow",
+    alias: "widget.cn_comp-lockingwindow",
 
-    cls : "cn_comp-lockingwindow",
+    cls: "cn_comp-lockingwindow",
 
-    autoShow   : true,
+    autoShow: true,
 
-    titleAlign : "center",
+    titleAlign: "center",
 
-    maximized  : true,
-    modal      : true,
-    closable   : false,
-    resizable  : false,
+    maximized: true,
+    modal: true,
+    closable: false,
+    resizable: false,
 
     /**
      * @inheritdoc
      *
      * @param config
      */
-    constructor : function (config) {
+    constructor: function (config) {
 
         const me = this;
 

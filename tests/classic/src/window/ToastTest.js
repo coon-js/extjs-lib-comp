@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2017-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * extjs-lib-comp
+ * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,8 +27,8 @@ describe("coon.comp.window.ToastTest", function (t) {
 
     t.it("prerequisites", function (t) {
         let toast = Ext.create("coon.comp.window.Toast", {
-            context : "foo",
-            html    : "Test"
+            context: "foo",
+            html: "Test"
         });
 
         t.isInstanceOf(toast, "Ext.window.Toast");

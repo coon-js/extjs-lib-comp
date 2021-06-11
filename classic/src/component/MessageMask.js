@@ -1,7 +1,7 @@
 /**
  * coon.js
- * lib-cn_comp
- * Copyright (C) 2019-2020 Thorsten Suckow-Homberg https://github.com/coon-js/lib-cn_comp
+ * extjs-lib-comp
+ * Copyright (C) 2019-2020 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -62,43 +62,43 @@ Ext.define("coon.comp.component.MessageMask", {
 
     extend: "Ext.LoadMask",
 
-    statics : {
+    statics: {
 
         /**
          * Button Config for showing "Yes"/"No" buttons.
          * @type {Number} [YESNO=1]
          */
-        YESNO : 1,
+        YESNO: 1,
 
         /**
          * Button Config for showing "Ok" button.
          * @type {Number} [OK=2]
          */
-        OK : 2,
+        OK: 2,
 
         /**
          * Button Config for showing "Ok" and "Cancel" button.
          * @type {Number} [OKCANCEL=3]
          */
-        OKCANCEL : 3,
+        OKCANCEL: 3,
 
         /**
          * Glyph cls for Question mark
          * @type {String} [QUESTION=fa fa-question-circle]
          */
-        QUESTION : "far fa-question-circle",
+        QUESTION: "far fa-question-circle",
 
         /**
          * Glyph cls for Question mark
          * @type {String} [QUESTION=fa fa-question-circle]
          */
-        FAILURE : "far fa-frown",
+        FAILURE: "far fa-frown",
 
         /**
          * Glyph cls for Exclamation mark
          * @type {String} [ERROR=fa fa-exclamation-circle]
          */
-        ERROR : "far fa-exclamation-circle"
+        ERROR: "far fa-exclamation-circle"
 
     },
 
@@ -131,14 +131,14 @@ Ext.define("coon.comp.component.MessageMask", {
         "</div>"
     ],
 
-    cls :  Ext.baseCSSPrefix + "mask" + " cn_comp-messagemask",
+    cls: Ext.baseCSSPrefix + "mask" + " cn_comp-messagemask",
 
     /**
      * true to style the mask as a dialog, otherwise false.
      */
-    dialogStyle : true,
+    dialogStyle: true,
 
-    msg : undefined,
+    msg: undefined,
 
 
     /**
@@ -147,17 +147,17 @@ Ext.define("coon.comp.component.MessageMask", {
      * an object with an "emptyText" value which will be shown as the placeholder
      * in the input field.
      */
-    input : null,
+    input: null,
 
     /**
      * An object containing the default button text strings.
      * @cfg {Object} buttonText
      */
     buttonText: {
-        yes    : "Yes",
-        no     : "No",
-        ok     : "Ok",
-        cancel : "Cancel"
+        yes: "Yes",
+        no: "No",
+        ok: "Ok",
+        cancel: "Cancel"
     },
 
     /**
@@ -166,7 +166,7 @@ Ext.define("coon.comp.component.MessageMask", {
      * this property.
      * @cfg {Array} buttonIds
      */
-    buttonIds : [
+    buttonIds: [
         "yesButton", "noButton", "okButton", "cancelButton"
     ],
 
@@ -176,25 +176,25 @@ Ext.define("coon.comp.component.MessageMask", {
      * the value of the #input field, if any was rendered.
      * @cfg {Function} callback
      */
-    callback : undefined,
+    callback: undefined,
 
     /**
      * The scope the callback has to be called in.
      * @cfg {Object} scope
      */
-    scope : undefined,
+    scope: undefined,
 
     /**
      * The glyph cls to use with this mask.
      * @cfg {String} icon
      */
-    icon : undefined,
+    icon: undefined,
 
 
     /**
      * @inheridoc
      */
-    constructor : function (config) {
+    constructor: function (config) {
 
         var me = this;
 
@@ -303,7 +303,7 @@ Ext.define("coon.comp.component.MessageMask", {
      * @see close
      * @private
      */
-    handleButtonClick : function (type, inputValue) {
+    handleButtonClick: function (type, inputValue) {
         var me = this;
 
         if (me.callback) {
@@ -323,14 +323,14 @@ Ext.define("coon.comp.component.MessageMask", {
      *
      * @private
      */
-    getButtonIdForIndex : function (index) {
+    getButtonIdForIndex: function (index) {
         var me    = this,
             value = me.buttonIds[index];
 
         if (!value) {
             Ext.raise({
-                index : index,
-                msg   : "no value found for \"index\""
+                index: index,
+                msg: "no value found for \"index\""
             });
         }
 
@@ -349,7 +349,7 @@ Ext.define("coon.comp.component.MessageMask", {
      *
      * @see handleButtonClick
      */
-    onClick : function (evt, el) {
+    onClick: function (evt, el) {
         var me          = this,
             id          = el.id.split("-").pop(),
             /**
@@ -377,7 +377,7 @@ Ext.define("coon.comp.component.MessageMask", {
      *
      * @see destroy
      */
-    close : function () {
+    close: function () {
         var me = this;
         me.destroy();
     },
@@ -386,27 +386,27 @@ Ext.define("coon.comp.component.MessageMask", {
     /**
      * no store functionality
      */
-    bindStore : Ext.emptyFn,
+    bindStore: Ext.emptyFn,
 
 
     /**
      * no store functionality
      */
-    getStoreListeners : Ext.emptyFn,
+    getStoreListeners: Ext.emptyFn,
 
 
     /**
      * no store functionality
      */
-    onLoad : Ext.emptyFn,
+    onLoad: Ext.emptyFn,
 
 
     /**
      * no store functionality
      */
-    onBeforeLoad : Ext.emptyFn,
+    onBeforeLoad: Ext.emptyFn,
 
-    privates : {
+    privates: {
 
         /**
          * Callback for the textfields "keydown" event, if the textfield was renderd.
@@ -417,7 +417,7 @@ Ext.define("coon.comp.component.MessageMask", {
          *
          * @see handleButtonClick
          */
-        handleTextFieldKeyDown : function (evt, source) {
+        handleTextFieldKeyDown: function (evt, source) {
 
             var me = this;
 
