@@ -23,8 +23,8 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe("coon.comp.container.LoadMaskTest", function (t) {
-
+StartTest((t) => {
+    
     var panel;
 
     t.beforeEach(function () {
@@ -47,7 +47,7 @@ describe("coon.comp.container.LoadMaskTest", function (t) {
     // |                    =~. Tests .~=
     // +----------------------------------------------------------------------------
 
-    t.it("test class and configuration", function (t) {
+    t.it("test class and configuration", (t) => {
         var w = Ext.create("coon.comp.component.LoadMask", {
             target: panel
         });
@@ -64,7 +64,7 @@ describe("coon.comp.container.LoadMaskTest", function (t) {
     });
 
 
-    t.it("initRenderData()", function (t) {
+    t.it("initRenderData()", (t) => {
         var w = Ext.create("coon.comp.component.LoadMask", {
                 target: panel,
                 glyphCls: "fa fa-envelope",
@@ -80,7 +80,7 @@ describe("coon.comp.container.LoadMaskTest", function (t) {
     });
 
 
-    t.it("updateActionMsg()", function (t) {
+    t.it("updateActionMsg()", (t) => {
         var w = Ext.create("coon.comp.component.LoadMask", {
                 target: panel,
                 msgAction: "foo"
@@ -96,7 +96,7 @@ describe("coon.comp.container.LoadMaskTest", function (t) {
     });
 
 
-    t.it("updateProgress()", function (t) {
+    t.it("updateProgress()", (t) => {
         var w = Ext.create("coon.comp.component.LoadMask", {
                 target: panel
             }),
@@ -114,7 +114,7 @@ describe("coon.comp.container.LoadMaskTest", function (t) {
     });
 
 
-    t.it("loopProgress()", function (t) {
+    t.it("loopProgress()", (t) => {
         var w = Ext.create("coon.comp.component.LoadMask", {
                 target: panel
             }),
@@ -137,14 +137,14 @@ describe("coon.comp.container.LoadMaskTest", function (t) {
 
         t.isObject(w.waitTimer);
 
-        t.waitForMs(500, function () {
+        t.waitForMs(t.parent.TIMEOUT, () => {
             // set timeout so tests can pass
         });
 
     });
 
 
-    t.it("clearTimer()", function (t) {
+    t.it("clearTimer()", (t) => {
         var w = Ext.create("coon.comp.component.LoadMask", {
             target: panel
         });
@@ -155,14 +155,14 @@ describe("coon.comp.container.LoadMaskTest", function (t) {
         w.loopProgress({increment: 50, interval: 1000});
         t.expect(w.waitTimer).toBeTruthy();
 
-        t.waitForMs(200, function () {
+        t.waitForMs(t.parent.TIMEOUT, () => {
             w.clearTimer();
             t.expect(w.waitTimer).toBeFalsy();
         });
     });
 
 
-    t.it("stop task with Ext.TaskManager.stop()", function (t) {
+    t.it("stop task with Ext.TaskManager.stop()", (t) => {
         var w = Ext.create("coon.comp.component.LoadMask", {
             target: panel
         });
@@ -175,13 +175,13 @@ describe("coon.comp.container.LoadMaskTest", function (t) {
 
         Ext.TaskManager.stop(w.waitTimer);
 
-        t.waitForMs(200, function () {
+        t.waitForMs(t.parent.TIMEOUT, () => {
             t.expect(w.waitTimer).toBeFalsy();
         });
     });
 
 
-    t.it("resetBar()", function (t) {
+    t.it("resetBar()", (t) => {
         var w = Ext.create("coon.comp.component.LoadMask", {
                 target: panel
             }),
@@ -193,7 +193,7 @@ describe("coon.comp.container.LoadMaskTest", function (t) {
         t.expect(m).toBe(w);
         t.isObject(w.waitTimer);
 
-        t.waitForMs(150, function () {
+        t.waitForMs(t.parent.TIMEOUT, () => {
 
             node = Ext.dom.Query.selectNode("div[data-ref=bar]", w.el.dom);
             t.expect(node.style.width).not.toBe("0%");
@@ -208,7 +208,7 @@ describe("coon.comp.container.LoadMaskTest", function (t) {
     });
 
 
-    t.it("hide()", function (t) {
+    t.it("hide()", (t) => {
         var w = Ext.create("coon.comp.component.LoadMask", {
             target: panel,
             msgAction: "foo"
@@ -221,7 +221,7 @@ describe("coon.comp.container.LoadMaskTest", function (t) {
     });
 
 
-    t.it("resetProgress()", function (t) {
+    t.it("resetProgress()", (t) => {
         var w = Ext.create("coon.comp.component.LoadMask", {
                 target: panel
             }),
@@ -236,7 +236,7 @@ describe("coon.comp.container.LoadMaskTest", function (t) {
     });
 
 
-    t.it("resetProgress(true)", function (t) {
+    t.it("resetProgress(true)", (t) => {
         var w = Ext.create("coon.comp.component.LoadMask", {
                 target: panel
             }),
@@ -251,7 +251,7 @@ describe("coon.comp.container.LoadMaskTest", function (t) {
     });
 
 
-    t.it("calculatePercFromTask()", function (t) {
+    t.it("calculatePercFromTask()", (t) => {
         var w = Ext.create("coon.comp.component.LoadMask", {
             target: panel
         });
@@ -272,7 +272,7 @@ describe("coon.comp.container.LoadMaskTest", function (t) {
     });
 
 
-    t.it("doDestroy()", function (t) {
+    t.it("doDestroy()", (t) => {
         var w = Ext.create("coon.comp.component.LoadMask", {
             target: panel
         });
@@ -284,7 +284,7 @@ describe("coon.comp.container.LoadMaskTest", function (t) {
     });
 
 
-    t.it("setTransitionDuration()", function (t) {
+    t.it("setTransitionDuration()", (t) => {
         var w = Ext.create("coon.comp.component.LoadMask", {
                 target: panel
             }),
@@ -299,7 +299,7 @@ describe("coon.comp.container.LoadMaskTest", function (t) {
     });
 
 
-    t.it("Should start with specified progress", function (t) {
+    t.it("Should start with specified progress", (t) => {
         var w = Ext.create("coon.comp.component.LoadMask", {
                 target: panel,
                 progress: 0.3
@@ -311,7 +311,7 @@ describe("coon.comp.container.LoadMaskTest", function (t) {
     });
 
 
-    t.it("Manual call to updateProcess() should stop loop timer", function (t) {
+    t.it("Manual call to updateProcess() should stop loop timer", (t) => {
         var w = Ext.create("coon.comp.component.LoadMask", {
             target: panel
         });
@@ -320,14 +320,14 @@ describe("coon.comp.container.LoadMaskTest", function (t) {
 
         t.isCalled("clearTimer", w);
 
-        t.waitForMs(200, function () {
+        t.waitForMs(t.parent.TIMEOUT, () => {
             w.updateProgress(1);
         });
 
     });
 
 
-    t.it("updateMsg()", function (t) {
+    t.it("updateMsg()", (t) => {
         var w = Ext.create("coon.comp.component.LoadMask", {
                 target: panel,
                 msg: "foo"
@@ -343,7 +343,7 @@ describe("coon.comp.container.LoadMaskTest", function (t) {
     });
 
 
-    t.it("make sure load mask is destroyed", function (t) {
+    t.it("make sure load mask is destroyed", (t) => {
         var w = Ext.create("coon.comp.component.LoadMask", {
             target: panel
         });

@@ -23,7 +23,7 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe("coon.comp.grid.feature.RowBodySwitchTest", function (t) {
+StartTest((t) => {
 
     var getGrid = function (disabled, rendered = true, variableRowHeight = true) {
 
@@ -101,7 +101,7 @@ describe("coon.comp.grid.feature.RowBodySwitchTest", function (t) {
     t.requireOk("coon.comp.grid.feature.RowBodySwitch", function () {
 
 
-        t.it("test class and configuration", function (t) {
+        t.it("test class and configuration", (t) => {
             var grid    = getGrid(false),
                 feature = grid.view.getFeature("rowbodyswitchfeature");
 
@@ -120,7 +120,7 @@ describe("coon.comp.grid.feature.RowBodySwitchTest", function (t) {
         });
 
 
-        t.it("enable()/disable() - excpetion", function (t) {
+        t.it("enable()/disable() - excpetion", (t) => {
 
             const grid    = getGrid(false, false),
                 feature = grid.view.getFeature("rowbodyswitchfeature");
@@ -139,7 +139,7 @@ describe("coon.comp.grid.feature.RowBodySwitchTest", function (t) {
         });
 
 
-        t.it("enable()/disable()", function (t) {
+        t.it("enable()/disable()", (t) => {
             var grid    = getGrid(false),
                 feature = grid.view.getFeature("rowbodyswitchfeature"),
                 columns = grid.getColumns(),
@@ -218,7 +218,7 @@ describe("coon.comp.grid.feature.RowBodySwitchTest", function (t) {
         });
 
 
-        t.it("featured initially disabled", function (t) {
+        t.it("featured initially disabled", (t) => {
 
             var grid    = getGrid(true),
                 feature = grid.view.getFeature("rowbodyswitchfeature");
@@ -235,7 +235,7 @@ describe("coon.comp.grid.feature.RowBodySwitchTest", function (t) {
         });
 
 
-        t.it("variableRowHeight = false", function (t) {
+        t.it("variableRowHeight = false", (t) => {
 
             var grid    = getGrid(true, true, false),
                 feature = grid.view.getFeature("rowbodyswitchfeature");

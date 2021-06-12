@@ -23,7 +23,7 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe("coon.comp.component.IframeTest", function (t) {
+StartTest((t) => {
 
     let iframe;
 
@@ -54,7 +54,7 @@ describe("coon.comp.component.IframeTest", function (t) {
     // |                    =~. Tests .~=
     // +----------------------------------------------------------------------------
 
-    t.it("test class and configuration", function (t) {
+    t.it("test class and configuration", (t) => {
 
         iframe = createIframe();
 
@@ -70,7 +70,7 @@ describe("coon.comp.component.IframeTest", function (t) {
     });
 
 
-    t.it("src / name", function (t) {
+    t.it("src / name", (t) => {
 
         iframe = createIframe({
             name: "conjoonIframe"
@@ -82,7 +82,7 @@ describe("coon.comp.component.IframeTest", function (t) {
     });
 
 
-    t.it("setSrcDoc() / getSrcDoc()", function (t) {
+    t.it("setSrcDoc() / getSrcDoc()", (t) => {
 
         iframe = createIframe();
 
@@ -100,7 +100,7 @@ describe("coon.comp.component.IframeTest", function (t) {
     });
 
 
-    t.it("sandbox / scrolling", function (t) {
+    t.it("sandbox / scrolling", (t) => {
 
         iframe = createIframe({
             sandbox: "",
@@ -113,7 +113,7 @@ describe("coon.comp.component.IframeTest", function (t) {
     });
 
 
-    t.it("getBody()", function (t) {
+    t.it("getBody()", (t) => {
 
         iframe = createIframe({
         });
@@ -124,7 +124,7 @@ describe("coon.comp.component.IframeTest", function (t) {
     });
 
 
-    t.it("load event", function (t) {
+    t.it("load event", (t) => {
 
         iframe = createIframe({
         });
@@ -138,12 +138,12 @@ describe("coon.comp.component.IframeTest", function (t) {
         t.expect(CALLED).toBe(0);
         iframe.setSrcDoc("foo");
 
-        t.waitForMs(250, function () {
+        t.waitForMs(t.parent.TIMEOUT, () => {
 
             t.expect(CALLED).toBe(1);
             iframe.setSrcDoc("bar");
 
-            t.waitForMs(250, function () {
+            t.waitForMs(t.parent.TIMEOUT, () => {
 
                 t.expect(CALLED).toBe(2);
             });
@@ -152,7 +152,7 @@ describe("coon.comp.component.IframeTest", function (t) {
     });
 
 
-    t.it("beforesrcdoc event", function (t) {
+    t.it("beforesrcdoc event", (t) => {
 
         iframe = createIframe({
         });

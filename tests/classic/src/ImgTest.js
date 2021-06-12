@@ -23,14 +23,14 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe("coon.comp.ImgTest", function (t) {
+StartTest((t) => {
 
 
     // +----------------------------------------------------------------------------
     // |                    =~. Tests .~=
     // +----------------------------------------------------------------------------
 
-    t.it("test class and configuration", function (t) {
+    t.it("test class and configuration", (t) => {
 
         let img = Ext.create("coon.comp.Img");
 

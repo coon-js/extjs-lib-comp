@@ -23,14 +23,14 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe("coon.comp.container.ViewportTest", function (t) {
+StartTest((t) => {
 
 
     // +----------------------------------------------------------------------------
     // |                    =~. Unit Tests .~=
     // +----------------------------------------------------------------------------
 
-    t.it("should be instance of Ext.container.Viewport", function (t) {
+    t.it("should be instance of Ext.container.Viewport", (t) => {
         const w = Ext.create("coon.comp.container.Viewport", {
         });
 
@@ -47,21 +47,21 @@ describe("coon.comp.container.ViewportTest", function (t) {
 
     });
 
-    t.it("postLaunchHook should be Ext.emptyFn", function (t) {
+    t.it("postLaunchHook should be Ext.emptyFn", (t) => {
         var w = Ext.create("coon.comp.container.Viewport", {
         });
 
         t.expect(w.addPostLaunchInfo).toBe(Ext.emptyFn);
     });
 
-    t.it("activateViewForHash()", function (t) {
+    t.it("activateViewForHash()", (t) => {
         var w = Ext.create("coon.comp.container.Viewport", {
         });
 
         t.expect(w.activateViewForHash).toBe(Ext.emptyFn);
     });
 
-    t.it("cleanup()", function (t) {
+    t.it("cleanup()", (t) => {
         var w = Ext.create("coon.comp.container.Viewport", {
         });
 

@@ -57,7 +57,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "npx ws --static.index tests.html --open",
+    "test": "npx ws --port 8061 --static.index tests.html --open",
     "postinstall" : "npx extjs-link"
   },
   "repository": {

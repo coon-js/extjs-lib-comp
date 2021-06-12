@@ -23,7 +23,7 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe("coon.comp.list.TreeTest", function (t) {
+StartTest((t) => {
 
     var tree,
         treeConfig;
@@ -44,20 +44,20 @@ describe("coon.comp.list.TreeTest", function (t) {
     // |                    =~. Unit Tests .~=
     // +----------------------------------------------------------------------------
 
-    t.it("Should create and show the tree", function (t) {
+    t.it("Should create and show the tree", (t) => {
         tree = Ext.create("coon.comp.list.Tree", treeConfig);
 
         t.expect(tree instanceof Ext.list.Tree).toBe(true);
         t.expect(tree.alias).toContain("widget.cn_comp-listtree");
     });
 
-    t.it("Should evaluate getMicro to false", function (t) {
+    t.it("Should evaluate getMicro to false", (t) => {
         var tree = Ext.create("coon.comp.list.Tree", {width: 200});
         t.expect(tree.getMicro()).toBeFalsy();
         tree.destroy();
     });
 
-    t.it("Should process width properly", function (t) {
+    t.it("Should process width properly", (t) => {
         var tree = Ext.create("coon.comp.list.Tree", {width: 200});
         t.expect(tree.defaultWidth).toBe(200);
         tree.destroy();
@@ -67,7 +67,7 @@ describe("coon.comp.list.TreeTest", function (t) {
         tree.destroy();
     });
 
-    t.it("Should process setHidden properly", function (t) {
+    t.it("Should process setHidden properly", (t) => {
         var tree = Ext.create("coon.comp.list.Tree", {
             renderTo: document.body,
             width: 200

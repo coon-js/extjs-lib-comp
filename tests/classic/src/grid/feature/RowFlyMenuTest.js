@@ -23,7 +23,7 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
+StartTest((t) => {
 
     var getGrid = function (disabled) {
 
@@ -79,7 +79,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
     t.requireOk("coon.comp.grid.feature.RowFlyMenu", function () {
 
 
-        t.it("test class and configuration", function (t) {
+        t.it("test class and configuration", (t) => {
             let feature = Ext.create("coon.comp.grid.feature.RowFlyMenu");
 
             t.isInstanceOf(feature, "coon.comp.grid.feature.RowFlyMenu");
@@ -100,7 +100,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
         });
 
 
-        t.it("processItems() / idToActionMap", function (t) {
+        t.it("processItems() / idToActionMap", (t) => {
 
             let grid    = getGrid(false),
                 feature = grid.view.getFeature("rowflymenu"),
@@ -135,7 +135,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
         });
 
 
-        t.it("buildMenu()", function (t) {
+        t.it("buildMenu()", (t) => {
 
             let grid    = getGrid(false),
                 feature = grid.view.getFeature("rowflymenu"),
@@ -151,7 +151,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
         });
 
 
-        t.it("installListeners()", function (t) {
+        t.it("installListeners()", (t) => {
 
             let grid    = getGrid(false),
                 feature = grid.view.getFeature("rowflymenu");
@@ -180,7 +180,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
         });
 
 
-        t.it("onItemMouseEnter() / onItemMouseLeave()", function (t) {
+        t.it("onItemMouseEnter() / onItemMouseLeave()", (t) => {
 
             let grid      = getGrid(false),
                 feature   = grid.view.getFeature("rowflymenu"),
@@ -201,7 +201,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
         });
 
 
-        t.it("onItemMouseEnter() / onItemMouseLeave() - feature disabled", function (t) {
+        t.it("onItemMouseEnter() / onItemMouseLeave() - feature disabled", (t) => {
 
             let grid      = getGrid(false),
                 feature   = grid.view.getFeature("rowflymenu"),
@@ -222,7 +222,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
         });
 
 
-        t.it("onItemMouseEnter() / onItemMouseLeave() - feature disabled during runtime", function (t) {
+        t.it("onItemMouseEnter() / onItemMouseLeave() - feature disabled during runtime", (t) => {
 
             let grid      = getGrid(false),
                 feature   = grid.view.getFeature("rowflymenu"),
@@ -246,7 +246,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
         });
 
 
-        t.it("onMenuClick() - installed", function (t) {
+        t.it("onMenuClick() - installed", (t) => {
 
             let feature = Ext.create("coon.comp.grid.feature.RowFlyMenu", {
                 items: []
@@ -270,7 +270,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
         });
 
 
-        t.it("onMenuClick()", function (t) {
+        t.it("onMenuClick()", (t) => {
 
             let feature = Ext.create("coon.comp.grid.feature.RowFlyMenu", {
                 items: []
@@ -306,7 +306,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
         });
 
 
-        t.it("destroy()", function (t) {
+        t.it("destroy()", (t) => {
 
             let grid    = getGrid(false),
                 feature = grid.view.getFeature("rowflymenu");
@@ -337,7 +337,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
         });
 
 
-        t.it("onItemMouseEnter() - beforemenushow", function (t) {
+        t.it("onItemMouseEnter() - beforemenushow", (t) => {
 
             let grid      = getGrid(false),
                 feature   = grid.view.getFeature("rowflymenu"),
@@ -361,7 +361,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
         });
 
 
-        t.it("onItemMouseEnter() - beforemenushow false", function (t) {
+        t.it("onItemMouseEnter() - beforemenushow false", (t) => {
 
             let grid      = getGrid(false),
                 feature   = grid.view.getFeature("rowflymenu"),
@@ -387,7 +387,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
         });
 
 
-        t.it("skipGarbageCollection should be set to \"true\"", function (t) {
+        t.it("skipGarbageCollection should be set to \"true\"", (t) => {
 
             let grid      = getGrid(false),
                 feature   = grid.view.getFeature("rowflymenu"),
@@ -397,7 +397,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
             grid.destroy();
         });
 
-        t.it("detachMenuAndUnset()", function (t) {
+        t.it("detachMenuAndUnset()", (t) => {
 
             let grid      = getGrid(false),
                 feature   = grid.view.getFeature("rowflymenu"),
@@ -415,7 +415,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
         });
 
 
-        t.it("grid view refresh - detachMenuAndUnset is called", function (t) {
+        t.it("grid view refresh - detachMenuAndUnset is called", (t) => {
 
             let grid      = getGrid(false),
                 feature   = grid.view.getFeature("rowflymenu");
@@ -426,7 +426,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
         });
 
 
-        t.it("onMenuMouseOver() / onMenuMouseOut()", function (t) {
+        t.it("onMenuMouseOver() / onMenuMouseOut()", (t) => {
 
             let grid      = getGrid(false),
                 feature   = grid.view.getFeature("rowflymenu"),
@@ -457,7 +457,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
         });
 
 
-        t.it("app-cn_mail#74", function (t) {
+        t.it("app-cn_mail#74", (t) => {
 
             let grid      = getGrid(false),
                 feature   = grid.view.getFeature("rowflymenu"),
@@ -510,7 +510,7 @@ describe("coon.comp.grid.feature.RowFlyMenuTest", function (t) {
                         });
                     });
                 });
-            }, null, [0, 0]);
+            });
         });
 
 

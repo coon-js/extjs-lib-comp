@@ -23,9 +23,10 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe("coon.comp.window.ToastTest", function (t) {
+StartTest((t) => {
 
-    t.it("prerequisites", function (t) {
+
+    t.it("prerequisites", (t) => {
         let toast = Ext.create("coon.comp.window.Toast", {
             context: "foo",
             html: "Test"
@@ -41,7 +42,7 @@ describe("coon.comp.window.ToastTest", function (t) {
     });
 
 
-    t.it("coon.Toast", function (t) {
+    t.it("coon.Toast", (t) => {
         t.expect(coon.Toast).toBeTruthy();
     });
 
@@ -55,19 +56,19 @@ describe("coon.comp.window.ToastTest", function (t) {
         t.expect(node.innerHTML).toBe(message);
     };
 
-    t.it("coon.Toast.warn", function (t) {
+    t.it("coon.Toast.warn", (t) => {
 
         TOASTTEST(t, "This is a warning.", "warn");
     });
 
 
-    t.it("coon.Toast.info", function (t) {
+    t.it("coon.Toast.info", (t) => {
 
         TOASTTEST(t, "This is an info", "info");
     });
 
 
-    t.it("coon.Toast.fail", function (t) {
+    t.it("coon.Toast.fail", (t) => {
 
         TOASTTEST(t, "This is a failure.", "fail");
     });

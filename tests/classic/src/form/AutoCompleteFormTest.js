@@ -23,7 +23,7 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe("coon.comp.form.AutCompleteFormTest", function (t) {
+StartTest((t) => {
 
 
     // +----------------------------------------------------------------------------
@@ -83,7 +83,7 @@ describe("coon.comp.form.AutCompleteFormTest", function (t) {
 
         // -------------------------------------------------------------------------
 
-        t.it("Should build the form with autocomplete attributes (autoCompleteTrigger=false)", function (t) {
+        t.it("Should build the form with autocomplete attributes (autoCompleteTrigger=false)", (t) => {
             formConfig.formName = "testform";
             form = Ext.widget(formConfig);
 
@@ -95,7 +95,7 @@ describe("coon.comp.form.AutCompleteFormTest", function (t) {
 
         });
 
-        t.it("Should have added autocomplete attribute to some fields (autoCompleteTrigger=false)", function (t) {
+        t.it("Should have added autocomplete attribute to some fields (autoCompleteTrigger=false)", (t) => {
             form = Ext.widget(formConfig);
 
             var c = 0,
@@ -118,7 +118,7 @@ describe("coon.comp.form.AutCompleteFormTest", function (t) {
         });
 
 
-        t.it("Second textfield should have the focus (autoCompleteTrigger=false)", function (t) {
+        t.it("Second textfield should have the focus (autoCompleteTrigger=false)", (t) => {
             form = Ext.widget(formConfig);
 
             var el  = form.down("textfield[name=focusMe]"),
@@ -137,7 +137,7 @@ describe("coon.comp.form.AutCompleteFormTest", function (t) {
 
         });
 
-        t.it("Should be okay with missing actionUrl (autoCompleteTrigger {})", function (t) {
+        t.it("Should be okay with missing actionUrl (autoCompleteTrigger {})", (t) => {
 
             form = Ext.widget(Ext.apply({
                 autoCompleteTrigger: {
@@ -158,7 +158,7 @@ describe("coon.comp.form.AutCompleteFormTest", function (t) {
 
         });
 
-        t.it("Should be okay with autoCompleteTrigger", function (t) {
+        t.it("Should be okay with autoCompleteTrigger", (t) => {
 
             var wasClicked = false;
 
@@ -197,7 +197,7 @@ describe("coon.comp.form.AutCompleteFormTest", function (t) {
         });
 
 
-        t.it("Should throw error for missing reference (autoCompleteTrigger {})", function (t) {
+        t.it("Should throw error for missing reference (autoCompleteTrigger {})", (t) => {
             formConfig.autoCompleteTrigger = {
                 actionUrl: "foo.bar"
             };
@@ -212,7 +212,7 @@ describe("coon.comp.form.AutCompleteFormTest", function (t) {
 
         });
 
-        t.it("Should trigger error with missing reference target (autoCompleteTrigger {})", function (t) {
+        t.it("Should trigger error with missing reference target (autoCompleteTrigger {})", (t) => {
             formConfig.autoCompleteTrigger = {
                 actionUrl: "foo.bar",
                 reference: "somebutton"
@@ -229,7 +229,7 @@ describe("coon.comp.form.AutCompleteFormTest", function (t) {
             t.expect(exc.msg).toBeDefined();
         });
 
-        t.it("Should throw error for wrong value for autoCompleteTrigger (autoCompleteTrigger {})", function (t) {
+        t.it("Should throw error for wrong value for autoCompleteTrigger (autoCompleteTrigger {})", (t) => {
             formConfig.autoCompleteTrigger = true;
             var exc = undefined;
             try {

@@ -23,7 +23,7 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe("coon.comp.app.ApplicationTest", function (t) {
+StartTest((t) => {
 
     t.requireOk(
         "coon.core.app.Application",
@@ -37,64 +37,17 @@ describe("coon.comp.app.ApplicationTest", function (t) {
 
 
             let app = null,
-                ORIGINAL_MANIFEST,
                 ONPROFILESREADY;
 
-
-            const buildManifest = function () {
-
-                const manifest = {};
-
-                manifest.name = "ApplicationTest";
-                manifest["coon-js"] = {env: "dev"};
-                manifest.packages = {
-                    "p_foo": {
-                        included: false,
-                        isLoaded: false,
-                        namespace: "foo",
-                        "coon-js": {package: {controller: true}}
-                    },
-                    "p_bar": {
-                        included: true,
-                        isLoaded: false,
-                        namespace: "bar",
-                        "coon-js": {package: {controller: true}}
-                    },
-                    "p_foobar": {
-                        included: false,
-                        isLoaded: false,
-                        namespace: "foobar",
-                        "cs": {package: {controller: true}}
-                    },
-                    "t_snafu": {
-                        included: false,
-                        isLoaded: false,
-                        namespace: "snafu",
-                        "coon-js": {package: {controller: true}}
-                    }
-                };
-                manifest.resources = {path: "./fixtures", shared: "../bar"};
-                return manifest;
+            const switchOnProfilesReady = (origin) => {
+                if (!origin) {
+                    ONPROFILESREADY = coon.core.app.Application.prototype.onProfilesReady;
+                    coon.core.app.Application.prototype.onProfilesReady = Ext.app.Application.prototype.onProfilesReady;
+                    return ONPROFILESREADY;
+                } else if (ONPROFILESREADY) {
+                    coon.core.app.Application.prototype.onProfilesReady = ONPROFILESREADY;
+                }
             };
-
-
-            const switchManifest = (reset) => {
-                    if (!reset) {
-                        ORIGINAL_MANIFEST = Ext.manifest;
-                        Ext.manifest = buildManifest();
-                    } else {
-                        Ext.manifest = ORIGINAL_MANIFEST;
-                    }
-                },
-                switchOnProfilesReady = (origin) => {
-                    if (!origin) {
-                        ONPROFILESREADY = coon.core.app.Application.prototype.onProfilesReady;
-                        coon.core.app.Application.prototype.onProfilesReady = Ext.app.Application.prototype.onProfilesReady;
-                        return ONPROFILESREADY;
-                    } else if (ONPROFILESREADY) {
-                        coon.core.app.Application.prototype.onProfilesReady = ONPROFILESREADY;
-                    }
-                };
 
             t.beforeEach(function () {
                 Ext.isModern && Ext.viewport.Viewport.setup();
@@ -122,8 +75,8 @@ describe("coon.comp.app.ApplicationTest", function (t) {
             // +----------------------------------------------------------------------------
 
 
-            t.it("Should create mainView if configured properly", function (t) {
-                switchManifest();
+            t.it("Should create mainView if configured properly", (t) => {
+
                 app = Ext.create("coon.comp.app.Application", {
                     name: "test",
                     mainView: "coon.comp.container.Viewport"
@@ -133,7 +86,7 @@ describe("coon.comp.app.ApplicationTest", function (t) {
             });
 
 
-            t.it("Should NOT call ViewportMock's postLaunchHook", function (t) {
+            t.it("Should NOT call ViewportMock's postLaunchHook", (t) => {
 
                 app = Ext.create("coon.comp.app.Application", {
                     name: "test",
@@ -144,7 +97,7 @@ describe("coon.comp.app.ApplicationTest", function (t) {
             });
 
 
-            t.it("Should call ViewportMock's postLaunchHook", function (t) {
+            t.it("Should call ViewportMock's postLaunchHook", (t) => {
 
 
                 app = Ext.create("coon.comp.app.Application", {
@@ -160,7 +113,7 @@ describe("coon.comp.app.ApplicationTest", function (t) {
             });
 
 
-            t.it("Should call ViewportMock's postLaunchHook 2 times", function (t) {
+            t.it("Should call ViewportMock's postLaunchHook 2 times", (t) => {
 
 
                 app = Ext.create("coon.comp.app.Application", {
@@ -177,7 +130,7 @@ describe("coon.comp.app.ApplicationTest", function (t) {
             });
 
 
-            t.it("4 controllers, 1 returns undefined, should call ViewportMock's postLaunchHook 3 times", function (t) {
+            t.it("4 controllers, 1 returns undefined, should call ViewportMock's postLaunchHook 3 times", (t) => {
 
                 app = Ext.create("coon.comp.app.Application", {
                     controllers: [
@@ -195,7 +148,7 @@ describe("coon.comp.app.ApplicationTest", function (t) {
             });
 
 
-            t.it("activateViewForHash()", function (t) {
+            t.it("activateViewForHash()", (t) => {
 
                 app = Ext.create("coon.comp.app.Application", {
                     name: "test",
@@ -213,7 +166,7 @@ describe("coon.comp.app.ApplicationTest", function (t) {
             });
 
 
-            t.it("Should throw an error if setup is complete, but mainView is no instance of coon.comp.container.Viewport", function (t) {
+            t.it("Should throw an error if setup is complete, but mainView is no instance of coon.comp.container.Viewport", (t) => {
                 var exc;
 
                 try {
@@ -228,5 +181,5 @@ describe("coon.comp.app.ApplicationTest", function (t) {
             });
 
 
-    });
+        });
 });

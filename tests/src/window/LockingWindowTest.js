@@ -23,9 +23,9 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe("coon.comp.window.LockingWindowTest", function (t) {
+StartTest((t) => {
 
-    t.it("Sanitize tests for LockingWindow specifics", function (t) {
+    t.it("Sanitize tests for LockingWindow specifics", (t) => {
 
         var w = Ext.create("coon.comp.window.LockingWindow", {
             modal: false,

@@ -23,9 +23,7 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe("coon.comp.grid.feature.LivegridTest", function (t) {
-
-    const TIMEOUT = 1250;
+StartTest((t) => {
 
     Ext.define("MockModel", {
         extend: "Ext.data.Model",
@@ -124,7 +122,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
         t.requireOk("coon.comp.fixtures.sim.ItemSim", function (){
 
 
-            t.it("Livegrid will not work with multiColumnSort", function (t) {
+            t.it("Livegrid will not work with multiColumnSort", (t) => {
 
                 var exc;
 
@@ -139,7 +137,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
 
             });
 
-            t.it("setup()", function (t) {
+            t.it("setup()", (t) => {
 
                 var store   = Ext.create("Ext.data.Store"),
                     SIGNAL  = 0, BEFOREPREFETCH = 0, CACHEMISS = 0, PAGEADD = 0,
@@ -179,7 +177,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
 
                 store = createStore();
                 store.load();
-                t.waitForMs(250, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     // onStoreUpdate installed
                     feature = createLivegrid();
@@ -206,6 +204,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
 
 
                     t.expect(SIGNAL).toBe(0);
+                    t.expect(store.isLoaded()).toBe(true);
                     t.expect(feature.configure(store)).toBe(true);
                     store.getAt(0).set("testProp", "t");
                     store.getAt(0).commit();
@@ -256,16 +255,16 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("scroller registered", function (t) {
+            t.it("scroller registered", (t) => {
 
                 let grid, feature;
                 t.isCalled("onScroll", coon.comp.grid.feature.Livegrid.prototype);
                 grid    = getGrid({autoLoad: true});
                 feature = grid.view.getFeature("livegrid");
 
-                t.waitForMs(750, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
                     feature.grid.view.getScrollable().scrollTo(0, 4200);
-                    t.waitForMs(250, function () {
+                    t.waitForMs(t.parent.TIMEOUT, () => {
                         grid.destroy();
                         grid = null;
                     });
@@ -274,7 +273,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("onGridReconfigure() - callback", function (t) {
+            t.it("onGridReconfigure() - callback", (t) => {
 
                 var grid, store;
 
@@ -295,7 +294,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("onGridReconfigure() - argument behavior", function (t) {
+            t.it("onGridReconfigure() - argument behavior", (t) => {
 
                 var grid, feature, store, store2;
 
@@ -319,7 +318,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("getPageMap()", function (t) {
+            t.it("getPageMap()", (t) => {
 
                 var grid, feature;
 
@@ -335,7 +334,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("getCurrentViewRange()", function (t) {
+            t.it("getCurrentViewRange()", (t) => {
 
                 var grid           = getGrid({autoLoad: true}),
                     feature        = grid.view.getFeature("livegrid"),
@@ -344,7 +343,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
 
                 t.expect(feature.getCurrentViewRange()).toBe(null);
 
-                t.waitForMs(500, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     t.expect(
                         feature.getCurrentViewRange() instanceof
@@ -369,7 +368,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("refreshView()", function (t) {
+            t.it("refreshView()", (t) => {
 
                 var grid           = getGrid({autoLoad: true}),
                     feature        = grid.view.getFeature("livegrid"),
@@ -377,7 +376,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
                     viewRange, SIGNAL = 0;
 
 
-                t.waitForMs(500, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     grid.view.on("refresh", function (){SIGNAL++;});
 
@@ -400,7 +399,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("onStoreUpdate() - is called", function (t) {
+            t.it("onStoreUpdate() - is called", (t) => {
 
                 t.isCalledNTimes(
                     "onStoreUpdate",
@@ -409,7 +408,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
                 );
                 var grid    = getGrid({autoLoad: true});
 
-                t.waitForMs(500, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     grid.getStore().getData().map[1].value[0].set("testProp", 800);
                     grid.getStore().getData().map[1].value[0].commit();
@@ -420,7 +419,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("onStoreUpdate()", function (t) {
+            t.it("onStoreUpdate()", (t) => {
 
                 var grid           = getGrid({autoLoad: true}),
                     store          = grid.getStore(),
@@ -430,7 +429,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
                     PageMapUtil    = coon.core.data.pageMap.PageMapUtil,
                     rec;
 
-                t.waitForMs(750, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     rec = PageMapUtil.getRecordAt(RecordPosition.create(1, 0), pageMap);
 
@@ -440,7 +439,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
 
                     // wrong sorter
                     store.setSorters({property: "subject", dir: "ASC"});
-                    t.waitForMs(500, function () {
+                    t.waitForMs(t.parent.TIMEOUT, () => {
                         t.expect(grid.getStore().getSorters().length).toBe(1);
                         t.expect(grid.getStore().getSorters().getAt(0).getProperty()).toBe("subject");
 
@@ -456,7 +455,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
                         // proper sorter
                         store.getSorters().clear();
                         store.setSorters({property: "testProp", dir: "ASC"});
-                        t.waitForMs(500, function () {
+                        t.waitForMs(t.parent.TIMEOUT, () => {
                             t.expect(grid.getStore().getSorters().length).toBe(1);
                             t.expect(grid.getStore().getSorters().getAt(0).getProperty()).toBe("testProp");
                             rec = PageMapUtil.getRecordAt(RecordPosition.create(1, 0), pageMap);
@@ -480,13 +479,13 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("saveFocusState()", function (t) {
+            t.it("saveFocusState()", (t) => {
 
                 let grid    = getGrid({autoLoad: true}),
                     feature = grid.view.getFeature("livegrid"),
                     res;
 
-                t.waitForMs(750, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     t.isCalledNTimes("saveFocusState", Ext.view.Table.prototype, 1);
 
@@ -502,14 +501,14 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("swapSaveFocusState()", function (t) {
+            t.it("swapSaveFocusState()", (t) => {
 
                 let grid    = getGrid({autoLoad: true}),
                     feature = grid.view.getFeature("livegrid");
 
                 t.isCalledNTimes("saveFocusState", coon.comp.grid.feature.Livegrid.prototype, 1);
 
-                t.waitForMs(750, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     t.expect(feature.swapSaveFocusState()).toBe(true);
                     t.expect(grid.view.saveFocusState).toBe(
@@ -525,7 +524,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("onBeforePrefetch()", function (t) {
+            t.it("onBeforePrefetch()", (t) => {
 
                 let grid    = getGrid({autoLoad: true}),
                     store   = grid.getStore(),
@@ -537,7 +536,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
                     };
 
 
-                t.waitForMs(1250, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     feature.pageMapFeeder.swapMapToFeed(2, 1);
 
@@ -557,14 +556,14 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("onPageAdd()", function (t) {
+            t.it("onPageAdd()", (t) => {
 
                 let grid    = getGrid({autoLoad: true}),
                     feature = grid.view.getFeature("livegrid"),
                     pageMap = feature.getPageMap();
 
 
-                t.waitForMs(1250, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     feature.onPageAdd(pageMap, 1);
                     feature.pageMapFeeder.swapMapToFeed(3, 2);
@@ -580,7 +579,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("onCacheMiss()", function (t) {
+            t.it("onCacheMiss()", (t) => {
 
                 let grid    = getGrid({autoLoad: true}),
                     store   = grid.getStore(),
@@ -588,7 +587,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
                     pageMap = feature.getPageMap();
 
 
-                t.waitForMs(1250, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     feature.pageMapFeeder.swapMapToFeed(3, 2);
                     t.expect(feature.pageMapFeeder.getFeedAt(3)).toBeTruthy();
@@ -604,7 +603,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("getCurrentViewRange()", function (t) {
+            t.it("getCurrentViewRange()", (t) => {
 
                 let grid        = getGrid({autoLoad: true}),
                     view        = grid.view,
@@ -613,7 +612,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
                     PageMapUtil = coon.core.data.pageMap.PageMapUtil;
 
 
-                t.waitForMs(750, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     let oldEnd = view.all.endIndex;
 
@@ -636,14 +635,14 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("refreshView()", function (t) {
+            t.it("refreshView()", (t) => {
 
                 let grid           = getGrid({autoLoad: true}),
                     feature        = grid.view.getFeature("livegrid"),
                     RecordPosition =  coon.core.data.pageMap.RecordPosition;
 
 
-                t.waitForMs(750, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     let positions = [
                         RecordPosition.create(3, 23)
@@ -667,7 +666,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("refreshView() - ensureVisible with selection", function (t) {
+            t.it("refreshView() - ensureVisible with selection", (t) => {
 
                 let grid           = getGrid({autoLoad: true}),
                     feature        = grid.view.getFeature("livegrid"),
@@ -676,7 +675,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
                     positions;
 
 
-                t.waitForMs(750, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     t.isCalledNTimes("ensureVisible", grid, 1);
 
@@ -696,7 +695,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("refreshView() - ensureVisible (=false) with selection", function (t) {
+            t.it("refreshView() - ensureVisible (=false) with selection", (t) => {
 
                 let grid           = getGrid({autoLoad: true}),
                     feature        = grid.view.getFeature("livegrid"),
@@ -705,7 +704,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
                     positions;
 
 
-                t.waitForMs(750, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     t.isCalledNTimes("ensureVisible", grid, 0);
 
@@ -725,13 +724,13 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("remove()", function (t) {
+            t.it("remove()", (t) => {
 
                 let grid           = getGrid({autoLoad: true}),
                     feature        = grid.view.getFeature("livegrid"),
                     pageMap        = feature.getPageMap();
 
-                t.waitForMs(750, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     let rec  = pageMap.map[1].value[4],
                         rec2 =  pageMap.map[3].value[4];
@@ -755,7 +754,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("refreshView() - indexes properly passed to view's refreshView", function (t) {
+            t.it("refreshView() - indexes properly passed to view's refreshView", (t) => {
 
                 let grid           = getGrid({autoLoad: true}),
                     view           = grid.view,
@@ -766,14 +765,14 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
                     PageMapUtil    = coon.core.data.pageMap.PageMapUtil;
 
 
-                t.waitForMs(1250, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     let scrollable = view.getScrollable(),
                         rowHeight  = view.bufferedRenderer.rowHeight;
 
                     scrollable.scrollTo(0, 300 * rowHeight);
 
-                    t.waitForMs(1250, function () {
+                    t.waitForMs(t.parent.TIMEOUT, () => {
 
                         let rec      = map[4].value[5],
                             pos      = PageMapUtil.findRecord(rec, feeder),
@@ -796,7 +795,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("add()", function (t) {
+            t.it("add()", (t) => {
 
                 let grid           = getGrid({sorters: {property: "testProp", dir: "ASC"}, autoLoad: true}),
                     view           = grid.view,
@@ -805,14 +804,14 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
                     PageMapUtil    = coon.core.data.pageMap.PageMapUtil;
 
 
-                t.waitForMs(1250, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     let scrollable = view.getScrollable(),
                         rowHeight  = view.bufferedRenderer.rowHeight;
 
                     scrollable.scrollTo(0, 300 * rowHeight);
 
-                    t.waitForMs(1250, function () {
+                    t.waitForMs(t.parent.TIMEOUT, () => {
 
                         let rec      = Ext.create("MockModel", {
                             testProp: 306.5,
@@ -832,7 +831,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("add() - start of view", function (t) {
+            t.it("add() - start of view", (t) => {
 
                 let grid        = getGrid({sorters: {property: "testProp", dir: "ASC"}, autoLoad: true}),
                     feature     = grid.view.getFeature("livegrid"),
@@ -840,9 +839,9 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
                     PageMapUtil = coon.core.data.pageMap.PageMapUtil;
 
 
-                t.waitForMs(1250, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
-                    t.waitForMs(1250, function () {
+                    t.waitForMs(t.parent.TIMEOUT, () => {
 
                         for (var i = 0; i < 78; i++) {
                             let rec      = Ext.create("MockModel", {
@@ -865,7 +864,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("onPageAdd()", function (t) {
+            t.it("onPageAdd()", (t) => {
 
                 let grid = getGrid({
                         sorters: {property: "testProp", dir: "ASC"},
@@ -873,7 +872,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
                     }),
                     feature = grid.view.getFeature("livegrid");
 
-                t.waitForMs(1250, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     t.isCalledNTimes("cleanFeedsAndVetoed", feature, 1);
 
@@ -885,7 +884,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("onPageRemove()", function (t) {
+            t.it("onPageRemove()", (t) => {
 
                 let grid = getGrid({
                         sorters: {property: "testProp", dir: "ASC"},
@@ -893,7 +892,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
                     }),
                     feature = grid.view.getFeature("livegrid");
 
-                t.waitForMs(1250, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     t.isCalledNTimes("cleanFeedsAndVetoed", feature, 1);
 
@@ -905,7 +904,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("onPageRemoveVeto()", function (t) {
+            t.it("onPageRemoveVeto()", (t) => {
 
                 let grid = getGrid({
                         sorters: {property: "testProp", dir: "ASC"},
@@ -913,7 +912,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
                     }),
                     feature = grid.view.getFeature("livegrid");
 
-                t.waitForMs(1250, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     t.expect(feature.vetoedPages).toEqual([]);
 
@@ -934,7 +933,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("onScroll()", function (t) {
+            t.it("onScroll()", (t) => {
 
                 let grid = getGrid({
                         sorters: {property: "testProp", dir: "ASC"},
@@ -944,7 +943,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
                     PageMapUtil    = coon.core.data.pageMap.PageMapUtil,
                     RecordPosition = coon.core.data.pageMap.RecordPosition;
 
-                t.waitForMs(1250, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     let rowHeight = feature.grid.view.bufferedRenderer.rowHeight,
                         posToY = function (pos) {
@@ -972,7 +971,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("cleanFeedsAndVetoed()", function (t) {
+            t.it("cleanFeedsAndVetoed()", (t) => {
 
                 let grid = getGrid({
                         sorters: {property: "testProp", dir: "ASC"},
@@ -980,7 +979,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
                     }),
                     feature = grid.view.getFeature("livegrid");
 
-                t.waitForMs(1250, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     feature.pageMapFeeder.swapMapToFeed(3, 2);
                     feature.vetoedPages = [3];
@@ -999,7 +998,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("add() - start of view, last page vetoed", function (t) {
+            t.it("add() - start of view, last page vetoed", (t) => {
 
                 let grid           = getGrid({sorters: {property: "testProp", dir: "ASC"}, autoLoad: true}),
                     view           = grid.view,
@@ -1008,7 +1007,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
                     PageMapUtil    = coon.core.data.pageMap.PageMapUtil;
 
 
-                t.waitForMs(1250, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     let scrollable = view.getScrollable(),
                         rowHeight  = view.bufferedRenderer.rowHeight,
@@ -1019,7 +1018,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
 
                     scrollable.scrollTo(0, 100000 * rowHeight);
 
-                    t.waitForMs(1250, function () {
+                    t.waitForMs(t.parent.TIMEOUT, () => {
 
                         for (var i = 0; i < 1; i++) {
                             let rec      = Ext.create("MockModel", {
@@ -1035,7 +1034,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
 
                         scrollable.scrollTo(0, 0);
 
-                        t.waitForMs(750, function () {
+                        t.waitForMs(t.parent.TIMEOUT, () => {
                             t.expect(feature.vetoedPages.indexOf(lastPage)).toBe(-1);
                             t.expect(pageMap.map[lastPage]).toBeUndefined();
 
@@ -1048,20 +1047,20 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("getRecordById()", function (t) {
+            t.it("getRecordById()", (t) => {
 
                 let grid           = getGrid({sorters: {property: "testProp", dir: "ASC"}, autoLoad: true}),
                     feature        = grid.view.getFeature("livegrid"),
                     PageMapUtil    = coon.core.data.pageMap.PageMapUtil;
 
 
-                t.waitForMs(750, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     t.isCalledOnce("getRecordById", PageMapUtil);
 
                     feature.getRecordById("foo");
 
-                    t.waitForMs(750, function () {
+                    t.waitForMs(t.parent.TIMEOUT, () => {
                         grid.destroy();
                         grid = null;
                     });
@@ -1069,7 +1068,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("extjs-lib-comp#4", function (t) {
+            t.it("extjs-lib-comp#4", (t) => {
 
                 var grid     = getGrid({autoLoad: true, sorters: {property: "testProp", dir: "ASC"}}),
                     store    = grid.getStore(),
@@ -1077,7 +1076,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
 
                 t.isntCalled("ensureVisible" ,grid);
 
-                t.waitForMs(500, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     let rogueRec = Ext.create("Ext.data.Model", {text: "foo"}),
                         rec      = store.getAt(0);
@@ -1101,7 +1100,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
             });
 
 
-            t.it("extjs-lib-comp#5", function (t) {
+            t.it("extjs-lib-comp#5", (t) => {
 
                 let grid = getGrid({
                         sorters: {property: "testProp", dir: "ASC"},
@@ -1113,7 +1112,7 @@ describe("coon.comp.grid.feature.LivegridTest", function (t) {
                     PageMapUtil = coon.core.data.pageMap.PageMapUtil;
 
 
-                t.waitForMs(TIMEOUT, function () {
+                t.waitForMs(t.parent.TIMEOUT, () => {
 
                     for (var i = 0; i < 78; i++) {
                         let rec      = Ext.create("MockModel", {

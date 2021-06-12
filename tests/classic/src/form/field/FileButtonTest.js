@@ -23,14 +23,14 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-describe("coon.comp.form.field.FileButtonTest", function (t) {
+StartTest((t) => {
 
 
     // +----------------------------------------------------------------------------
     // |                    =~. Unit Tests .~=
     // +----------------------------------------------------------------------------
 
-    t.it("Sanitize FileButton class", function (t) {
+    t.it("Sanitize FileButton class", (t) => {
 
         var button = Ext.create("coon.comp.form.field.FileButton");
 
@@ -42,7 +42,7 @@ describe("coon.comp.form.field.FileButtonTest", function (t) {
         button = null;
     });
 
-    t.it("Make sure fireChange() passes fourth argument", function (t) {
+    t.it("Make sure fireChange() passes fourth argument", (t) => {
 
         var button = Ext.create("coon.comp.form.field.FileButton", {
                 renderTo: document.body
