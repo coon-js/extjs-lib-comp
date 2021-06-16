@@ -1,6 +1,4 @@
 /build
-/tests/tests.config.js
-/tests/index.html
 /.idea
 /.extjs-link.conf.json
 /node_modules
