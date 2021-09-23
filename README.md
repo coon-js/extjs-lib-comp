@@ -1,11 +1,9 @@
 # @coon-js/extjs-lib-comp  
-This **Sencha ExtJS** package contains view functionality for the coon.js 
-project.
-Files found herein represent view implementations.  
+Common and extended view component implementations for rapid, modular ExtJS application building.
 
 ## Installation
 ```
-npm install --save-dev @coon-js/extjs-lib-core
+npm install --save-dev @coon-js/extjs-lib-comp
 ```
 
 ## Post-Install
