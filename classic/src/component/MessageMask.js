@@ -84,13 +84,13 @@ Ext.define("coon.comp.component.MessageMask", {
 
         /**
          * Glyph cls for Question mark
-         * @type {String} [QUESTION=fa fa-question-circle]
+         * @type {String} [QUESTION=far fa-question-circle]
          */
         QUESTION: "far fa-question-circle",
 
         /**
          * Glyph cls for Question mark
-         * @type {String} [QUESTION=fa fa-question-circle]
+         * @type {String} [QUESTION=far fa-frown]
          */
         FAILURE: "far fa-frown",
 
@@ -98,7 +98,7 @@ Ext.define("coon.comp.component.MessageMask", {
          * Glyph cls for Exclamation mark
          * @type {String} [ERROR=fa fa-exclamation-circle]
          */
-        ERROR: "far fa-exclamation-circle"
+        ERROR: "fa fa-exclamation-circle"
 
     },
 
