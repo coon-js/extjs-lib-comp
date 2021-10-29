@@ -28,6 +28,7 @@ export default [{
     items: ["classic/src/ImgTest.js", {
         group: "component",
         items: [
+            "classic/src/component/AnnouncementBarTest.js",
             "classic/src/component/IframeTest.js",
             "classic/src/component/LoadMaskTest.js",
             "classic/src/component/MessageMaskTest.js"
