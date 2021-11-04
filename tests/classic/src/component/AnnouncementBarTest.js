@@ -210,5 +210,54 @@ StartTest((t) => {
             t.expect(bar.getMessage()).toBe(5);
 
         });
+
+
+        t.it("yes/no custom text", (t) => {
+
+            let yesCall = 0, noCall = 0;
+
+            bar = createBar({
+                message: "Hello World",
+                yes: {
+                    text: "That's okay",
+                    callback: () => yesCall++
+                }
+            });
+            bar.show();
+
+            const
+                dom = () => bar.el.dom.firstChild,
+                message = () => dom().firstChild.firstChild,
+                yes = () => message().nextSibling ,
+                no =  () => yes().nextSibling;
+
+            t.expect(Ext.fly(yes()).isVisible()).toBe(true);
+            t.expect(message().innerHTML).toBe("Hello World");
+            t.expect(yes().innerHTML).toBe("That's okay");
+
+            t.click(yes(), () => {
+                t.expect(yesCall).toBe(1);
+                t.expect(noCall).toBe(0);
+                t.expect(bar.isHidden()).toBe(true);
+                bar.show();
+
+                bar.setNo({
+                    text: "I'm good, thanks",
+                    callback: () => noCall++
+                });
+
+                t.expect(Ext.fly(no()).isVisible()).toBe(true);
+                t.expect(no().innerHTML).toBe("I'm good, thanks");
+
+                t.click(no(), () => {
+                    t.expect(yesCall).toBe(1);
+                    t.expect(noCall).toBe(1);
+
+                    t.expect(bar.isHidden()).toBe(true);
+                });
+            });
+
+        });
+
     });
 });

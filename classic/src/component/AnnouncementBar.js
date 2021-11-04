@@ -54,6 +54,17 @@
  *         "yes": () => window.location.reload(),
  *         "no": true, // clicking yes/no will hide the bar, use "true" to render default "no" options
  *         "type": "warning"
+ *     });
+ *
+ *     // custom text for "yes"-option
+ *     coon.Announcement.show({
+ *         "message": "This application has an update, reload?",
+ *         "yes": {
+ *            text: "Reload window",
+ *            callback: () => window.location.reload()
+ *          }
+ *         "no": false
+ *         "type": "info"
  *     })
  *
  */
@@ -109,16 +120,27 @@ Ext.define("coon.comp.component.AnnouncementBar", {
         /**
          * The callback for a "yes"-option, if any.
          *
-         * @type {Function}
+         * @type {Object|Function}
          */
         yes: undefined,
 
         /**
          * The callback for a "no"-option, if any.
          *
-         * @type {Function}
+         * @type {Object|Function}
          */
-        no: undefined
+        no: undefined,
+
+        /**
+         * @type {String}
+         */
+        yesText: "yes",
+
+        /**
+         * @type {String}
+         */
+        noText: "no"
+
     },
 
     /**
@@ -129,8 +151,8 @@ Ext.define("coon.comp.component.AnnouncementBar", {
         "<div id=\"{id}-barEl\" data-ref=\"barEl\" class=\"wrap {type}\" role=\"presentation\">" +
             "<div class=\"msgWrap\">" +
                 "<div id=\"{id}-msgEl\" class=\"msg\" data-ref=\"msgEl\">{message}</div>" +
-                "<div data-ref=\"yesEl\" id=\"{id}-yesEl\" class=\"yes\">yes</div>" +
-                "<div data-ref=\"noEl\" id=\"{id}-noEl\" class=\"no\">no</div>" +
+                "<div data-ref=\"yesEl\" id=\"{id}-yesEl\" class=\"yes\">{yesText}</div>" +
+                "<div data-ref=\"noEl\" id=\"{id}-noEl\" class=\"no\">{noText}</div>" +
             "</div>" +
             "<div id=\"{id}-linkEl\" class=\"link\" data-ref=\"linkEl\" >{link}</div>" +
         "</div>"
@@ -160,7 +182,9 @@ Ext.define("coon.comp.component.AnnouncementBar", {
         result.link = me.link;
         result.className = me.cls;
         result.yes = me.yes;
+        result.yesText = me.yesText;
         result.no = me.no;
+        result.noText = me.noText;
 
         return result;
     },
@@ -181,7 +205,7 @@ Ext.define("coon.comp.component.AnnouncementBar", {
             me.yesEl.hide();
         }
 
-        if (!me.getYes()) {
+        if (!me.getNo()) {
             me.noEl.hide();
         }
 
@@ -281,10 +305,53 @@ Ext.define("coon.comp.component.AnnouncementBar", {
     },
 
     /**
-     * @param {String} msg
+     * Configures the "yes"-option for the AnnouncementBar.
+     *
+     * @param {Object|Function} yesCallback
      */
-    updateYes (yesCallback) {
+    applyYes (yesCallback) {
+
+        if (l8.isPlainObject(yesCallback)) {
+            this.setYesText(yesCallback.text);
+            yesCallback = yesCallback.callback;
+        }
+
         this.yesEl && this.yesEl[yesCallback ? "show" : "hide"]();
+
+        return yesCallback;
+    },
+
+
+    /**
+     * @param {String} yesText
+     */
+    updateYesText (yesText) {
+        this.yesEl && this.yesEl.update(yesText);
+    },
+
+
+    /**
+     * Configures the "no"-option for the AnnouncementBar.
+     *
+     * @param {Object|Function} noCallback
+     */
+    applyNo (noCallback) {
+
+        if (l8.isPlainObject(noCallback)) {
+            this.setNoText(noCallback.text);
+            noCallback = noCallback.callback;
+        }
+
+        this.noEl && this.noEl[noCallback ? "show" : "hide"]();
+        return noCallback;
+    },
+
+
+    /**
+     * @param {String} noText
+     */
+    updateNoText (noText) {
+        this.noEl && this.noEl.update(noText);
     },
 
 
@@ -340,8 +407,8 @@ Ext.define("coon.comp.component.AnnouncementBar", {
         ann.type && me.setType(ann.type);
         ann.link && me.setLink(ann.link);
         ann.callback && me.setCallback(ann.callback);
-        me.setYes(ann.yes ?? null);
-        me.setNo(ann.no ?? null);
+        me.setYes(ann.yes ? ann.yes :  null);
+        me.setNo(ann.no ? ann.no : null);
 
         this.show();
 
