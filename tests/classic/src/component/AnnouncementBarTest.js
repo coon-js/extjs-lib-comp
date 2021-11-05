@@ -58,7 +58,7 @@ StartTest((t) => {
     // +----------------------------------------------------------------------------
     t.requireOk("coon.comp.component.AnnouncementBar", () => {
 
-
+        /*
         t.it("test class and configuration", (t) => {
 
             let barMock;
@@ -212,7 +212,7 @@ StartTest((t) => {
         });
 
 
-        t.it("yes/no custom text", (t) => {
+        t.it("yes/no custom text", t => {
 
             let yesCall = 0, noCall = 0;
 
@@ -256,6 +256,50 @@ StartTest((t) => {
                     t.expect(bar.isHidden()).toBe(true);
                 });
             });
+
+        });
+
+*/
+        t.it("extjs-lib-comp#6", t => {
+
+            coon.Announcement.register( createBar({
+                message: "Hello World",
+                link: "okay"
+            }));
+
+            bar = coon.Announcement.show({message: 1, no: {text: "nono"}, yes: {text: "option", callback: () =>{}}});
+            t.expect(bar.getMessage()).toBe(1);
+
+            const
+                dom = () => bar.el.dom.firstChild,
+                message = () => dom().firstChild.firstChild,
+                yes = () => message().nextSibling ,
+                no =  () => yes().nextSibling;
+
+            t.expect(Ext.fly(yes()).isVisible()).toBe(true);
+            t.expect(yes().innerHTML).toBe("option");
+
+            t.expect(Ext.fly(no()).isVisible()).toBe(true);
+            t.expect(no().innerHTML).toBe("nono");
+
+            coon.Announcement.show({yes: () => {}});
+
+            t.expect(yes().innerHTML).toBe("option");
+
+            bar.hide();
+            t.expect(bar.isVisible()).toBe(true);
+            t.expect(Ext.fly(no()).isVisible()).toBe(false);
+
+
+            t.expect(Ext.fly(yes()).isVisible()).toBe(true);
+
+            t.expect(yes().innerHTML).toBe("yes");
+
+            coon.Announcement.show({no: () => {}});
+            bar.hide();
+            t.expect(bar.isVisible()).toBe(true);
+            t.expect(Ext.fly(no()).isVisible()).toBe(true);
+            t.expect(no().innerHTML).toBe("no");
 
         });
 

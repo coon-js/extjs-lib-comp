@@ -144,6 +144,18 @@ Ext.define("coon.comp.component.AnnouncementBar", {
     },
 
     /**
+     * @type {String} defaultYesText
+     * @private
+     */
+    defaultYesText: "yes",
+
+    /**
+     * @type {String} defaultNoText
+     * @private
+     */
+    defaultNoText: "no",
+
+    /**
      * @cfg renderTpl
      * @inheritdoc
      */
@@ -172,7 +184,7 @@ Ext.define("coon.comp.component.AnnouncementBar", {
     /**
      * @inheritdoc
      */
-    initRenderData: function () {
+    initRenderData () {
         const
             me = this,
             result = me.callParent(arguments);
@@ -224,7 +236,9 @@ Ext.define("coon.comp.component.AnnouncementBar", {
      *
      * @private
      */
-    handleLinkClick: function (bar, type) {
+    handleLinkClick (bar, type) {
+        "use strict";
+
         const
             me = this;
 
@@ -259,7 +273,9 @@ Ext.define("coon.comp.component.AnnouncementBar", {
      *
      * @see handleButtonClick
      */
-    onClick: function (evt, el) {
+    onClick (evt, el) {
+        "use strict";
+
         const me = this,
             id = el.id.split("-").pop();
 
@@ -285,7 +301,9 @@ Ext.define("coon.comp.component.AnnouncementBar", {
      *
      * @see destroy
      */
-    close: function () {
+    close () {
+        "use strict";
+
         this.destroy();
     },
 
@@ -294,6 +312,8 @@ Ext.define("coon.comp.component.AnnouncementBar", {
      * @param {String} msg
      */
     updateMessage (msg) {
+        "use strict";
+
         this.msgEl && this.msgEl.update(msg);
     },
 
@@ -301,6 +321,8 @@ Ext.define("coon.comp.component.AnnouncementBar", {
      * @param {String} msg
      */
     updateLink (link) {
+        "use strict";
+
         this.linkEl && this.linkEl.update(link);
     },
 
@@ -310,13 +332,18 @@ Ext.define("coon.comp.component.AnnouncementBar", {
      * @param {Object|Function} yesCallback
      */
     applyYes (yesCallback) {
+        "use strict";
+
+        const me = this;
 
         if (l8.isPlainObject(yesCallback)) {
-            this.setYesText(yesCallback.text);
-            yesCallback = yesCallback.callback;
+            me.setYesText(yesCallback.text);
+            yesCallback = yesCallback.callback || (() => {});
+        } else {
+            me.setYesText(me.defaultYesText);
         }
 
-        this.yesEl && this.yesEl[yesCallback ? "show" : "hide"]();
+        me.yesEl && me.yesEl[yesCallback ? "show" : "hide"]();
 
         return yesCallback;
     },
@@ -326,6 +353,8 @@ Ext.define("coon.comp.component.AnnouncementBar", {
      * @param {String} yesText
      */
     updateYesText (yesText) {
+        "use strict";
+
         this.yesEl && this.yesEl.update(yesText);
     },
 
@@ -336,13 +365,18 @@ Ext.define("coon.comp.component.AnnouncementBar", {
      * @param {Object|Function} noCallback
      */
     applyNo (noCallback) {
+        "use strict";
+
+        const me = this;
 
         if (l8.isPlainObject(noCallback)) {
-            this.setNoText(noCallback.text);
-            noCallback = noCallback.callback;
+            me.setNoText(noCallback.text);
+            noCallback = noCallback.callback || (() => {});
+        } else {
+            me.setNoText(me.defaultNoText);
         }
 
-        this.noEl && this.noEl[noCallback ? "show" : "hide"]();
+        me.noEl && me.noEl[noCallback ? "show" : "hide"]();
         return noCallback;
     },
 
@@ -351,6 +385,8 @@ Ext.define("coon.comp.component.AnnouncementBar", {
      * @param {String} noText
      */
     updateNoText (noText) {
+        "use strict";
+
         this.noEl && this.noEl.update(noText);
     },
 
@@ -359,6 +395,8 @@ Ext.define("coon.comp.component.AnnouncementBar", {
      * @param {String} msg
      */
     updateNo (noCallback) {
+        "use strict";
+
         this.noEl && this.noEl[noCallback ? "show" : "hide"]();
     },
 
@@ -371,6 +409,8 @@ Ext.define("coon.comp.component.AnnouncementBar", {
      * @returns {String}
      */
     applyType (type) {
+        "use strict";
+
         return this.translateType(type);
     },
 
@@ -379,6 +419,8 @@ Ext.define("coon.comp.component.AnnouncementBar", {
      * @param {String} type
      */
     updateType (type,oldType) {
+        "use strict";
+
         const
             me = this,
             el = me.barEl;
@@ -420,6 +462,7 @@ Ext.define("coon.comp.component.AnnouncementBar", {
      * @private
      */
     translateType (type) {
+        "use strict";
 
         const
             me = this,
@@ -472,6 +515,8 @@ Ext.define("coon.comp.component.AnnouncementBar", {
          * @param {Object} announcement
          */
         const show = (announcement) => {
+            "use strict";
+
             return announcementBar.setAnnouncement(announcement);
         };
 
@@ -480,6 +525,8 @@ Ext.define("coon.comp.component.AnnouncementBar", {
          * since an announcement was visible.
          */
         const processStack = () => {
+            "use strict";
+
             if (stack.length) {
                 show(stack.shift());
             }
@@ -491,6 +538,8 @@ Ext.define("coon.comp.component.AnnouncementBar", {
              * @param target
              */
             register (target) {
+                "use strict";
+
                 announcementBar = target;
                 announcementBar.on("hide", processStack, null);
             },
@@ -504,6 +553,8 @@ Ext.define("coon.comp.component.AnnouncementBar", {
              * @param announcement
              */
             show (announcement) {
+                "use strict";
+
                 if (announcementBar.isVisible()) {
                     stack.push(announcement);
                     return;
