@@ -58,7 +58,7 @@ StartTest((t) => {
     // +----------------------------------------------------------------------------
     t.requireOk("coon.comp.component.AnnouncementBar", () => {
 
-        /*
+
         t.it("test class and configuration", (t) => {
 
             let barMock;
@@ -259,7 +259,7 @@ StartTest((t) => {
 
         });
 
-*/
+
         t.it("extjs-lib-comp#6", t => {
 
             coon.Announcement.register( createBar({
