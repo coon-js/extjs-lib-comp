@@ -1,7 +1,7 @@
 /**
  * coon.js
  * extjs-lib-comp
- * Copyright (C) 2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
+ * Copyright (C) 2021-2022 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -21,6 +21,11 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+/**
+ * We can safely test modern/classic AnnouncementBar since they share the same functionality,
+ * except for a different rendering mechanism. *
  */
 
 StartTest((t) => {

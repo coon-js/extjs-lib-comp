@@ -1,7 +1,7 @@
 /**
  * coon.js
  * extjs-lib-comp
- * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
+ * Copyright (C) 2017-2022 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -28,7 +28,6 @@ export default [{
     items: ["classic/src/ImgTest.js", {
         group: "component",
         items: [
-            "classic/src/component/AnnouncementBarTest.js",
             "classic/src/component/IframeTest.js",
             "classic/src/component/LoadMaskTest.js",
             "classic/src/component/MessageMaskTest.js"
@@ -83,6 +82,11 @@ export default [{
         group: "app",
         items: [
             "src/app/ApplicationTest.js"
+        ]
+    }, {
+        group: "component",
+        items: [
+            "src/component/AnnouncementBarTest.js"
         ]
     }, {
         group: "list",
