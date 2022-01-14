@@ -96,6 +96,10 @@ Ext.define("coon.comp.form.AutoCompleteForm", {
 
     extend: "Ext.form.Panel",
 
+    requires: [
+        "coon.core.Environment"
+    ],
+
     xtype: "cn_comp-autocompleteform",
 
     referenceHolder: true,
@@ -109,7 +113,6 @@ Ext.define("coon.comp.form.AutoCompleteForm", {
      * @cfg {String} formName
      * The name for the form used as the name attribute for the <form>-tag
      */
-    formName: undefined,
 
     /**
      * @type {Boolean/Object} [autoCompleteTrigger=false]
@@ -129,7 +132,7 @@ Ext.define("coon.comp.form.AutoCompleteForm", {
      * The default action url to use with the fake iframe if autoCompleteTrigger
      * is configured as an object, but missing the actionUrl property.
      */
-    defaultFakeActionUrl: "./resources/html/blank.html",
+
 
     /**
      * @type {HtmlElement}
@@ -142,11 +145,16 @@ Ext.define("coon.comp.form.AutoCompleteForm", {
      *
      * @throws exception if autoCompleteTrigger was not properly configured
      */
-    initComponent: function () {
+    initComponent () {
 
-        var me         = this,
-            listen     = {},
-            cfgObject  = null;
+        const me = this;
+
+        let cfgObject, listen;
+
+        me.defaultFakeActionUrl = coon.core.Environment.getPathForResource(
+            "html/blank.html",
+            "extjs-lib-comp"
+        );
 
         // Use standard FORM tag for detection by browser or password tools
         cfgObject = {
@@ -275,7 +283,9 @@ Ext.define("coon.comp.form.AutoCompleteForm", {
             evt.preventDefault();
 
             var request = new XMLHttpRequest();
+
             request.open("POST", me.autoCompleteTrigger.actionUrl, true);
+            request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             request.send();
 
             return false;

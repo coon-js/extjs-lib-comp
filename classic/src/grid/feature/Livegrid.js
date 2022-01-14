@@ -129,6 +129,8 @@ Ext.define("coon.comp.grid.feature.Livegrid", {
 
     /**
      * Adds the specified record to this Feature's BufferedStore.
+     * Make sure to join the record with the store afterwards if commit/edit/etc.
+     * events are required.
      *
      * @param {Ext.data.Model} record
      *

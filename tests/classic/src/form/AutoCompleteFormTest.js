@@ -23,227 +23,233 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-StartTest((t) => {
+StartTest(t => {
 
 
     // +----------------------------------------------------------------------------
     // |                    =~. Unit Tests .~=
     // +----------------------------------------------------------------------------
 
-    t.requireOk("coon.comp.form.AutoCompleteForm", function () {
+    t.requireOk(
+        "coon.comp.form.AutoCompleteForm",
+        "coon.comp.form.AutoCompleteForm", function () {
 
-        var form,
-            formConfig,
-            currId;
+            let form,
+                formConfig,
+                currId,
+                envSpy;
 
-        t.beforeEach(function (t){
+            t.beforeEach(function (t){
 
-            currId = Ext.id();
+                currId = Ext.id();
 
-            formConfig = {
-                id: currId,
-                xtype: "cn_comp-autocompleteform",
-                width: 400,
-                height: 200,
-                renderTo: document.body,
-                items: [{
-                    xtype: "textfield",
-                    value: "a",
-                    name: "focusMeToo"
-                }, {
-                    xtype: "textfield",
-                    name: "focusMe"
-                }, {
-                    xtype: "textfield",
-                    inputType: "password"
-                }, {
-                    xtype: "textfield",
-                    inputType: "password",
-                    autoComplete: false
-                }]
-            };
-        });
+                envSpy = t.spyOn(coon.core.Environment, "getPathForResource").and.callFake((path, pck) => pck + "/" + path);
 
-        t.afterEach(function (t) {
+                formConfig = {
+                    id: currId,
+                    xtype: "cn_comp-autocompleteform",
+                    width: 400,
+                    height: 200,
+                    renderTo: document.body,
+                    items: [{
+                        xtype: "textfield",
+                        value: "a",
+                        name: "focusMeToo"
+                    }, {
+                        xtype: "textfield",
+                        name: "focusMe"
+                    }, {
+                        xtype: "textfield",
+                        inputType: "password"
+                    }, {
+                        xtype: "textfield",
+                        inputType: "password",
+                        autoComplete: false
+                    }]
+                };
+            });
 
-            if (form) {
-                form.destroy();
-                form = null;
-            }
+            t.afterEach(t => {
 
-            if (document.getElementById(currId)) {
-                document.getElementById(currId)
-                    .parentNode
-                    .removeChild(document.getElementById(currId));
-            }
-
-            formConfig = null;
-        });
-
-
-        // -------------------------------------------------------------------------
-
-        t.it("Should build the form with autocomplete attributes (autoCompleteTrigger=false)", (t) => {
-            formConfig.formName = "testform";
-            form = Ext.widget(formConfig);
-
-            t.expect(form.autoCompleteTrigger).toBe(false);
-            t.expect(form.submitHelperButton).toBeNull();
-            t.expect(form.el.dom.tagName.toLowerCase()).toBe("form");
-            t.expect(form.el.dom.method.toLowerCase()).toBe("post");
-            t.expect(form.el.dom.name).toBe("testform");
-
-        });
-
-        t.it("Should have added autocomplete attribute to some fields (autoCompleteTrigger=false)", (t) => {
-            form = Ext.widget(formConfig);
-
-            var c = 0,
-                i = 0;
-
-            Ext.each(form.query("textfield"), function (field) {
-                if (field.autoComplete === false) {
-                    t.expect(field.inputEl.dom.autocomplete).toBe("off");
-                    i++;
-                } else {
-                    t.expect(field.inputEl.dom.autocomplete).toBe("on");
-                    c++;
+                envSpy.remove();
+                if (form) {
+                    form.destroy();
+                    form = null;
                 }
 
-            });
+                if (document.getElementById(currId)) {
+                    document.getElementById(currId)
+                        .parentNode
+                        .removeChild(document.getElementById(currId));
+                }
 
-            t.expect(i).toBe(1);
-            t.expect(c).toBe(3);
-            t.expect(form.el.dom.name).toBe("");
-        });
-
-
-        t.it("Second textfield should have the focus (autoCompleteTrigger=false)", (t) => {
-            form = Ext.widget(formConfig);
-
-            var el  = form.down("textfield[name=focusMe]"),
-                el2 = form.down("textfield[name=focusMeToo]");
-
-            t.expect(document.activeElement).not.toBe(el2.inputEl.dom);
-            t.expect(document.activeElement).not.toBe(el.inputEl.dom);
-            form.focus();
-            t.expect(document.activeElement).not.toBe(el2.inputEl.dom);
-            t.expect(document.activeElement).toBe(el.inputEl.dom);
-
-            el2.focus();
-
-            t.expect(document.activeElement).not.toBe(el.inputEl.dom);
-            t.expect(document.activeElement).toBe(el2.inputEl.dom);
-
-        });
-
-        t.it("Should be okay with missing actionUrl (autoCompleteTrigger {})", (t) => {
-
-            form = Ext.widget(Ext.apply({
-                autoCompleteTrigger: {
-                    reference: "somebutton"
-                },
-                buttons: [{
-                    text: "Login",
-                    reference: "somebutton"
-                }]
-            }, formConfig));
-
-            t.expect(form.defaultFakeActionUrl).not.toBeNull();
-            t.expect(form.defaultFakeActionUrl).toBeDefined();
-            t.expect(form.defaultFakeActionUrl).toBe("./resources/html/blank.html");
-
-            t.expect(form.autoCompleteTrigger.actionUrl)
-                .toBe("./resources/html/blank.html");
-
-        });
-
-        t.it("Should be okay with autoCompleteTrigger", (t) => {
-
-            var wasClicked = false;
-
-            var form = Ext.widget(Ext.apply({
-                autoCompleteTrigger: {
-                    actionUrl: "./foo.bar",
-                    reference: "somebuttonNew"
-                },
-                buttons: [{
-                    text: "Login",
-                    reference: "somebuttonNew"
-                }]
-            }, formConfig));
-
-            t.expect(form.submitHelperButton).not.toBeNull();
-            t.expect(form.submitHelperButton).toBeDefined();
-
-            if (Ext.isChrome) {
-                form.submitHelperButton.addEventListener("click", function (){
-                    wasClicked = true;
-                });
-            } else {
-                Ext.get(form.submitHelperButton).on("click", function (){
-                    wasClicked = true;
-                });
-            }
-
-            t.expect(wasClicked).toBe(false);
-
-
-            t.click(form.down("button[reference=somebuttonNew]"), function () {
-                t.expect(wasClicked).toBe(true);
+                formConfig = null;
             });
 
 
-        });
+            // -------------------------------------------------------------------------
 
-
-        t.it("Should throw error for missing reference (autoCompleteTrigger {})", (t) => {
-            formConfig.autoCompleteTrigger = {
-                actionUrl: "foo.bar"
-            };
-            var exc = undefined;
-            try {
+            t.it("Should build the form with autocomplete attributes (autoCompleteTrigger=false)", t => {
+                formConfig.formName = "testform";
                 form = Ext.widget(formConfig);
-            } catch (e) {
-                exc = e;
-            }
-            t.expect(exc).toBeDefined();
-            t.expect(exc.msg).toBeDefined();
 
-        });
+                t.expect(form.autoCompleteTrigger).toBe(false);
+                t.expect(form.submitHelperButton).toBeNull();
+                t.expect(form.el.dom.tagName.toLowerCase()).toBe("form");
+                t.expect(form.el.dom.method.toLowerCase()).toBe("post");
+                t.expect(form.el.dom.name).toBe("testform");
 
-        t.it("Should trigger error with missing reference target (autoCompleteTrigger {})", (t) => {
-            formConfig.autoCompleteTrigger = {
-                actionUrl: "foo.bar",
-                reference: "somebutton"
-            };
-            var exc = undefined;
+            });
 
-            try {
+            t.it("Should have added autocomplete attribute to some fields (autoCompleteTrigger=false)", t => {
                 form = Ext.widget(formConfig);
-            } catch (e) {
-                exc = e;
-            }
 
-            t.expect(exc).toBeDefined();
-            t.expect(exc.msg).toBeDefined();
-        });
+                var c = 0,
+                    i = 0;
 
-        t.it("Should throw error for wrong value for autoCompleteTrigger (autoCompleteTrigger {})", (t) => {
-            formConfig.autoCompleteTrigger = true;
-            var exc = undefined;
-            try {
+                Ext.each(form.query("textfield"), function (field) {
+                    if (field.autoComplete === false) {
+                        t.expect(field.inputEl.dom.autocomplete).toBe("off");
+                        i++;
+                    } else {
+                        t.expect(field.inputEl.dom.autocomplete).toBe("on");
+                        c++;
+                    }
+
+                });
+
+                t.expect(i).toBe(1);
+                t.expect(c).toBe(3);
+                t.expect(form.el.dom.name).toBe("");
+            });
+
+
+            t.it("Second textfield should have the focus (autoCompleteTrigger=false)", t => {
                 form = Ext.widget(formConfig);
-            } catch (e) {
-                exc = e;
-            }
-            t.expect(exc).toBeDefined();
-            t.expect(exc.msg).toBeDefined();
 
-        });
+                var el  = form.down("textfield[name=focusMe]"),
+                    el2 = form.down("textfield[name=focusMeToo]");
+
+                t.expect(document.activeElement).not.toBe(el2.inputEl.dom);
+                t.expect(document.activeElement).not.toBe(el.inputEl.dom);
+                form.focus();
+                t.expect(document.activeElement).not.toBe(el2.inputEl.dom);
+                t.expect(document.activeElement).toBe(el.inputEl.dom);
+
+                el2.focus();
+
+                t.expect(document.activeElement).not.toBe(el.inputEl.dom);
+                t.expect(document.activeElement).toBe(el2.inputEl.dom);
+
+            });
+
+            t.it("Should be okay with missing actionUrl (autoCompleteTrigger {})", t => {
+
+                form = Ext.widget(Ext.apply({
+                    autoCompleteTrigger: {
+                        reference: "somebutton"
+                    },
+                    buttons: [{
+                        text: "Login",
+                        reference: "somebutton"
+                    }]
+                }, formConfig));
+
+                t.expect(form.defaultFakeActionUrl).not.toBeNull();
+                t.expect(form.defaultFakeActionUrl).toBeDefined();
+                t.expect(form.defaultFakeActionUrl).toBe("extjs-lib-comp/html/blank.html");
+
+                t.expect(form.autoCompleteTrigger.actionUrl)
+                    .toBe("extjs-lib-comp/html/blank.html");
+
+            });
+
+            t.it("Should be okay with autoCompleteTrigger", t => {
+
+                var wasClicked = false;
+
+                var form = Ext.widget(Ext.apply({
+                    autoCompleteTrigger: {
+                        actionUrl: "./foo.bar",
+                        reference: "somebuttonNew"
+                    },
+                    buttons: [{
+                        text: "Login",
+                        reference: "somebuttonNew"
+                    }]
+                }, formConfig));
+
+                t.expect(form.submitHelperButton).not.toBeNull();
+                t.expect(form.submitHelperButton).toBeDefined();
+
+                if (Ext.isChrome) {
+                    form.submitHelperButton.addEventListener("click", function (){
+                        wasClicked = true;
+                    });
+                } else {
+                    Ext.get(form.submitHelperButton).on("click", function (){
+                        wasClicked = true;
+                    });
+                }
+
+                t.expect(wasClicked).toBe(false);
 
 
-    }); // EO requireOK
+                t.click(form.down("button[reference=somebuttonNew]"), function () {
+                    t.expect(wasClicked).toBe(true);
+                });
+
+
+            });
+
+
+            t.it("Should throw error for missing reference (autoCompleteTrigger {})", t => {
+                formConfig.autoCompleteTrigger = {
+                    actionUrl: "foo.bar"
+                };
+                var exc = undefined;
+                try {
+                    form = Ext.widget(formConfig);
+                } catch (e) {
+                    exc = e;
+                }
+                t.expect(exc).toBeDefined();
+                t.expect(exc.msg).toBeDefined();
+
+            });
+
+            t.it("Should trigger error with missing reference target (autoCompleteTrigger {})", t => {
+                formConfig.autoCompleteTrigger = {
+                    actionUrl: "foo.bar",
+                    reference: "somebutton"
+                };
+                var exc = undefined;
+
+                try {
+                    form = Ext.widget(formConfig);
+                } catch (e) {
+                    exc = e;
+                }
+
+                t.expect(exc).toBeDefined();
+                t.expect(exc.msg).toBeDefined();
+            });
+
+            t.it("Should throw error for wrong value for autoCompleteTrigger (autoCompleteTrigger {})", t => {
+                formConfig.autoCompleteTrigger = true;
+                var exc = undefined;
+                try {
+                    form = Ext.widget(formConfig);
+                } catch (e) {
+                    exc = e;
+                }
+                t.expect(exc).toBeDefined();
+                t.expect(exc.msg).toBeDefined();
+
+            });
+
+
+        }); // EO requireOK
 
 
 });
