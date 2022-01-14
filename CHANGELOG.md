@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.3](https://github.com/coon-js/extjs-lib-comp/compare/v0.2.2...v0.2.3) (2022-01-14)
+
+
+### Features
+
+* add AnnouncementBar to modern toolkit ([6c505fe](https://github.com/coon-js/extjs-lib-comp/commit/6c505fe25cd021a3a52a778d531867144d463144)), closes [coon-js/extjs-lib-comp#15](https://github.com/coon-js/extjs-lib-comp/issues/15)
+
+
+### Bug Fixes
+
+* fix wrong version prefix for allowing broader range of version compatibility ([4197a12](https://github.com/coon-js/extjs-lib-comp/commit/4197a124c7412cff6ef3f937935f90bf663adae2))
+
 ### [0.2.2](https://github.com/coon-js/extjs-lib-comp/compare/v0.2.1...v0.2.2) (2022-01-14)
 
 ### [0.2.1](https://github.com/coon-js/extjs-lib-comp/compare/v0.2.0...v0.2.1) (2022-01-14)
