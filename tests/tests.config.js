@@ -1,7 +1,7 @@
 /**
  * coon.js
  * extjs-lib-core
- * Copyright (C) 2017-2021 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-core
+ * Copyright (C) 2017-2022 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-core
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -38,6 +38,7 @@ export default {
         "Ext.package": "../node_modules/@coon-js/extjs-package-loader/packages/package-loader/src/package",
 
         "coon.comp.fixtures": "./fixtures",
+        "coon.comp.component.AbstractAnnouncementBar": "../src/component/AbstractAnnouncementBar.js",
         "coon.comp.window.LockingWindow": "../src/window/LockingWindow.js",
         "coon.comp.app": "../src/app",
         "coon.comp.list": "../src/list",
@@ -47,6 +48,7 @@ export default {
         modern: {
             "coon.comp.form": "../modern/src/form",
             "coon.comp.container": "../modern/src/container",
+            "coon.comp.component": "../modern/src/component",
             "coon.comp.Img": "../modern/src/Img.js"
         },
 
