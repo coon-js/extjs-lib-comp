@@ -89,13 +89,13 @@
   },
   "homepage": "https://github.com/coon-js/extjs-lib-comp#readme",
   "dependencies": {
-    "@coon-js/extjs-package-loader": "~0.1.0",
-    "@l8js/l8": "~0.5.2",
-    "@coon-js/extjs-lib-core": "~0.6.0"
+    "@coon-js/extjs-package-loader": ">=0.1.0",
+    "@l8js/l8": ">=0.5.2",
+    "@coon-js/extjs-lib-core": ">=0.6.0"
   },
   "devDependencies": {
-    "@coon-js/extjs-link": "~0.1.0",
-    "@coon-js/siesta-lib-helper": "~0.1.5",
+    "@coon-js/extjs-link": ">=0.1.0",
+    "@coon-js/siesta-lib-helper": ">=0.1.5",
     "eslint": "^7.28.0",
     "local-web-server": "^4.2.1",
     "node-git-hooks": "^1.0.6",
