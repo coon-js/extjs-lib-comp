@@ -30,6 +30,8 @@ Ext.define("coon.comp.component.AnnouncementBar", {
 
     extend: "coon.comp.component.AbstractAnnouncementBar",
 
+    alias: "widget.cn_comp-announcementbar",
+
     getTemplate: function () {
 
         return [{
