@@ -7,8 +7,8 @@
     "creator": "coon.js",
     "summary": "NPM package providing Livegrid-plugin and a collection of enhanced views and related functionality for Sencha ExtJS applications.",
     "detailedDescription": "This package contains extended and advanced implementations for ExtJS projects which are related to view components. Requires @coon-js/extjs-lib-core. Also home of the Livegrid-plugin.",
-    "version": "0.0.2",
-    "compatVersion": "0.0.2",
+    "version": "0.2.4",
+    "compatVersion": "0.2.4",
     "format": "1",
     "slicer": null,
     "output": {
@@ -50,7 +50,7 @@
       }
     }
   },
-  "version": "0.1.1",
+  "version": "0.2.3",
   "description": "NPM package providing component library for ExtJS projects",
   "main": "index.js",
   "directories": {
@@ -89,13 +89,13 @@
   },
   "homepage": "https://github.com/coon-js/extjs-lib-comp#readme",
   "dependencies": {
-    "@coon-js/extjs-package-loader": ">=0.1.0",
-    "@l8js/l8": ">=0.5.2",
-    "@coon-js/extjs-lib-core": ">=0.6.0"
+    "@coon-js/extjs-package-loader": "^0.1.8",
+    "@l8js/l8": "^0.5.5",
+    "@coon-js/extjs-lib-core": "^0.7.2"
   },
   "devDependencies": {
-    "@coon-js/extjs-link": ">=0.1.0",
-    "@coon-js/siesta-lib-helper": ">=0.1.5",
+    "@coon-js/extjs-link": "^0.1.4",
+    "@coon-js/siesta-lib-helper": "^0.1.10",
     "eslint": "^7.28.0",
     "local-web-server": "^4.2.1",
     "node-git-hooks": "^1.0.6",
