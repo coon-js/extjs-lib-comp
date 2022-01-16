@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.4](https://github.com/coon-js/extjs-lib-comp/compare/v0.2.3...v0.2.4) (2022-01-16)
+
+
+### Bug Fixes
+
+* add alias to concrete AnnouncementBar subclass ([9614a60](https://github.com/coon-js/extjs-lib-comp/commit/9614a601c0e41b2521b0ad07248f073433bb78a6)), closes [coon-js/extjs-lib-comp#15](https://github.com/coon-js/extjs-lib-comp/issues/15)
+
 ### [0.2.3](https://github.com/coon-js/extjs-lib-comp/compare/v0.2.2...v0.2.3) (2022-01-14)
 
 
