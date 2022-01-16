@@ -78,8 +78,6 @@ Ext.define("coon.comp.component.AbstractAnnouncementBar", {
         "l8"
     ],
 
-    alias: "widget.cn_comp-announcementbar",
-
     inheritableStatics: {
         INFO: 1,
         WARNING: 2,
@@ -165,6 +163,7 @@ Ext.define("coon.comp.component.AbstractAnnouncementBar", {
      * @ee onClick
      */
     afterRender () {
+
         const me = this;
 
         me.callParent(arguments);
