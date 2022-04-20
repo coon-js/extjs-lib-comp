@@ -25,15 +25,18 @@
 
 /**
  * We can safely test modern/classic AnnouncementBar since they share the same functionality,
- * except for a different rendering mechanism. *
+ * except for a different rendering mechanism.
  */
 
-StartTest((t) => {
+StartTest(t => {
+
 
     var bar;
 
     const
         className = "coon.comp.component.AnnouncementBar",
+
+
         createBar = (cfg) => {
 
             return Ext.create(className, Ext.apply({
@@ -49,11 +52,8 @@ StartTest((t) => {
     });
 
     t.afterEach(() => {
-
-        if (bar) {
-            bar.destroy();
-            bar = null;
-        }
+        coon.Announcement.close();
+        bar = null;
 
     });
 
@@ -305,6 +305,27 @@ StartTest((t) => {
             t.expect(bar.isVisible()).toBe(true);
             t.expect(Ext.fly(no()).isVisible()).toBe(true);
             t.expect(no().innerHTML).toBe("no");
+
+            let closeSpy =  t.spyOn(bar, "close").and.callThrough();
+            coon.Announcement.close();
+            t.expect(closeSpy.calls.all().length).toBe(1);
+            closeSpy.remove();
+        });
+
+
+        t.it("fix: call to show() triggers error if AnnouncementBar was not registered yet - coon-js/extjs-lib-comp#22", t => {
+
+            bar = coon.Announcement.show({message: "Hello World", type: "success"});
+            t.expect(bar).toBeUndefined();
+
+            const add = createBar({});
+            bar = coon.Announcement.register(add);
+            bar.show();
+            t.expect(bar).toBe(add);
+            t.expect(bar.getMessage()).toBeUndefined();
+            bar.hide();
+            t.expect(bar.isVisible()).toBe(true);
+            t.expect(bar.getMessage()).toBe("Hello World");
 
         });
 

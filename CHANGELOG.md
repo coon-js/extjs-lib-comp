@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.5](https://github.com/coon-js/extjs-lib-comp/compare/v0.2.4...v0.2.5) (2022-04-20)
+
+
+### Bug Fixes
+
+* call to show() triggers error if AnnouncementBar was not registered yet ([1a43395](https://github.com/coon-js/extjs-lib-comp/commit/1a43395ab8908b3fc214ff11b89961cb0a4968e3)), closes [coon-js/extjs-lib-comp#22](https://github.com/coon-js/extjs-lib-comp/issues/22)
+
 ### [0.2.4](https://github.com/coon-js/extjs-lib-comp/compare/v0.2.3...v0.2.4) (2022-01-16)
 
 
