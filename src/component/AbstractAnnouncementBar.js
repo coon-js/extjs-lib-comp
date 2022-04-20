@@ -488,15 +488,35 @@ Ext.define("coon.comp.component.AbstractAnnouncementBar", {
         };
 
         return {
+
+            /**
+             * Closes and destroys the AnnouncementBar
+             */
+            close () {
+                "use strict";
+
+                if (announcementBar) {
+                    announcementBar.close();
+                }
+
+                announcementBar = null;
+            },
+
+
             /**
              * Sets the announcementBar that should be used for showing announcements.
+             *
              * @param target
+             *
+             * @return {coon.comp.component.AbstractAnnouncementBar}
              */
             register (target) {
                 "use strict";
 
                 announcementBar = target;
                 announcementBar.on("hide", processStack, null);
+
+                return announcementBar;
             },
 
 
@@ -510,7 +530,7 @@ Ext.define("coon.comp.component.AbstractAnnouncementBar", {
             show (announcement) {
                 "use strict";
 
-                if (announcementBar.isVisible()) {
+                if (!announcementBar || announcementBar.isVisible()) {
                     stack.push(announcement);
                     return;
                 }
