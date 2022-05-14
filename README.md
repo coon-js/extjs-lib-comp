@@ -1,6 +1,7 @@
 # @coon-js/extjs-lib-comp ![MIT](https://img.shields.io/npm/l/@coon-js/extjs-lib-comp) [![npm version](https://badge.fury.io/js/@coon-js%2Fextjs-lib-comp.svg)](https://badge.fury.io/js/@coon-js%2Fextjs-lib-comp)
 
-Common and extended view component implementations for rapid, modular ExtJS application building.
+
+Common and extended view component implementations for rapid, modular Ext JS application building.
 
 ## Installation
 ```bash
@@ -9,20 +10,20 @@ $ npm i --save-dev @coon-js/extjs-lib-comp
 
 If you want to develop with `extjs-lib-comp`, run the `build:dev`-script afterwards:
 ```bash
-npm run build:dev
+$ npm run build:dev
 ```
 Testing environment will then be available via
 
 ```bash
-npm test
+$ npm test
 ```
-
 
 For using the package as an external dependency in an application, use
 ```bash
-$ npm install --save-prod @coon-js/extjs-lib-comp
+$ npm i @coon-js/extjs-lib-comp
 ```
-In your `app.json`, add this package as a requirement, and make sure your ExtJS `workspace.json`
+
+In your `app.json`, add this package as a requirement, and make sure your Ext JS `workspace.json`
 is properly configured to look up local repositories in the `node_modules`-directory.
 
 Example (`workspace.json`) :
@@ -37,9 +38,9 @@ Example (`workspace.json`) :
 
 ## Post-Install
 [@coon-js/extjs-link](https://npmjs.org/coon-js/extjs-link) will start once the package was installed and guide you
-through the process of creating symlinks to an existing ExtJS sdk installation.
+through the process of creating symlinks to an existing Ext JS sdk installation.
 This is only required if you want to run the tests (`./tests`), as [Siesta](https//npmjs.org/siesta-lite) relies on
-an existing ExtJS installation.
+an existing Ext JS installation.
 
 ## Naming
 The following naming conventions apply:
@@ -55,4 +56,5 @@ The following naming conventions apply:
 Class `coon.comp.component.Iframe` has the alias `widget.cn_comp-iframe`
 
 ## Tests
-Tests are written with [Siesta](https://bryntum.com/siesta)
+Tests are written with [Siesta](https://bryntum.com/siesta). Documentation can be found
+in the [here](./tests/README.md).

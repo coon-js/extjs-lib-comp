@@ -7,8 +7,8 @@
     "creator": "coon.js",
     "summary": "NPM package providing Livegrid-plugin and a collection of enhanced views and related functionality for Sencha ExtJS applications.",
     "detailedDescription": "This package contains extended and advanced implementations for ExtJS projects which are related to view components. Requires @coon-js/extjs-lib-core. Also home of the Livegrid-plugin.",
-    "version": "0.2.6",
-    "compatVersion": "0.2.6",
+    "version": "0.2.7",
+    "compatVersion": "0.2.7",
     "format": "1",
     "slicer": null,
     "output": {
@@ -57,9 +57,8 @@
     "test": "tests"
   },
   "scripts": {
-    "build:dev": "npm run build:deps && npm run build:test && npx node-git-hooks",
-    "build:deps": "npm explore @coon-js/siesta-lib-helper npm run build:dev",
-    "build:test": "npx extjs-link && npx siesta-lib-helper",
+    "build:dev": "npm run build:test && npx node-git-hooks",
+    "build:test": "npm i --save-dev && npx extjs-link && npx siesta-lib-helper",
     "postversion": "git push && git push --tags",
     "test": "npx ws --port 8061 --static.index tests.redirect.html --open",
     "release": "standard-version",
@@ -89,13 +88,13 @@
   },
   "homepage": "https://github.com/coon-js/extjs-lib-comp#readme",
   "dependencies": {
-    "@coon-js/extjs-package-loader": "^0.1.8",
-    "@l8js/l8": "^0.5.5",
-    "@coon-js/extjs-lib-core": "^0.7.2"
+    "@coon-js/extjs-package-loader": "^0.1.10",
+    "@l8js/l8": "^0.7.2",
+    "@coon-js/extjs-lib-core": "^0.8.1"
   },
   "devDependencies": {
-    "@coon-js/extjs-link": "^0.1.4",
-    "@coon-js/siesta-lib-helper": "^0.1.10",
+    "@coon-js/extjs-link": "^0.1.10",
+    "@coon-js/siesta-lib-helper": "^0.1.16",
     "eslint": "^7.28.0",
     "local-web-server": "^4.2.1",
     "node-git-hooks": "^1.0.6",

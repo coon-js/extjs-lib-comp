@@ -1,12 +1,11 @@
 # @coon-js/extjs-lib-comp - Tests
-
 This package uses [Siesta](http://bryntum.com) for Unit-/UI-testing.
 
 ### Configuration
 
 tl;dr
 ```
-npm run setup:tests
+npm run build:test
 npm test
 ```
 
@@ -14,7 +13,7 @@ Explanation:
 
 Run
 ```
-npm run setup:tests
+npm run build:test
 ```
 in the NPM package. The tool will guide you through the process of symlinking to an existing ExtJS SDK installation
 (build files are required to properly run the tests in a Siesta-Browser environment). Once this is done, boilerplate-html
@@ -44,6 +43,5 @@ necessary to extend the duration of tests and test-setups.
 
   *Example-URL _(toolkit=classic with a timeout of 1000ms)*
   `http://127.0.0.1:8000/tests/index.html?toolkit=classic&timeout=1000`
-  
   
  
