@@ -56,5 +56,4 @@ The following naming conventions apply:
 Class `coon.comp.component.Iframe` has the alias `widget.cn_comp-iframe`
 
 ## Tests
-Tests are written with [Siesta](https://bryntum.com/siesta). Documentation can be found
-in the [here](./tests/README.md).
+Tests are written with [Siesta](https://bryntum.com/siesta). Documentation can be found [here](./tests/README.md).
