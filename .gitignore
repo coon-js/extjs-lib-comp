@@ -4,3 +4,5 @@
 /node_modules
 /tests.redirect.html
 /tests/index.extjs-browser.html
+/.deloreanbuild
+package.json.delorean
