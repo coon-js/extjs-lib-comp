@@ -30,11 +30,11 @@
         "local": true,
         "sass": null,
         "classpath": [
-            "${package.dir}/.deloreanbuild/src",
-            "${package.dir}/.deloreanbuild/${toolkit.name}/src"
+            "${package.dir}/src",
+            "${package.dir}/${toolkit.name}/src"
         ],
         "overrides": [
-            "${package.dir}/.deloreanbuild/overrides"
+            "${package.dir}/overrides"
         ],
         "example": null,
         "framework": "ext",
@@ -50,7 +50,7 @@
             }
         }
     },
-    "version": "0.2.8",
+    "version": "0.3.0",
     "description": "NPM package providing component library for ExtJS projects",
     "main": "index.js",
     "directories": {
