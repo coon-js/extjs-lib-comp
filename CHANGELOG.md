@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0](https://github.com/coon-js/extjs-lib-comp/compare/v0.3.0...v1.0.0) (2023-02-14)
+
+
+### Features
+
+* add urge() to show announcements ahead of existing announcement ([c2cfeac](https://github.com/coon-js/extjs-lib-comp/commit/c2cfeac3356c5c771e17c204f136d27c3ca6b8d3)), closes [conjoon/extjs-lib-comp#32](https://github.com/conjoon/extjs-lib-comp/issues/32)
+
 ## [0.3.0](https://github.com/coon-js/extjs-lib-comp/compare/v0.2.8...v0.3.0) (2022-12-14)
 
 ### [0.2.8](https://github.com/coon-js/extjs-lib-comp/compare/v0.2.7...v0.2.8) (2022-05-14)
