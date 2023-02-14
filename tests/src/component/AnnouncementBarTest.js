@@ -1,7 +1,7 @@
 /**
  * coon.js
  * extjs-lib-comp
- * Copyright (C) 2021-2022 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
+ * Copyright (C) 2021-2023 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -322,11 +322,61 @@ StartTest(t => {
             bar = coon.Announcement.register(add);
             bar.show();
             t.expect(bar).toBe(add);
-            t.expect(bar.getMessage()).toBeUndefined();
+            t.expect(bar.getMessage()).toBe("Hello World");
+            t.expect(bar.getType()).toBe("success");
             bar.hide();
             t.expect(bar.isVisible()).toBe(true);
             t.expect(bar.getMessage()).toBe("Hello World");
 
+        });
+
+        t.it("coon.Announcement.urge()", (t) => {
+
+            coon.Announcement.urge({message: 0});
+
+            bar = coon.Announcement.register( createBar({
+                message: "Hello World",
+                link: "okay"
+            }));
+
+            t.expect(bar.getMessage()).toBe(0);
+            bar.hide();
+
+            t.expect(bar.getMessage()).toBe("Hello World");
+            bar.hide();
+
+            coon.Announcement.show({message: 1}); // 1
+            t.expect(bar.getMessage()).toBe(1);
+            t.expect(bar.currentAnnouncement().message).toBe(1);
+
+            coon.Announcement.show({message: 2}); // 2 1
+            t.expect(bar.getMessage()).toBe(1);
+            t.expect(bar.currentAnnouncement().message).toBe(1);
+
+            coon.Announcement.urge({message: 4}); // 2 1 4
+            t.expect(bar.getMessage()).toBe(4);
+            t.expect(bar.currentAnnouncement().message).toBe(4);
+
+            coon.Announcement.show({message: 5}); // 5 2 1 4
+            t.expect(bar.getMessage()).toBe(4);
+            t.expect(bar.currentAnnouncement().message).toBe(4);
+
+            bar.hide();
+            t.expect(bar.getMessage()).toBe(1); // 2 1
+            t.expect(bar.currentAnnouncement().message).toBe(1);
+
+            bar.hide();
+            t.expect(bar.getMessage()).toBe(2); // 2
+            t.expect(bar.currentAnnouncement().message).toBe(2);
+
+            bar.hide();
+            t.expect(bar.getMessage()).toBe(5); // 5
+            t.expect(bar.currentAnnouncement().message).toBe(5);
+
+            bar.hide();
+            bar.show();
+            t.expect(bar.getMessage()).toBe(5); // 5
+            t.expect(bar.currentAnnouncement().message).toBe(5);
         });
 
     });

@@ -1,7 +1,7 @@
 /**
  * coon.js
  * extjs-lib-comp
- * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
+ * Copyright (C) 2022-2023 Thorsten Suckow-Homberg https://github.com/coon-js/extjs-lib-comp
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -260,7 +260,10 @@ Ext.define("coon.comp.component.AbstractAnnouncementBar", {
     close () {
         "use strict";
 
-        this.destroy();
+        const me = this;
+
+        me.itsAnnouncement = null;
+        me.destroy();
     },
 
 
@@ -400,16 +403,21 @@ Ext.define("coon.comp.component.AbstractAnnouncementBar", {
             me = this,
             ann = announcement;
 
-        ann.message && me.setMessage(ann.message);
+        ann.message !== undefined && me.setMessage(ann.message);
         ann.type && me.setType(ann.type);
         ann.link && me.setLink(ann.link);
         ann.callback && me.setCallback(ann.callback);
         me.setYes(ann.yes ? ann.yes :  null);
         me.setNo(ann.no ? ann.no : null);
 
+        this.itsAnnouncement = announcement;
         this.show();
 
         return this;
+    },
+
+    currentAnnouncement () {
+        return this.itsAnnouncement;
     },
 
 
@@ -499,6 +507,7 @@ Ext.define("coon.comp.component.AbstractAnnouncementBar", {
                     announcementBar.close();
                 }
 
+                stack.splice(0);
                 announcementBar = null;
             },
 
@@ -513,6 +522,16 @@ Ext.define("coon.comp.component.AbstractAnnouncementBar", {
             register (target) {
                 "use strict";
 
+                // swap if any message is available
+                if (stack.length) {
+                    const ann = Object.fromEntries(Object.entries(target.config).filter(([key, value]) => [
+                        "message", "type", "link", "callback", "yes", "no"
+                    ].includes(key)));
+                    const announcement = stack.shift();
+                    stack.unshift(ann);
+                    target.setAnnouncement(announcement);
+                }
+
                 announcementBar = target;
                 announcementBar.on("hide", processStack, null);
 
@@ -525,13 +544,33 @@ Ext.define("coon.comp.component.AbstractAnnouncementBar", {
              * Otherwise, the announcement will be placed on a stack and processed once the current
              * announcement was hidden.
              *
-             * @param announcement
+             * @param announcement if undefined, will fall back to currentAnnouncement() of bar
              */
             show (announcement) {
                 "use strict";
 
                 if (!announcementBar || announcementBar.isVisible()) {
                     stack.push(announcement);
+                    return;
+                }
+
+                return show(announcement || announcementBar.currentAnnouncement());
+            },
+
+
+            /**
+             * Shows the configured announcement immediately before any existing announcement.
+             * @param announcement
+             */
+            urge (announcement) {
+                "use strict";
+
+                if (announcementBar?.currentAnnouncement()) {
+                    stack.unshift(announcementBar.currentAnnouncement());
+                }
+
+                if (!announcementBar?.isVisible()) {
+                    stack.unshift(announcement);
                     return;
                 }
 
