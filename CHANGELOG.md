@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.1](https://github.com/coon-js/extjs-lib-comp/compare/v1.0.0...v1.0.1) (2023-02-14)
+
+
+### Bug Fixes
+
+* urge() does not show AnnouncementBar ([c81361e](https://github.com/coon-js/extjs-lib-comp/commit/c81361e151bb44fcb5072913723bb9880bdcbbe3))
+
 ## [1.0.0](https://github.com/coon-js/extjs-lib-comp/compare/v0.3.0...v1.0.0) (2023-02-14)
 
 
