@@ -569,7 +569,7 @@ Ext.define("coon.comp.component.AbstractAnnouncementBar", {
                     stack.unshift(announcementBar.currentAnnouncement());
                 }
 
-                if (!announcementBar?.isVisible()) {
+                if (!announcementBar) {
                     stack.unshift(announcement);
                     return;
                 }

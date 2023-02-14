@@ -332,7 +332,8 @@ StartTest(t => {
 
         t.it("coon.Announcement.urge()", (t) => {
 
-            coon.Announcement.urge({message: 0});
+            bar = coon.Announcement.urge({message: 0});
+            t.expect(bar).toBeUndefined();
 
             bar = coon.Announcement.register( createBar({
                 message: "Hello World",
@@ -354,6 +355,7 @@ StartTest(t => {
             t.expect(bar.currentAnnouncement().message).toBe(1);
 
             coon.Announcement.urge({message: 4}); // 2 1 4
+            t.expect(bar.isVisible()).toBe(true);
             t.expect(bar.getMessage()).toBe(4);
             t.expect(bar.currentAnnouncement().message).toBe(4);
 
@@ -379,5 +381,20 @@ StartTest(t => {
             t.expect(bar.currentAnnouncement().message).toBe(5);
         });
 
-    });
-});
+        t.it("urge() sets bar visible", (t) => {
+
+            bar = coon.Announcement.register( createBar({
+                message: "Hello World",
+                link: "okay"
+            }));
+            bar.show();
+            t.expect(bar.isVisible()).toBe(true);
+
+            bar.hide();
+            t.expect(bar.isVisible()).toBe(false);
+
+            bar = coon.Announcement.urge({message: 0});
+            t.expect(bar.isVisible()).toBe(true);
+            t.expect(bar.getMessage()).toBe(0);
+        });
+    });});
